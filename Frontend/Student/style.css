@@ -1,0 +1,406 @@
+/* ====================== General Styles ====================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #1664b8;
+  color: #ffffff;
+  display: flex;
+  min-height: 100vh;
+  padding-top: 70px; /* space for fixed navbar */
+}
+
+/* ====================== Navbar ====================== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 15px 25px;
+  background: rgba(0,0,0,0.25);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  z-index: 1000;
+}
+
+.navbar .logo {
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* ====================== Notifications ====================== */
+.notification-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.notif-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #fff;
+  position: relative;
+}
+
+.notif-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: red;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 50%;
+  min-width: 18px;
+  text-align: center;
+  line-height: 14px;
+}
+
+.notif-dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  margin-top: 10px;
+  background-color: #1b2a49;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  width: 300px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.notif-dropdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notif-dropdown li {
+  padding: 10px;
+  border-bottom: 1px solid #64ffda;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.notif-dropdown li:hover {
+  background-color: #0d1b2a;
+}
+
+/* ====================== Sidebar ====================== */
+.sidebar {
+  position: fixed;
+  margin-top: 60px;
+  top: 0;
+  left: 0;
+  width: 220px;
+  height: 100%;
+  background-color: #1b2a49;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  z-index: 999;
+}
+
+.sidebar a {
+  color: #64ffda;
+  text-decoration: none;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.sidebar a:hover {
+  background-color: #0d1b2a;
+  transform: translateX(5px);
+}
+
+ .logout-btn {
+  margin-top: auto;
+  background: #ff4d4d;
+  color: #fff;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.sidebar .logout-btn:hover {
+  background: #ff1a1a;
+}
+
+/* ====================== Main Content ====================== */
+.main-content {
+  margin-left: 220px; /* space for sidebar */
+  padding: 30px;
+  flex: 1;
+  overflow-x: hidden;
+}
+
+/* ====================== Cards ====================== */
+.card {
+  background-color: #1b2a49;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* ====================== Buttons ====================== */
+.btn {
+  background-color: #64ffda;
+  color: #0d1b2a;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #52d8c7;
+  transform: scale(1.05);
+}
+
+/* ====================== Inputs ====================== */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="password"],
+select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #64ffda;
+  background-color: #0d1b2a;
+  color: #fff;
+}
+
+input::placeholder {
+  color: #64ffda;
+}
+
+/* ====================== Tables ====================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+table th,
+table td {
+  padding: 12px;
+  border-bottom: 1px solid #64ffda;
+  text-align: left;
+}
+
+table th {
+  background-color: #1b2a49;
+  color: #64ffda;
+}
+
+table tr:hover {
+  background-color: #0d1b2a;
+}
+
+/* ====================== Profile Photo ====================== */
+.profile-photo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.profile-photo img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #64ffda;
+  transition: transform 0.3s ease;
+}
+
+.profile-photo img:hover {
+  transform: scale(1.05);
+}
+
+.profile-photo input[type="file"] {
+  background-color: #1b2a49;
+  color: #64ffda;
+  border: 1px solid #64ffda;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profile-photo input[type="file"]:hover {
+  background-color: #0d1b2a;
+}
+
+/* ====================== Job Cards ====================== */
+.job-card {
+  background-color: #1b2a49;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border-left: 4px solid #64ffda;
+}
+
+.job-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  border-left-color: #52d8c7;
+}
+
+.job-card h4 {
+  color: #64ffda;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.job-card p {
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.job-card strong {
+  color: #52d8c7;
+}
+
+.job-card .btn {
+  margin-top: 15px;
+  display: inline-block;
+  text-decoration: none;
+}
+
+/* ====================== Responsive ====================== */
+@media screen and (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .sidebar a {
+    margin-bottom: 0;
+    margin-right: 15px;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 15px;
+  }
+
+  .navbar {
+    padding: 10px 15px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="password"],
+  select {
+    font-size: 14px;
+  }
+
+  .btn {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .notif-dropdown {
+    width: 250px;
+    right: -10px; /* Slight offset for smaller screens */
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .notif-btn {
+    font-size: 18px;
+  }
+  .notif-count {
+    top: -4px;
+    right: -4px;
+    font-size: 11px;
+    padding: 2px 5px;
+  }
+  .notif-dropdown {
+    width: 220px;
+    right: 0;
+  }
+  .notif-dropdown li {
+    font-size: 13px;
+    padding: 8px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .notif-btn {
+    font-size: 16px;
+  }
+  .notif-count {
+    top: -3px;
+    right: -3px;
+    font-size: 10px;
+    padding: 1px 4px;
+  }
+  .notif-dropdown {
+    width: 180px;
+    max-height: 250px;
+  }
+  .notif-dropdown li {
+    font-size: 12px;
+    padding: 6px;
+  }
+}
+@media screen and (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+  }
+  .sidebar a {
+    margin-bottom: 0;
+    margin-right: 15px;
+  }
+  .main-content {
+    padding: 15px;
+  }
+}

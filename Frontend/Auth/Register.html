@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - JobPortal</title>
+  <link rel="stylesheet" href="auth1.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo">HireWay</a>
+      <nav class="nav">
+        <a href="../index.html">Home</a>
+        <a href="login.html" id="auth-link">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="auth-bg">
+    <div class="register-container">
+      <div class="register-image">
+        <div class="overlay">
+          <h1>Join Us!</h1>
+          <p>Start your journey with HireWay</p>
+        </div>
+      </div>
+
+      <div class="register-form slide-in">
+        <h2>Create an Account</h2>
+        <p>Sign up and explore your career opportunities</p>
+        <p id="registerError" class="error"></p>
+        <p id="registerLoading" class="loading"></p>
+
+        <form id="registerSubmit">
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Enter username" required />
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Enter email" required />
+            <small class="validation-hint" id="emailHint"></small>
+          </div>
+
+          <div class="form-group">
+            <label>Mobile</label>
+            <input type="text" name="mobile" placeholder="Enter mobile number" maxlength="11" required />
+            <small class="validation-hint" id="mobileHint"></small>
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="registerPassword" name="password" placeholder="Enter password" required />
+          </div>
+
+          <div class="show-password-container">
+            <input type="checkbox" id="showRegisterPassword">
+            <label for="showRegisterPassword">Show Password</label>
+          </div>
+
+          <div class="form-group role-group">
+            <label>Select Role:</label>
+            <select name="role" id="RegisterUsertype" required>
+              <option value="">-- Select Role --</option>
+              <option value="student">Student</option>
+              <option value="recruiter">Recruiter</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+
+          <div class="agree-container">
+            <input type="checkbox" id="agree" required />
+            <label for="agree">I agree to the <a href="#">terms</a> and <a href="#">privacy policy</a></label>
+          </div>
+
+          <button type="submit">Create Account</button>
+        </form>
+
+        <p class="login-link">Already have an account? <a href="login.html">Sign In</a></p>
+      </div>
+    </div>
+  </div>
+<script src="utils.js" defer></script>
+<script src="auth.js" defer></script>
+
+</body>
+</html>

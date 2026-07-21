@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reset Password - JobPortal</title>
+<link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="../index.html" class="logo">HireWay</a>
+    <nav class="nav">
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+    </nav>
+  </div>
+</header>
+
+<div class="auth-bg">
+  <div class="login-container">
+    <div class="login-form">
+      <h2>Reset Password</h2>
+      <p>Enter your email to receive a password reset code</p>
+      <p id="resetError" class="error"></p>
+      <p id="resetLoading" class="loading"></p>
+
+      <form id="resetForm">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" required />
+        </div>
+
+        <button type="submit">Send Reset code</button>
+      </form>
+
+      <p>Remember your password? <a href="login.html">Sign In</a></p>
+    </div>
+  </div>
+</div>
+
+<script src="reset.js" defer></script>
+</body>
+</html>

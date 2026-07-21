@@ -1,0 +1,20 @@
+{
+  "watch": [
+    "Routes",
+    "Models",
+    "Controllers",
+    "Server.js"
+  ],
+  "ignore": [
+    "../Frontend/*",
+    "../Frontend/**",
+    "Frontend/*",
+    "Frontend/**",
+    "*.html",
+    "*.css",
+    "*.png",
+    "*.jpg",
+    "*.svg",
+    "*.map"
+  ]
+}

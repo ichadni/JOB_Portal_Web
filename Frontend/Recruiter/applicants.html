@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Applicants</title>
+  <link rel="stylesheet" href="css/recruiter.css">
+</head>
+
+<body>
+  <div class="sidebar">
+    <h2>Recruiter</h2>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="add-job.html">Add Job</a>
+    <a href="my-jobs.html">My Jobs</a>
+    <a href="applicants.html">Applicants</a>
+    <a href="profile.html">Profile</a>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="main">
+    <h1>Applicants List</h1>
+
+    <div class="filter-section">
+      <select id="jobFilter">
+        <option value="">All Jobs</option>
+      </select>
+      <select id="statusFilter">
+        <option value="">All Status</option>
+        <option value="pending">Pending</option>
+        <option value="reviewed">Reviewed</option>
+        <option value="accepted">Accepted</option>
+        <option value="rejected">Rejected</option>
+      </select>
+    </div>
+
+    <table class="applicants-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Job Applied</th>
+          <th>Email</th>
+          <th>Cover Letter</th>
+          <th>Resume</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody id="applicantsTable"></tbody>
+    </table>
+
+    <div id="noApplicants" style="display: none; text-align: center; padding: 40px;">
+      <p>No applicants found.</p>
+    </div>
+
+  </div>
+
+   <script src="js/applicants.js"></script> 
+</body>
+</html>

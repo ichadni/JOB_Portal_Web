@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Job Listings</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="navbar">
+  <div class="logo">Admin Panel</div>
+
+  <div class="navbar-right">
+    <div class="notification-wrapper">
+      <button id="notifBtn" class="notif-btn">
+        🔔
+        <span id="notifCount" class="notif-count">0</span>
+      </button>
+      <div id="notifDropdown" class="notif-dropdown">
+        <ul id="notifList">
+          <li>No notifications</li>
+        </ul>
+      </div>
+    </div>
+    <button id="logout" class="logout-btn">Logout</button>
+  </div>
+</div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="user.html">Users</a>
+    <a href="jobs.html" class="active">Job Listings</a>
+    <a href="profile.html">Profile</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h1>Job Listings</h1>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Job Title</th>
+            <th>Company</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="jobTableBody">
+          <!-- Dynamic job rows will appear here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+
+
+
+
+   <!-- Edit Job Modal -->
+  <div id="editModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Edit Job</h2>
+      <form id="editJobForm">
+        <input type="hidden" id="editJobId">
+        <div class="form-group">
+          <label for="editTitle">Job Title:</label>
+          <input type="text" id="editTitle" required>
+        </div>
+        <div class="form-group">
+          <label for="editCompany">Company:</label>
+          <input type="text" id="editCompany" required>
+        </div>
+        <div class="form-group">
+          <label for="editLocation">Location:</label>
+          <input type="text" id="editLocation">
+        </div>
+        <div class="form-group">
+          <label for="editType">Job Type:</label>
+          <select id="editType">
+            <option value="Full-time">Full-time</option>
+            <option value="Part-time">Part-time</option>
+            <option value="Contract">Contract</option>
+            <option value="Internship">Internship</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="editSalary">Salary:</label>
+          <input type="text" id="editSalary">
+        </div>
+        <div class="form-group">
+          <label for="editDescription">Description:</label>
+          <textarea id="editDescription" rows="4"></textarea>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn">Update Job</button>
+          <button type="button" class="btn" onclick="closeEditModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+   <script src="js/auth-helper.js"></script> 
+   <script src="js/jobs.js"></script> 
+
+</body>
+</html>

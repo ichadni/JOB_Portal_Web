@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="navbar">
+  <div class="logo">Student Panel</div>
+
+  <div class="navbar-right">
+    <div class="notification-wrapper">
+      <button id="notifBtn" class="notif-btn">
+        🔔
+        <span id="notifCount" class="notif-count">0</span>
+      </button>
+      <div id="notifDropdown" class="notif-dropdown">
+        <ul id="notifList">
+          <li>No notifications</li>
+        </ul>
+      </div>
+    </div>
+    <button id="logout" class="logout-btn">Logout</button>
+  </div>
+</div>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="job-list.html">Jobs</a>
+    <a href="applied-jobs.html">Applied Jobs</a>
+    <a href="profile.html">Profile</a>
+     <button id="logout-btn" class="logout-btn">Logout</button>
+  </div>
+
+  <!-- Main content -->
+  <div class="main-content">
+    <h1>Welcome, Student!</h1>
+
+    <div class="card">
+      <h3>📊 Total Jobs Available</h3>
+      <p>Loading...</p>
+    </div>
+
+    <div class="card">
+      <h3>📝 Applications Submitted</h3>
+      <p>Loading...</p>
+    </div>
+
+    <div class="card">
+      <h3>👤 Profile Completion</h3>
+      <p>Loading...</p>
+    </div>
+  
+
+  <script src="Js/dashboard.js"></script> 
+</body>
+</html>

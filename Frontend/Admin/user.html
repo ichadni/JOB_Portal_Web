@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Users - Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="user.html" class="active">Users</a>
+    <a href="jobs.html">Job Listings</a>
+    <a href="profile.html">Profile</a>
+  </div>
+    <div class="navbar">
+  <div class="logo">Admin Panel</div>
+  
+  <div class="navbar-right">
+    <div class="notification-wrapper">
+      <button id="notifBtn" class="notif-btn">
+        🔔
+        <span id="notifCount" class="notif-count">0</span>
+      </button>
+      <div id="notifDropdown" class="notif-dropdown">
+        <ul id="notifList">
+          <li>No notifications</li>
+        </ul>
+      </div>
+    </div>
+    <button id="logout-btn" class="logout-btn">Logout</button>
+  </div>
+</div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h1>Users Management</h1>
+
+    <!-- Top Controls -->
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3>All Users</h3>
+        <button class="btn" id="add-user-btn">+ Add New User</button>
+      </div>
+
+      <!-- Users Table -->
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Mobile</th>
+            <th>Role</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Users will be dynamically loaded here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+    <script src="js/utils.js"></script>
+
+  <script src="js/auth-helper.js"></script>
+  <script src="js/user.js"></script>
+</body>
+</html>
+

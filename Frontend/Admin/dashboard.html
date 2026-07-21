@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="navbar">
+  <div class="logo">Admin Panel</div>
+
+  <div class="navbar-right">
+    <div class="notification-wrapper">
+      <button id="notifBtn" class="notif-btn">
+        🔔
+        <span id="notifCount" class="notif-count">0</span>
+      </button>
+      <div id="notifDropdown" class="notif-dropdown">
+        <ul id="notifList">
+          <li>No notifications</li>
+        </ul>
+      </div>
+    </div>
+    <button id="logout" class="logout-btn">Logout</button>
+  </div>
+</div>
+
+
+  <div class="sidebar">
+    <a href="dashboard.html" class="active">Dashboard</a>
+    <a href="user.html">Users</a>
+    <a href="jobs.html">Job Listings</a>
+    <a href="profile.html">Profile</a>
+  </div>
+
+  <div class="main-content">
+    <h1>Welcome, Admin!</h1>
+
+    <div class="card" id="totalUsersCard">
+      <h3>Total Users</h3>
+      <p>Loading...</p>
+    </div>
+
+    <div class="card" id="totalJobsCard">
+      <h3>Total Jobs Posted</h3>
+      <p>Loading...</p>
+    </div>
+
+    <div class="card"  id="pendingJobsCard">
+      <h3>Pending Job Approvals</h3>
+      <p>Loading...</p>
+    </div>
+
+    <div class="card" id="recentRegistrationsCard">
+      <h3>Recent Registrations</h3>
+      <p>Loading...</p>
+    </div>
+     <div class="card" id="RecentjobsCard">
+  <h3>Recent Job Postings</h3>
+  <ul id="recentJobs">
+    <li>Loading...</li>
+  </ul>
+</div>
+<div class="card" id="userStatusCard">
+  <h3>Active vs Inactive Users</h3>
+  <p id="userStatus">Loading...</p>
+</div>
+  </div>
+   <script src="js/auth-helper.js"></script>
+
+
+
+
+
+  <script src="js/dashboard.js"></script>
+
+</body>
+</html>

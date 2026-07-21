@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Job Listings</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="navbar">
+  <div class="logo">Student Panel</div>
+
+  <div class="navbar-right">
+    <div class="notification-wrapper">
+      <button id="notifBtn" class="notif-btn">
+        🔔
+        <span id="notifCount" class="notif-count">0</span>
+      </button>
+      <div id="notifDropdown" class="notif-dropdown">
+        <ul id="notifList">
+          <li>No notifications</li>
+        </ul>
+      </div>
+    </div>
+    <button id="logout" class="logout-btn">Logout</button>
+  </div>
+</div>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="job-list.html">Jobs</a>
+    <a href="applied-jobs.html">Applied Jobs</a>
+    <a href="profile.html">Profile</a>
+     <button id="logout-btn" class="logout-btn">Logout</button>
+  </div>
+
+  <!-- Main content -->
+  <div class="main-content">
+    <h1>Available Jobs</h1>
+
+    <!-- Filters -->
+    <div class="card">
+      <h3>Filter Jobs</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+        <input type="text" id="jobTitle" placeholder="Job Title">
+        <input type="text" id="company" placeholder="Company">
+        <input type="text" id="location" placeholder="Location">
+        <input type="text" id="skills" placeholder="Skills">
+        <select id="salaryRange">
+          <option value="">All Salary Ranges</option>
+          <option value="0-30000">Under $30,000</option>
+          <option value="30000-50000">$30,000 - $50,000</option>
+          <option value="50000-70000">$50,000 - $70,000</option>
+          <option value="70000-100000">$70,000 - $100,000</option>
+          <option value="100000+">$100,000+</option>
+        </select>
+        <select id="jobType">
+          <option value="">All Job Types</option>
+          <option value="full-time">Full Time</option>
+          <option value="part-time">Part Time</option>
+          <option value="contract">Contract</option>
+          <option value="internship">Internship</option>
+        </select>
+      </div>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button id="applyFilters" class="btn">Apply Filters</button>
+        <button id="clearFilters" class="btn">Clear Filters</button>
+        <button id="saveFilters" class="btn">Save Filters</button>
+      </div>
+      <div id="activeFilters" style="margin-top: 10px; font-size: 14px; color: #64ffda;"></div>
+    </div>
+
+    <!-- Job List -->
+    <div id="job-list"></div>
+  </div>
+
+   <script src="Js/job-list.js"></script>
+</body>
+</html>

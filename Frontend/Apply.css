@@ -1,0 +1,170 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Container */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(90deg, #4f46e5, #6366f1);
+  color: #fff;
+  padding: 20px 0;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  margin-bottom: 40px;
+}
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header .logo {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+}
+.header .nav a {
+  margin-left: 20px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+.header .nav a:hover {
+  color: #facc15; /* amber yellow */
+}
+
+/* Job Details */
+.job-details {
+  background: #f0f4ff;
+  border-left: 6px solid #4f46e5;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.15);
+  margin-bottom: 40px;
+  transition: transform 0.3s ease;
+}
+.job-details:hover {
+  transform: translateY(-5px);
+}
+.job-details h2 {
+  font-size: 26px;
+  margin-bottom: 10px;
+  color: #1e3a8a;
+}
+.job-details p {
+  font-size: 16px;
+  color: #1f2937;
+  margin-bottom: 6px;
+}
+
+/* Apply Form */
+.apply-form-section {
+  background: linear-gradient(135deg, #f9fafb, #e0e7ff);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease;
+}
+.apply-form-section:hover {
+  transform: translateY(-5px);
+}
+.apply-form-section h3 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: #4f46e5;
+  text-align: center;
+}
+
+/* Form Fields */
+.form-group {
+  margin-bottom: 18px;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #1e40af;
+}
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #c7d2fe;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 10px rgba(79, 70, 229, 0.3);
+  outline: none;
+}
+textarea {
+  resize: vertical;
+}
+
+/* Submit Button */
+.btn-submit {
+  display: block;
+  width: 100%;
+  background: linear-gradient(90deg, #4f46e5, #6366f1);
+  color: #fff;
+  padding: 14px 0;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-submit:hover {
+  background: linear-gradient(90deg, #6366f1, #4f46e5);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+}
+
+/* Success / Error Message */
+.apply-msg {
+  margin-top: 15px;
+  font-weight: 600;
+  font-size: 16px;
+  color: #16a34a; /* green */
+  text-align: center;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  margin-top: 60px;
+  padding: 20px 0;
+  background: #1e3a8a;
+  color: #fff;
+  font-weight: 500;
+}
+.footer a {
+  color: #facc15;
+  text-decoration: none;
+  margin: 0 6px;
+}
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header-inner, .apply-form-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+

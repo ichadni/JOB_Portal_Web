@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Recruiter Pages</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Recruiter Pages Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Dashboard</h2>
+        <button onclick="testDashboard()">Test Dashboard API</button>
+        <div id="dashboardResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Applicants</h2>
+        <button onclick="testApplicants()">Test Applicants API</button>
+        <div id="applicantsResult"></div>
+    </div>
+
+    <script>
+        const API = "http://localhost:5001/api";
+        
+        function getAuthToken() {
+            return localStorage.getItem('token');
+        }
+        
+        function authFetchOptions(options = {}) {
+            return {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getAuthToken()}`,
+                    ...options.headers
+                }
+            };
+        }
+        
+        async function testDashboard() {
+            const resultDiv = document.getElementById('dashboardResult');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                // Test jobs count
+                const jobsResponse = await fetch(API + "/recruiter/jobs/count", authFetchOptions());
+                const jobsData = await jobsResponse.json();
+                
+                // Test applicants count
+                const applicantsResponse = await fetch(API + "/recruiter/applicants", authFetchOptions());
+                const applicantsData = await applicantsResponse.json();
+                
+                resultDiv.innerHTML = `
+                    <div class="success">✅ Dashboard APIs working!</div>
+                    <div>Jobs Count: ${jobsData.count || 0}</div>
+                    <div>Applicants Count: ${applicantsData.length || 0}</div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+            }
+        }
+        
+        async function testApplicants() {
+            const resultDiv = document.getElementById('applicantsResult');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const response = await fetch(API + "/recruiter/applicants", authFetchOptions());
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <div class="success">✅ Applicants API working!</div>
+                    <div>Total Applicants: ${data.length}</div>
+                    <pre>${JSON.stringify(data.slice(0, 2), null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>

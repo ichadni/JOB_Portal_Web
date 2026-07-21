@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply - JobPortal</title>
+  <link rel="stylesheet" href="apply.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <h1 class="logo">HireWaY</h1>
+      <nav class="nav">
+        <a href="./index.html">Home</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Job Details -->
+  <main class="container">
+    <section id="job-details" class="job-details">
+      <h2 id="jobTitle">Job Title</h2>
+      <p><strong>Company:</strong> <span id="jobCompany"></span></p>
+      <p><strong>Location:</strong> <span id="jobLocation"></span></p>
+      <p><strong>Salary:</strong> <span id="jobSalary"></span></p>
+      <p><strong>Type:</strong> <span id="jobType"></span></p>
+      <p><strong>Description:</strong> <span id="jobDescription"></span></p>
+    </section>
+
+    <!-- Application Form -->
+    <section class="apply-form-section">
+      <h3>Apply for this job</h3>
+      <form id="applyForm">
+        <div class="form-group">
+          <label for="applicantName">Full Name</label>
+          <input type="text" id="applicantName" name="name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="applicantEmail">Email</label>
+          <input type="email" id="applicantEmail" name="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="resume">Resume (PDF)</label>
+          <input type="file" id="resume" name="resume" accept=".pdf" required>
+        </div>
+
+        <div class="form-group">
+          <label for="coverLetter">Cover Letter</label>
+          <textarea id="coverLetter" name="coverLetter" rows="5" required></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit">Submit Application</button>
+        <p id="applyMsg" class="apply-msg"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2025 JobPortal. All rights reserved.</p>
+  </footer>
+
+  <script src="apply.js" defer></script>
+</body>
+</html>

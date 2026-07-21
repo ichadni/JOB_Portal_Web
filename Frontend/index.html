@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobPortal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+
+    <!-- Header -->
+    <header class="bg-white shadow">
+        <div class="container mx-auto flex justify-between items-center py-4 px-6">
+            <h1 class="text-2xl font-bold text-indigo-600">HireWaY</h1>
+            <nav class="space-x-6">
+                <a href="./index.html" class="text-gray-700 hover:text-indigo-600">Home</a>
+
+                <a href="./Auth/Login.html" class="text-gray-700 hover:text-indigo-600">Login</a>
+                <a href="./Auth/Register.html" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Sign Up</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-indigo-600 text-white py-20">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4">Find Your Dream Job</h2>
+            <p class="text-lg md:text-xl mb-8">Browse thousands of job opportunities and apply today.</p>
+            <form class="max-w-2xl mx-auto flex flex-col md:flex-row gap-4">
+                <input type="text" placeholder="Job title or keyword" class="flex-1 px-4 py-3 rounded-md text-gray-800 focus:outline-none">
+                <input type="text" placeholder="Location" class="flex-1 px-4 py-3 rounded-md text-gray-800 focus:outline-none">
+                <button class="bg-yellow-400 text-gray-900 font-semibold px-6 py-3 rounded-md hover:bg-yellow-500">Search Jobs</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Featured Jobs -->
+   <section class="py-16">
+  <div class="container mx-auto">
+    <h3 class="text-3xl font-bold text-gray-800 mb-8 text-center">Featured Jobs</h3>
+
+    <!-- Replace static cards with this container -->
+    <div id="job-list" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Job cards will be dynamically inserted here by JS -->
+    </div>
+  </div>
+</section>
+
+
+
+ <!-- Job Types -->
+<section class="py-16 bg-gray-100">
+  <div class="container mx-auto text-center">
+    <h3 class="text-3xl font-bold text-gray-800 mb-8">Job Types</h3>
+    <div class="flex flex-wrap justify-center gap-6">
+      <span data-category="Full-Time" class="category-btn bg-white px-6 py-3 rounded-full shadow hover:shadow-lg transition cursor-pointer">Full-Time</span>
+      <span data-category="Part-Time" class="category-btn bg-white px-6 py-3 rounded-full shadow hover:shadow-lg transition cursor-pointer">Part-Time</span>
+      <span data-category="Internship" class="category-btn bg-white px-6 py-3 rounded-full shadow hover:shadow-lg transition cursor-pointer">Internship</span>
+      <span data-category="Contract" class="category-btn bg-white px-6 py-3 rounded-full shadow hover:shadow-lg transition cursor-pointer">Contract</span>
+
+    </div>
+  </div>
+</section>
+
+
+</div>
+
+        </div>
+    </section>
+
+    
+
+    <!-- Footer -->
+      <footer class="bg-gray-800 text-gray-200 py-12">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between gap-8">
+            
+            <!-- Quick Links -->
+            <div>
+                <h4 class="text-lg font-bold mb-4">Quick Links</h4>
+                <ul class="space-y-2">
+                    <li><a href="./index.html" class="hover:text-white">Home</a></li>
+                    <li><a href="./Auth/Login.html" class="hover:text-white">Login</a></li>
+                    <li><a href="./Auth/Register.html" class="hover:text-white">Sign Up</a></li>
+                </ul>
+            </div>
+
+            <!-- Policies & Contact -->
+            <div>
+                <h4 class="text-lg font-bold mb-4">Policies & Contact</h4>
+                <ul class="space-y-2">
+                    <li><a href="policy.html" class="hover:text-white">Privacy Policy</a></li>
+                    <li><a href="terms.html" class="hover:text-white">Terms & Conditions</a></li>
+                    <li><a href="https://facebook.com/YourPage" target="_blank" class="hover:text-white">Facebook</a></li>
+                    <li>📞 01747863344</li>
+                </ul>
+            </div>
+
+            <!-- Copyright -->
+            <div class="flex items-center justify-center md:justify-end">
+                <p>© 2025 HireWaY. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="index.js"></script>
+
+</body>
+</html>

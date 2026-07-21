@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Job</title>
+  <link rel="stylesheet" href="css/recruiter.css">
+</head>
+
+<body>
+  <div class="sidebar">
+    <h2>Recruiter</h2>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="add-job.html">Add Job</a>
+    <a href="my-jobs.html">My Jobs</a>
+    <a href="applicants.html">Applicants</a>
+    <a href="profile.html">Profile</a>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="main">
+    <h1>Add New Job</h1>
+
+    <form id="jobForm" class="card">
+      <label>Job Title *</label>
+      <input type="text" id="title" required>
+
+      <label>Company *</label>
+      <input type="text" id="company" required>
+
+      <label>Location *</label>
+      <input type="text" id="location" required>
+
+      <label>Salary</label>
+      <input type="number" id="salary" placeholder="e.g., 50000">
+
+      <label>Job Type</label>
+      <select id="type">
+        <option value="Full-Time">Full-Time</option>
+        <option value="Part-Time">Part-Time</option>
+        <option value="Internship">Internship</option>
+        <option value="Contract">Contract</option>
+      </select>
+
+      <label>Description</label>
+      <textarea id="description" rows="6" placeholder="Job description, requirements, responsibilities..."></textarea>
+
+      <button type="submit" class="btn">Post Job</button>
+    </form>
+
+    <p id="msg"></p>
+
+  </div>
+
+   <script src="js/add-job.js"></script> 
+</body>
+</html>

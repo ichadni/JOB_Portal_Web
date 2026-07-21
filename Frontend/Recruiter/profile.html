@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Recruiter Profile</title>
+  <link rel="stylesheet" href="css/recruiter.css">
+</head>
+
+<body>
+  <div class="sidebar">
+    <h2>Recruiter</h2>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="add-job.html">Add Job</a>
+    <a href="my-jobs.html">My Jobs</a>
+    <a href="applicants.html">Applicants</a>
+    <a href="profile.html">Profile</a>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="main">
+    <h1>Your Profile</h1>
+
+    <div class="card">
+       <label>Username</label>
+        <input type="text" id="username" value="">
+
+        <label>Email</label>
+        <input type="email" id="email" value="">
+
+        <label>Mobile</label>
+        <input type="text" id="mobile" value="">
+
+        <label>Current Password</label>
+        <input type="password" id="currentPassword" placeholder="Leave blank if not changing">
+
+        <label>New Password</label>
+        <input type="password" id="newPassword" placeholder="Leave blank if not changing">
+
+        <label>Confirm New Password</label>
+        <input type="password" id="confirmPassword" placeholder="Leave blank if not changing">
+
+        <button class="btn" type="submit">Update Profile</button>
+    </div>
+
+  </div>
+  <script src="js/recruiter.js"></script>
+  <script>
+    // Load user profile data
+    function loadProfile() {
+      fetch(API + "/auth/me", authFetchOptions())
+        .then(r => {
+          if (!r.ok) throw new Error('Failed to fetch profile');
+          return r.json();
+        })
+        .then(data => {
+          const user = data.user;
+          document.getElementById('username').value = user.username || '';
+          document.getElementById('email').value = user.email || '';
+          document.getElementById('mobile').value = user.mobile || '';
+        })
+        .catch(err => {
+          console.error('Error loading profile:', err);
+        });
+    }
+
+    // Handle profile update
+    document.querySelector('.btn').addEventListener('click', function(e) {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
+      const mobile = document.getElementById('mobile').value;
+      const currentPassword = document.getElementById('currentPassword').value;
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      // Validate passwords if new password is provided
+      if (newPassword && newPassword !== confirmPassword) {
+        alert('New password and confirm password do not match');
+        return;
+      }
+
+      const updateData = { username, email, mobile };
+      if (newPassword) {
+        updateData.password = newPassword;
+        updateData.currentPassword = currentPassword;
+      }
+
+      fetch(API + "/auth/update-profile", {
+        ...authFetchOptions(),
+        method: 'PUT',
+        body: JSON.stringify(updateData)
+      })
+      .then(r => {
+        if (!r.ok) throw new Error('Failed to update profile');
+        return r.json();
+      })
+      .then(data => {
+        alert('Profile updated successfully!');
+        // Clear password fields
+        document.getElementById('currentPassword').value = '';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmPassword').value = '';
+      })
+      .catch(err => {
+        console.error('Error updating profile:', err);
+        alert('Failed to update profile');
+      });
+    });
+
+    // Load profile when page loads
+    document.addEventListener("DOMContentLoaded", () => {
+      checkAuth();
+      loadProfile();
+    });
+  </script>
+</body>
+</html>
