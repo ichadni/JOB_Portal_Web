@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reset Password - JobPortal</title>
-<link rel="stylesheet" href="auth.css">
+  <link rel="stylesheet" href="auth.css">
 </head>
 <body>
 
@@ -27,12 +27,36 @@
       <p id="resetLoading" class="loading"></p>
 
       <form id="resetForm">
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" name="email" required />
+        <!-- Step 1: Email -->
+        <div id="emailSection">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="resetEmail" name="email" required />
+          </div>
+          <button type="button" id="sendResetCodeBtn">Send Reset Code</button>
         </div>
 
-        <button type="submit">Send Reset code</button>
+        <!-- Step 2: Code (hidden initially) -->
+        <div id="codeSection" style="display: none;">
+          <div class="form-group">
+            <label>Reset Code</label>
+            <input type="text" id="resetCode" placeholder="Enter 6-digit code" />
+            <small style="color: #666;">Check your email for the code</small>
+          </div>
+        </div>
+
+        <!-- Step 3: New Password (hidden initially) -->
+        <div id="passwordSection" style="display: none;">
+          <div class="form-group">
+            <label>New Password</label>
+            <input type="password" id="newPassword" placeholder="Enter new password" />
+          </div>
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" id="confirmPassword" placeholder="Confirm new password" />
+          </div>
+          <button type="button" id="resetPasswordBtn">Reset Password</button>
+        </div>
       </form>
 
       <p>Remember your password? <a href="login.html">Sign In</a></p>

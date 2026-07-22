@@ -7,14 +7,13 @@ const User = require("../models/User");
 
 dotenv.config();
 
-// Configure Nodemailer
+// ✅ Configure Nodemailer (Fixed)
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
-  }// Backend/controllers/authController.js
-,
+  },
 });
 
 // Helper function to validate email
@@ -59,7 +58,6 @@ const register = async (req, res) => {
       user: { id: user.id, username: user.username, email: user.email, mobile: user.mobile, role: user.role }
     };
 
-    // Include redirect URL if provided
     if (redirect) {
       response.redirect = redirect;
     }
@@ -82,7 +80,6 @@ const login = async (req, res) => {
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) return res.status(401).json({ error: "Invalid credentials" });
 
-    // Check if the selected role matches the user's actual role
     if (role && user.role !== role) {
       return res.status(401).json({ error: `Access denied. Please log in as a ${user.role}.` });
     }
@@ -94,7 +91,6 @@ const login = async (req, res) => {
       user: { id: user.id, username: user.username, email: user.email, mobile: user.mobile, role: user.role }
     };
 
-    // Include redirect URL if provided
     if (redirect) {
       response.redirect = redirect;
     }
@@ -123,8 +119,6 @@ const me = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
-    // For JWT-based auth, logout is handled client-side by removing the token
-    // We can optionally blacklist tokens if needed, but for now just return success
     res.json({ message: "Logout successful" });
   } catch (err) {
     console.error(err);
@@ -154,6 +148,7 @@ const checkEmailExistence = async (req, res) => {
   }
 };
 
+// ✅ FORGOT PASSWORD - Sends 6-digit code to email
 const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -170,28 +165,57 @@ const forgotPassword = async (req, res) => {
     user.resetPasswordExpires = resetExpires;
     await user.save();
 
+    // ✅ Email HTML Template
+    const htmlTemplate = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+          .container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+          .header { text-align: center; border-bottom: 2px solid #6a1b9a; padding-bottom: 15px; }
+          .header h2 { color: #6a1b9a; margin: 0; }
+          .code { font-size: 36px; font-weight: bold; color: #6a1b9a; text-align: center; padding: 20px; background: #f5f0ff; border-radius: 8px; margin: 20px 0; letter-spacing: 5px; }
+          .footer { text-align: center; color: #888; font-size: 12px; margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; }
+          .warning { color: #e74c3c; font-size: 13px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h2>🔐 Password Reset</h2>
+          </div>
+          <p>Hello ${user.username},</p>
+          <p>You requested to reset your password. Use the 6-digit code below:</p>
+          <div class="code">${resetToken}</div>
+          <p>This code will expire in <strong>1 hour</strong>.</p>
+          <p class="warning">⚠️ If you didn't request this, please ignore this email.</p>
+          <div class="footer">
+            <p>Job Portal App &copy; 2024</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
-      subject: "Password Reset Code - JobPortal",
+      subject: "🔐 Password Reset Code - JobPortal",
       text: `Your password reset code is: ${resetToken}`,
+      html: htmlTemplate,
     };
 
-    // Attempt to send email
+    // ✅ Send Email
     try {
-      if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-        await transporter.sendMail(mailOptions);
-        res.json({ message: "Reset code sent to email" });
-      } else {
-        console.warn("Email credentials not found. Printing token to console.");
-        console.log(`[DEV] Reset Token for ${email}: ${resetToken}`);
-        res.json({ message: "Reset code generated (check console for dev mode)" });
-      }
+      await transporter.sendMail(mailOptions);
+      console.log(`✅ Password reset email sent to ${email}`);
+      res.json({ message: "Reset code sent to your email" });
     } catch (emailErr) {
-      console.error("Email send error:", emailErr);
-      // Fallback for dev
-      console.log(`[DEV] Reset Token for ${email}: ${resetToken}`);
-      res.json({ message: "Reset code generated (check console)" });
+      console.error("❌ Email send error:", emailErr);
+      // Fallback: Show code in console for development
+      console.log(`📧 [DEV] Reset Token for ${email}: ${resetToken}`);
+      res.json({ message: "Reset code generated. Check console for dev mode." });
     }
 
   } catch (err) {
@@ -200,6 +224,7 @@ const forgotPassword = async (req, res) => {
   }
 };
 
+// ✅ RESET PASSWORD - Verifies code and updates password
 const resetPassword = async (req, res) => {
   try {
     const { email, code, newPassword } = req.body;
@@ -236,7 +261,6 @@ const updateProfile = async (req, res) => {
     const user = await User.findByPk(userId);
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    // Validate current password if changing password
     if (password) {
       if (!currentPassword) {
         return res.status(400).json({ error: "Current password is required to change password" });
@@ -248,7 +272,6 @@ const updateProfile = async (req, res) => {
       }
     }
 
-    // Update fields if provided
     if (username) user.username = username;
     if (email) user.email = email;
     if (mobile) user.mobile = mobile;
