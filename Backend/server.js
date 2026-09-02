@@ -1,5 +1,3 @@
-
-// Backend/index.js
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
@@ -14,13 +12,10 @@ const adminRoutes = require("./routes/adminRoutes.js");
 const studentRoutes = require("./routes/student.js");
 const studentApplicationsRoutes = require("./routes/studentApplications.js");
 const path = require("path");
-
-
-
+const notificationRoutes = require('./routes/notifications');
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 const app = express();
-
 
 app.use(express.json());
 app.use(cors({
@@ -28,12 +23,15 @@ app.use(cors({
   credentials: true
 }));
 
+// ✅ Serve uploads folder (for resumes and files)
+const uploadsPath = path.join(__dirname, 'uploads');
+app.use('/uploads', express.static(uploadsPath));
+console.log(`Serving Uploads from: ${uploadsPath}`);
+
 // Serve static files
 const frontendPath = path.resolve(__dirname, '../Frontend');
-
 console.log(`Serving Frontend from: ${frontendPath}`);
-
-app.use(express.static(frontendPath)); // Serve Frontend at root
+app.use(express.static(frontendPath));
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -43,14 +41,15 @@ app.use("/api/applications", applicationsRoutes);
 app.use("/api/recruiter", recruiterRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/student", studentRoutes);
-app.use("/api/student", studentApplicationsRoutes);
+app.use("/api/student/applications", studentApplicationsRoutes);
 app.use("/apply-job", applicationsRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Start server after syncing DB
 const PORT = process.env.PORT || 5001;
 (async () => {
   try {
-    await sequelize.sync(); // ✅ Sync database without forcing alterations
+    await sequelize.sync();
     console.log("✅ Database synced successfully.");
     app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
   } catch (err) {

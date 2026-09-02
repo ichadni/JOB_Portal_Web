@@ -5,68 +5,654 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Manage Users - Admin Panel</title>
   <link rel="stylesheet" href="style.css">
+  
+  <style>
+    /* ============================================
+       CSS VARIABLES ( matching theme )
+       ============================================ */
+    :root {
+      --primary: #6C2BD9;
+      --primary-dark: #4A1A8A;
+      --primary-light: #8B5CF6;
+      --secondary: #1E293B;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-primary: #0F172A;
+      --text-secondary: #1E293B;   /* ✅ FIX: darker */
+      --text-muted: #64748B;       /* ✅ FIX: darker */
+      --border: #E2E8F0;
+      --shadow: 0 4px 24px rgba(108, 43, 217, 0.08);
+      --shadow-hover: 0 12px 40px rgba(108, 43, 217, 0.15);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ============================================
+       RESET & BASE
+       ============================================ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      display: flex;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ============================================
+       SIDEBAR ( consistent with other pages )
+       ============================================ */
+    .sidebar {
+      width: 260px;
+      background: var(--secondary);
+      color: white;
+      padding: 28px 0;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: var(--transition);
+      font-size: 14px;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      margin: 2px 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    .sidebar a:hover {
+      background: rgba(255,255,255,0.05);
+      color: white;
+    }
+
+    .sidebar a.active {
+      background: rgba(108, 43, 217, 0.2);
+      color: white;
+      border-left-color: var(--primary-light);
+    }
+
+    /* ============================================
+       TOP NAVBAR
+       ============================================ */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 32px;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      position: fixed;
+      top: 0;
+      left: 260px;
+      right: 0;
+      z-index: 99;
+      height: 70px;
+    }
+
+    .navbar .logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .navbar .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    /* Notification Bell */
+    .notification-wrapper {
+      position: relative;
+    }
+
+    .notif-btn {
+      position: relative;
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: var(--transition);
+      color: var(--text-secondary);
+    }
+
+    .notif-btn:hover {
+      background: var(--bg);
+    }
+
+    .notif-count {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #EF4444;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid white;
+    }
+
+    .notif-dropdown {
+      position: absolute;
+      top: 45px;
+      right: 0;
+      width: 380px;
+      max-height: 450px;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+      display: none;
+      overflow: hidden;
+      z-index: 1000;
+      border: 1px solid var(--border);
+    }
+
+    .notif-dropdown.open {
+      display: block;
+      animation: slideDown 0.25s ease;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to   { opacity: 1; transform: translateY(0);      }
+    }
+
+    .notif-dropdown ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 360px;
+      overflow-y: auto;
+    }
+
+    .notif-dropdown ul li {
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--text-secondary);
+      transition: var(--transition);
+    }
+
+    .notif-dropdown ul li:hover {
+      background: var(--bg);
+    }
+
+    .logout-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: var(--transition);
+      font-family: inherit;
+    }
+
+    .logout-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(108, 43, 217, 0.3);
+    }
+
+    /* ============================================
+       MAIN CONTENT
+       ============================================ */
+    .main-content {
+      margin-left: 260px;
+      padding: 90px 40px 40px 40px;
+      flex: 1;
+      width: calc(100% - 260px);
+      min-height: 100vh;
+    }
+
+    .main-content h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .main-content .subtitle {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-bottom: 28px;
+    }
+
+    /* ============================================
+       CARD
+       ============================================ */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: var(--transition);
+      overflow: hidden;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-hover);
+    }
+
+    .card .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .card .card-header h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* ============================================
+       BUTTONS
+       ============================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: var(--transition);
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(108, 43, 217, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--border);
+      transform: translateY(-2px);
+      box-shadow: none;
+    }
+
+    .btn-danger {
+      background: #EF4444;
+      color: white;
+    }
+    .btn-danger:hover {
+      background: #DC2626;
+    }
+
+    .btn-sm {
+      padding: 4px 12px;
+      font-size: 12px;
+    }
+
+    /* ============================================
+       TABLE
+       ============================================ */
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    thead {
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+    }
+
+    thead th {
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 600;
+      color:   #475569;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+    }
+
+   tbody td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  color: #292b2d !important;   /* ← Force dark color */
+  font-size: 14px;
+  vertical-align: middle;
+}
+    /* ✅ VISIBILITY FIXES FOR TABLE COLUMNS */
+    tbody td:first-child {
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    tbody td:nth-child(2) {
+      font-weight: 600;
+      color: #292b2d;
+    }
+
+    tbody td:nth-child(3) {
+      font-weight: 500;
+      color: #292b2d;
+    }
+
+    tbody td:nth-child(4) {
+      font-weight: 500;
+      color: #292b2d;
+    }
+
+    tbody tr {
+      transition: var(--transition);
+    }
+
+    tbody tr:hover {
+      background: #F1F5F9;   /* ✅ solid, visible hover */
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* ===== ROLE BADGES – with borders for visibility ===== */
+    .role-badge {
+      display: inline-block;
+      padding: 3px 14px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: capitalize;
+      border: 1px solid transparent;
+    }
+
+    .role-admin {
+      background: #DBEAFE;
+      color: #1E40AF;
+      border-color: #BFDBFE;
+    }
+
+    .role-recruiter {
+      background: #D1FAE5;
+      color: #065F46;
+      border-color: #A7F3D0;
+    }
+
+    .role-student {
+      background: #FEF3C7;
+      color: #92400E;
+      border-color: #FDE68A;
+    }
+
+    /* ===== ACTION BUTTONS – clearer colors ===== */
+    /* ===== ACTION BUTTONS – polished with strong feedback ===== */
+.action-buttons {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.action-buttons .btn {
+  padding: 5px 14px;
+  font-size: 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  font-family: inherit;
+  min-width: 60px;
+  justify-content: center;
+}
+
+/* ── Edit button ── */
+.action-buttons .btn-edit {
+  background: #EEF2FF;
+  color: #4338CA;
+  border-color: #C7D2FE;
+}
+.action-buttons .btn-edit:hover {
+  background: #C7D2FE;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(67, 56, 202, 0.25);
+}
+.action-buttons .btn-edit:active {
+  background: #A5B4FC;
+  transform: scale(0.92);
+  box-shadow: inset 0 2px 6px rgba(67, 56, 202, 0.3);
+}
+
+/* ── Delete button ── */
+.action-buttons .btn-delete {
+  background: #FEF2F2;
+  color: #DC2626;
+  border-color: #FECACA;
+}
+.action-buttons .btn-delete:hover {
+  background: #FECACA;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+}
+.action-buttons .btn-delete:active {
+  background: #FCA5A5;
+  transform: scale(0.92);
+  box-shadow: inset 0 2px 6px rgba(220, 38, 38, 0.3);
+}
+
+/* ── View button ── */
+.action-buttons .btn-view {
+  background: #ECFDF5;
+  color: #0D9488;
+  border-color: #A7F3D0;
+}
+.action-buttons .btn-view:hover {
+  background: #A7F3D0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25);
+}
+.action-buttons .btn-view:active {
+  background: #6EE7B7;
+  transform: scale(0.92);
+  box-shadow: inset 0 2px 6px rgba(13, 148, 136, 0.3);
+}
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 1024px) {
+      .main-content {
+        padding: 24px 28px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 72px;
+        padding: 16px 0;
+      }
+      .sidebar a {
+        padding: 12px;
+        margin: 2px 6px;
+        justify-content: center;
+        font-size: 0;
+        border-radius: var(--radius-sm);
+      }
+      .navbar {
+        left: 72px;
+        padding: 12px 16px;
+      }
+      .navbar .logo {
+        font-size: 16px;
+      }
+      .main-content {
+        margin-left: 72px;
+        padding: 80px 16px 16px 16px;
+        width: calc(100% - 72px);
+      }
+      .card {
+        padding: 16px;
+      }
+      table {
+        font-size: 13px;
+      }
+      thead th, tbody td {
+        padding: 8px 10px;
+      }
+      .notif-dropdown {
+        width: 320px;
+        right: -60px;
+      }
+      .action-buttons {
+        flex-direction: column;
+        gap: 4px;
+      }
+      .action-buttons .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .notif-dropdown {
+        width: 290px;
+        right: -40px;
+      }
+      .card .card-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+      .card .card-header .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Sidebar -->
+  <!-- ===== SIDEBAR ===== -->
   <div class="sidebar">
-    <a href="dashboard.html">Dashboard</a>
-    <a href="user.html" class="active">Users</a>
-    <a href="jobs.html">Job Listings</a>
-    <a href="profile.html">Profile</a>
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="user.html" class="active">👥 Users</a>
+    <a href="jobs.html">💼 Job Listings</a>
+    <a href="profile.html">👤 Profile</a>
   </div>
-    <div class="navbar">
-  <div class="logo">Admin Panel</div>
-  
-  <div class="navbar-right">
-    <div class="notification-wrapper">
-      <button id="notifBtn" class="notif-btn">
-        🔔
-        <span id="notifCount" class="notif-count">0</span>
-      </button>
-      <div id="notifDropdown" class="notif-dropdown">
-        <ul id="notifList">
-          <li>No notifications</li>
-        </ul>
+
+  <!-- ===== TOP NAVBAR ===== -->
+  <div class="navbar">
+    <div class="logo">👑 Admin Panel</div>
+    
+    <div class="navbar-right">
+      <div class="notification-wrapper">
+        <button id="notifBtn" class="notif-btn">
+          🔔
+          <span id="notifCount" class="notif-count">0</span>
+        </button>
+        <div id="notifDropdown" class="notif-dropdown">
+          <ul id="notifList">
+            <li>No notifications</li>
+          </ul>
+        </div>
       </div>
+      <button id="logout-btn" class="logout-btn">Logout</button>
     </div>
-    <button id="logout-btn" class="logout-btn">Logout</button>
   </div>
-</div>
 
-  <!-- Main Content -->
+  <!-- ===== MAIN CONTENT ===== -->
   <div class="main-content">
-    <h1>Users Management</h1>
+    <h1>👥 Users Management</h1>
+    <p class="subtitle">Manage all registered users across the platform</p>
 
-    <!-- Top Controls -->
+    <!-- Users Card -->
     <div class="card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h3>All Users</h3>
+      <div class="card-header">
+        <h3>📋 All Users</h3>
         <button class="btn" id="add-user-btn">+ Add New User</button>
       </div>
 
-      <!-- Users Table -->
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Mobile</th>
-            <th>Role</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Users will be dynamically loaded here -->
-        </tbody>
-      </table>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Mobile</th>
+              <th>Role</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody">
+            <!-- Users will be dynamically loaded here -->
+            <tr>
+              <td colspan="6" style="text-align:center; padding: 40px; color: var(--text-muted);">
+                <span style="font-size: 32px; display: block; margin-bottom: 8px;">⏳</span>
+                Loading users...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
-    <script src="js/utils.js"></script>
 
+  <!-- ===== SCRIPTS ===== -->
+  <script src="js/utils.js"></script>
   <script src="js/auth-helper.js"></script>
   <script src="js/user.js"></script>
+
+  <!-- ===== NOTIFICATION TOGGLE ===== -->
+  <script>
+    document.getElementById('notifBtn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      document.getElementById('notifDropdown').classList.toggle('open');
+    });
+
+    document.addEventListener('click', function() {
+      document.getElementById('notifDropdown').classList.remove('open');
+    });
+  </script>
 </body>
 </html>
-

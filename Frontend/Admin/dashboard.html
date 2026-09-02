@@ -1,79 +1,640 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ===== RESET & BASE ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      display: flex;
+      min-height: 100vh;
+      background: #f4f7fc;
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      width: 250px;
+      background: linear-gradient(180deg, #1a1a2e, #16213e);
+      color: white;
+      padding: 20px 0;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+    .sidebar .logo-text {
+      font-size: 24px;
+      font-weight: bold;
+      padding: 20px 25px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      color: #a87bc9;
+    }
+    .sidebar .logo-text span { color: white; }
+    .sidebar a {
+      display: block;
+      padding: 14px 25px;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      transition: 0.3s;
+      border-left: 3px solid transparent;
+    }
+    .sidebar a:hover {
+      background: rgba(255,255,255,0.05);
+      color: white;
+      border-left-color: #8a4baf;
+    }
+    .sidebar a.active {
+      background: rgba(106, 27, 154, 0.15);
+      color: white;
+      border-left-color: #8a4baf;
+    }
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 20px 15px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .sidebar-footer .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(239, 68, 68, 0.1);
+      border: none;
+      color: #f87171;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: 0.3s;
+      font-family: inherit;
+    }
+    .sidebar-footer .logout-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+    }
+
+    /* ===== TOP NAVBAR ===== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 250px;
+      background: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      z-index: 100;
+      height: 70px;
+    }
+    .navbar .logo {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1a1a2e;
+    }
+    .navbar .logo span { color: #6a1b9a; }
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .logout-btn-top {
+      padding: 8px 20px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
+      font-family: inherit;
+    }
+    .logout-btn-top:hover {
+      background: #c0392b;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(231,76,60,0.3);
+    }
+
+    /* ===== NOTIFICATION ===== */
+    .notification-wrapper { position: relative; }
+    .notif-btn {
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: 0.3s;
+      color: #555;
+      font-family: inherit;
+    }
+    .notif-btn:hover { background: #f0edf5; }
+    .notif-count {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #e74c3c;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid white;
+    }
+    .notif-count.visible { display: flex; }
+    .notif-dropdown {
+      position: absolute;
+      top: 45px;
+      right: 0;
+      width: 380px;
+      max-height: 450px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+      display: none;
+      overflow: hidden;
+      z-index: 1000;
+      border: 1px solid #f0edf5;
+    }
+    .notif-dropdown.open { display: block; animation: slideDown 0.25s ease; }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .notif-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      border-bottom: 1px solid #f0edf5;
+    }
+    .notif-header h4 { font-size: 15px; font-weight: 700; color: #1a1a2e; margin: 0; }
+    .notif-actions { display: flex; gap: 6px; }
+    .notif-actions button {
+      background: none;
+      border: none;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 12px;
+      border-radius: 6px;
+      transition: 0.3s;
+      font-family: inherit;
+    }
+    .mark-all-read-btn { color: #6a1b9a; }
+    .mark-all-read-btn:hover { background: rgba(106,27,154,0.08); }
+    .clear-all-btn { color: #e74c3c; }
+    .clear-all-btn:hover { background: rgba(231,76,60,0.08); }
+    #notifList {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 360px;
+      overflow-y: auto;
+    }
+    #notifList::-webkit-scrollbar { width: 4px; }
+    #notifList::-webkit-scrollbar-track { background: #f0edf5; }
+    #notifList::-webkit-scrollbar-thumb { background: #6a1b9a; border-radius: 10px; }
+    .notif-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: 0.2s;
+      border-left: 3px solid transparent;
+    }
+    .notif-item:hover { background: #f8f6ff; }
+    .notif-item.unread { background: #faf8ff; border-left-color: #6a1b9a; }
+    .notif-item.read { opacity: 0.7; }
+    .notif-item .notif-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+    .notif-item .notif-content { flex: 1; min-width: 0; }
+    .notif-item .notif-title { font-size: 14px; font-weight: 600; color: #1a1a2e; margin-bottom: 2px; }
+    .notif-item .notif-message { font-size: 13px; color: #666; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .notif-item .notif-time { font-size: 11px; color: #aaa; margin-top: 4px; }
+    .notif-item .unread-dot { width: 8px; height: 8px; background: #6a1b9a; border-radius: 50%; flex-shrink: 0; margin-top: 8px; }
+    .empty-notifications { text-align: center; padding: 40px 20px; color: #888; }
+    .empty-notifications .empty-icon { font-size: 40px; display: block; margin-bottom: 10px; }
+    .empty-notifications p { font-size: 14px; margin: 0; }
+
+    /* ===== MAIN CONTENT ===== */
+    .main-content {
+      margin-left: 250px;
+      margin-top: 70px;
+      padding: 30px;
+      flex: 1;
+      width: calc(100% - 250px);
+    }
+    .main-content h1 { font-size: 32px; color: #1a1a2e; margin-bottom: 30px; }
+
+    /* ===== STATS CARDS ===== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      transition: 0.3s;
+      border: 1px solid rgba(106,27,154,0.06);
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(106,27,154,0.08); }
+    .card .icon { font-size: 28px; margin-bottom: 10px; }
+    .card h3 { font-size: 14px; color: #888; font-weight: 500; margin-bottom: 4px; }
+    .card .number { font-size: 28px; font-weight: 700; color: #1a1a2e; }
+    .card .number.purple { color: #6a1b9a; }
+    .card .number.green { color: #27ae60; }
+    .card .number.orange { color: #f39c12; }
+    .card .number.blue { color: #1976d2; }
+    .card ul { list-style: none; padding: 0; margin: 5px 0 0; }
+    .card ul li { padding: 8px 0; border-bottom: 1px solid #f0edf5; color: #555; font-size: 14px; }
+    .card ul li:last-child { border-bottom: none; }
+    .status-badge { display: inline-block; padding: 4px 12px; border-radius: 50px; font-size: 12px; font-weight: 600; }
+    .status-badge.active { background: #d4edda; color: #155724; }
+    .status-badge.inactive { background: #f8d7da; color: #721c24; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .sidebar { width: 72px; }
+      .sidebar .logo-text { font-size: 16px; padding: 15px; text-align: center; }
+      .sidebar .logo-text span { display: none; }
+      .sidebar a { padding: 12px; font-size: 0; text-align: center; }
+      .sidebar a .icon { font-size: 20px; }
+      .sidebar-footer .logout-btn { justify-content: center; font-size: 0; padding: 12px; }
+      .sidebar-footer .logout-btn::before { content: "🚪"; font-size: 20px; }
+      .navbar { left: 72px; padding: 12px 15px; }
+      .main-content { margin-left: 72px; margin-top: 70px; padding: 15px; width: calc(100% - 72px); }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .notif-dropdown { width: 320px; right: -60px; }
+    }
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .notif-dropdown { width: 290px; right: -40px; }
+    }
+  </style>
 </head>
 <body>
-    <div class="navbar">
-  <div class="logo">Admin Panel</div>
 
-  <div class="navbar-right">
-    <div class="notification-wrapper">
-      <button id="notifBtn" class="notif-btn">
-        🔔
+  <!-- ===== SIDEBAR ===== -->
+  <div class="sidebar">
+    <div class="logo-text">💼 <span>JobPortal</span></div>
+    <a href="dashboard.html" class="active">📊 Dashboard</a>
+    <a href="user.html">👥 Users</a>
+    <a href="jobs.html">💼 Job Listings</a>
+    <a href="profile.html">👤 Profile</a>
+    <div class="sidebar-footer">
+      <button id="logoutSidebarBtn" class="logout-btn">🚪 Logout</button>
+    </div>
+  </div>
+
+  <!-- ===== TOP NAVBAR ===== -->
+  <div class="navbar">
+    <div class="logo">Admin <span>Dashboard</span></div>
+    <div class="navbar-right">
+      <div class="notification-wrapper">
+        <button id="notifBtn" class="notif-btn">🔔</button>
         <span id="notifCount" class="notif-count">0</span>
-      </button>
-      <div id="notifDropdown" class="notif-dropdown">
-        <ul id="notifList">
-          <li>No notifications</li>
-        </ul>
+        <div id="notifDropdown" class="notif-dropdown">
+          <div class="notif-header">
+            <h4>Notifications</h4>
+            <div class="notif-actions">
+              <button id="markAllReadBtn" class="mark-all-read-btn">Mark all read</button>
+              <button id="clearAllBtn" class="clear-all-btn">🗑️</button>
+            </div>
+          </div>
+          <ul id="notifList">
+            <li class="empty-notifications">
+              <span class="empty-icon">🔔</span>
+              <p>Loading notifications...</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <button id="logoutBtn" class="logout-btn-top">🚪 Logout</button>
+    </div>
+  </div>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="main-content">
+    <h1>Welcome, <span id="adminName">Admin</span>! 👋</h1>
+    <div class="stats-grid">
+      <div class="card">
+        <div class="icon">👥</div>
+        <h3>Total Users</h3>
+        <div class="number purple" id="totalUsers">0</div>
+      </div>
+      <div class="card">
+        <div class="icon">💼</div>
+        <h3>Total Jobs Posted</h3>
+        <div class="number green" id="totalJobs">0</div>
+      </div>
+      <div class="card">
+        <div class="icon">📝</div>
+        <h3>Total Applications</h3>
+        <div class="number blue" id="totalApplications">0</div>
       </div>
     </div>
-    <button id="logout" class="logout-btn">Logout</button>
+
+    <div class="card" style="margin-bottom:20px;">
+      <h3>📋 Recent Registrations</h3>
+      <ul id="recentRegistrations"><li>Loading...</li></ul>
+    </div>
+    <div class="card" style="margin-bottom:20px;">
+      <h3>📌 Recent Job Postings</h3>
+      <ul id="recentJobs"><li>Loading...</li></ul>
+    </div>
+    <div class="card">
+      <h3>📊 Active vs Inactive Users</h3>
+      <div id="userStatus">Loading...</div>
+    </div>
   </div>
-</div>
 
+  <script>
+    // ============================================
+    // CONFIG
+    // ============================================
+    const API_URL = 'http://localhost:5001/api';
 
-  <div class="sidebar">
-    <a href="dashboard.html" class="active">Dashboard</a>
-    <a href="user.html">Users</a>
-    <a href="jobs.html">Job Listings</a>
-    <a href="profile.html">Profile</a>
-  </div>
+    // ============================================
+    // AUTH CHECK
+    // ============================================
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = '../Auth/Login.html';
+    }
 
-  <div class="main-content">
-    <h1>Welcome, Admin!</h1>
+    // ============================================
+    // USER INFO
+    // ============================================
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    document.getElementById('adminName').textContent = user.username || 'Admin';
 
-    <div class="card" id="totalUsersCard">
-      <h3>Total Users</h3>
-      <p>Loading...</p>
-    </div>
+    // ============================================
+    // LOGOUT
+    // ============================================
+    function logout() {
+      localStorage.clear();
+      window.location.href = '../Auth/Login.html';
+    }
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+    document.getElementById('logoutSidebarBtn').addEventListener('click', logout);
 
-    <div class="card" id="totalJobsCard">
-      <h3>Total Jobs Posted</h3>
-      <p>Loading...</p>
-    </div>
+    // ============================================
+    // NOTIFICATIONS
+    // ============================================
+    function getAuthToken() { return localStorage.getItem('token'); }
 
-    <div class="card"  id="pendingJobsCard">
-      <h3>Pending Job Approvals</h3>
-      <p>Loading...</p>
-    </div>
+    function timeAgo(date) {
+      if (!date) return 'Just now';
+      try {
+        const now = new Date();
+        const past = new Date(date);
+        if (isNaN(past.getTime())) return 'Just now';
+        const diff = Math.floor((now - past) / 1000);
+        if (diff < 60) return diff + 's ago';
+        if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+        if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+        if (diff < 604800) return Math.floor(diff/86400) + 'd ago';
+        return past.toLocaleDateString();
+      } catch (e) { return 'Just now'; }
+    }
 
-    <div class="card" id="recentRegistrationsCard">
-      <h3>Recent Registrations</h3>
-      <p>Loading...</p>
-    </div>
-     <div class="card" id="RecentjobsCard">
-  <h3>Recent Job Postings</h3>
-  <ul id="recentJobs">
-    <li>Loading...</li>
-  </ul>
-</div>
-<div class="card" id="userStatusCard">
-  <h3>Active vs Inactive Users</h3>
-  <p id="userStatus">Loading...</p>
-</div>
-  </div>
-   <script src="js/auth-helper.js"></script>
+    function getNotificationIcon(type) {
+      const map = {
+        'application_status':'📝','job_alert':'💼','profile_update':'👤',
+        'system':'🔔','interview':'📅','job_approval':'✅'
+      };
+      return map[type] || '🔔';
+    }
 
+    function updateBadge(count) {
+      const badge = document.getElementById('notifCount');
+      if (badge) {
+        if (count > 0) {
+          badge.textContent = count > 99 ? '99+' : count;
+          badge.classList.add('visible');
+        } else {
+          badge.classList.remove('visible');
+        }
+      }
+    }
 
+    function renderNotifications(notifications) {
+      const list = document.getElementById('notifList');
+      if (!list) return;
+      if (!notifications || notifications.length === 0) {
+        list.innerHTML = `
+          <li class="empty-notifications">
+            <span class="empty-icon">🔔</span>
+            <p>No notifications yet</p>
+          </li>`;
+        return;
+      }
+      list.innerHTML = notifications.map(n => `
+        <li class="notif-item ${n.read ? 'read' : 'unread'}" data-id="${n.id}">
+          <span class="notif-icon">${getNotificationIcon(n.type)}</span>
+          <div class="notif-content">
+            <div class="notif-title">${n.title || 'Notification'}</div>
+            <div class="notif-message">${n.message || ''}</div>
+            <div class="notif-time">${timeAgo(n.created_at)}</div>
+          </div>
+          ${!n.read ? '<span class="unread-dot"></span>' : ''}
+        </li>
+      `).join('');
+      // attach click listeners
+      document.querySelectorAll('.notif-item').forEach(el => {
+        el.addEventListener('click', function() {
+          const id = this.dataset.id;
+          const link = notifications.find(n => n.id == id)?.link || '';
+          handleNotificationClick(id, link);
+        });
+      });
+    }
 
+    async function fetchNotifications() {
+      try {
+        const token = getAuthToken();
+        if (!token) return;
+        const res = await fetch(`${API_URL}/notifications`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.status === 401) { window.location.href = '../Auth/Login.html'; return; }
+        const data = await res.json();
+        if (data.success) {
+          updateBadge(data.unreadCount);
+          renderNotifications(data.notifications);
+        }
+      } catch (e) { console.error('Fetch notifications error:', e); }
+    }
 
+    async function markAsRead(id) {
+      try {
+        const token = getAuthToken();
+        if (!token) return;
+        await fetch(`${API_URL}/notifications/${id}/read`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const item = document.querySelector(`.notif-item[data-id="${id}"]`);
+        if (item) {
+          item.classList.remove('unread');
+          item.classList.add('read');
+          const dot = item.querySelector('.unread-dot');
+          if (dot) dot.remove();
+        }
+        // decrease badge
+        const badge = document.getElementById('notifCount');
+        const current = parseInt(badge.textContent) || 0;
+        if (current > 0) updateBadge(current - 1);
+      } catch (e) { console.error('Mark as read error:', e); }
+    }
 
-  <script src="js/dashboard.js"></script>
+    async function handleNotificationClick(id, link) {
+      await markAsRead(id);
+      if (link) window.location.href = link;
+    }
 
+    async function markAllAsRead() {
+      try {
+        const token = getAuthToken();
+        if (!token) return;
+        await fetch(`${API_URL}/notifications/read-all`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        document.querySelectorAll('.notif-item.unread').forEach(el => {
+          el.classList.remove('unread');
+          el.classList.add('read');
+          const dot = el.querySelector('.unread-dot');
+          if (dot) dot.remove();
+        });
+        updateBadge(0);
+      } catch (e) { console.error('Mark all read error:', e); }
+    }
+
+    async function clearAllNotifications() {
+      if (!confirm('Delete all notifications?')) return;
+      try {
+        const token = getAuthToken();
+        if (!token) return;
+        await fetch(`${API_URL}/notifications/clear-all`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        document.getElementById('notifList').innerHTML = `
+          <li class="empty-notifications">
+            <span class="empty-icon">🔔</span>
+            <p>No notifications</p>
+          </li>`;
+        updateBadge(0);
+      } catch (e) { console.error('Clear all error:', e); }
+    }
+
+    function toggleNotifications() {
+      const dropdown = document.getElementById('notifDropdown');
+      dropdown.classList.toggle('open');
+      if (dropdown.classList.contains('open')) fetchNotifications();
+    }
+
+    // ============================================
+    // DASHBOARD STATS
+    // ============================================
+    async function loadDashboardStats() {
+      try {
+        const token = getAuthToken();
+        if (!token) return;
+        // Users
+        const usersRes = await fetch(`${API_URL}/admin/users`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (usersRes.ok) {
+          const data = await usersRes.json();
+          let users = data.users || data.data?.users || data || [];
+          if (!Array.isArray(users)) users = [];
+          document.getElementById('totalUsers').textContent = users.length;
+          const recent = users.slice(0,5);
+          document.getElementById('recentRegistrations').innerHTML = recent.map(u => `
+            <li>👤 ${u.username || u.email || 'User'} – ${new Date(u.createdAt || u.created_at).toLocaleDateString()}</li>
+          `).join('') || '<li>No users</li>';
+          const active = users.filter(u => u.status === 'active' || u.isActive === true || (!u.status && u.isActive === undefined)).length;
+          const inactive = users.length - active;
+          document.getElementById('userStatus').innerHTML = `
+            <span class="status-badge active">🟢 Active: ${active}</span>
+            <span class="status-badge inactive">🔴 Inactive: ${inactive}</span>
+          `;
+        }
+
+        // Jobs (admin endpoint)
+        const jobsRes = await fetch(`${API_URL}/admin/jobs`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (jobsRes.ok) {
+          const data = await jobsRes.json();
+          let jobs = data.jobs || data.data?.jobs || data || [];
+          if (!Array.isArray(jobs)) jobs = [];
+          document.getElementById('totalJobs').textContent = jobs.length;
+          const recent = jobs.slice(0,5);
+          document.getElementById('recentJobs').innerHTML = recent.map(j => `
+            <li>💼 ${j.title} – ${j.status || 'active'} (${new Date(j.created_at || j.createdAt).toLocaleDateString()})</li>
+          `).join('') || '<li>No jobs</li>';
+        }
+
+        // Applications
+        const appsRes = await fetch(`${API_URL}/applications`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (appsRes.ok) {
+          const data = await appsRes.json();
+          let apps = data.applications || data.data?.applications || data || [];
+          if (!Array.isArray(apps)) apps = [];
+          document.getElementById('totalApplications').textContent = apps.length;
+        }
+      } catch (e) { console.error('Stats error:', e); }
+    }
+
+    // ============================================
+    // INIT
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+      // Notification toggle
+      document.getElementById('notifBtn').addEventListener('click', toggleNotifications);
+      document.getElementById('markAllReadBtn').addEventListener('click', markAllAsRead);
+      document.getElementById('clearAllBtn').addEventListener('click', clearAllNotifications);
+
+      // Close dropdown on outside click
+      document.addEventListener('click', function(e) {
+        const dropdown = document.getElementById('notifDropdown');
+        const btn = document.getElementById('notifBtn');
+        if (dropdown && btn && !dropdown.contains(e.target) && !btn.contains(e.target)) {
+          dropdown.classList.remove('open');
+        }
+      });
+
+      fetchNotifications();
+      loadDashboardStats();
+      setInterval(fetchNotifications, 30000);
+    });
+  </script>
 </body>
 </html>

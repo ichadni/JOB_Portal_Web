@@ -1,71 +1,701 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Profile</title>
-  <link rel="stylesheet" href="style.css">
+
+  <!-- If buttons are hidden, comment out or remove the line below -->
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* ============================================
+       CSS VARIABLES
+       ============================================ */
+    :root {
+      --primary: #6C2BD9;
+      --primary-dark: #4A1A8A;
+      --primary-light: #8B5CF6;
+      --secondary: #1E293B;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #94A3B8;
+      --border: #E2E8F0;
+      --shadow: 0 4px 24px rgba(108, 43, 217, 0.08);
+      --shadow-hover: 0 12px 40px rgba(108, 43, 217, 0.15);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      display: flex;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      width: 260px;
+      background: var(--secondary);
+      color: white;
+      padding: 28px 0;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: var(--transition);
+      font-size: 14px;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      margin: 2px 12px;
+      border-radius: var(--radius-sm);
+    }
+    .sidebar a:hover {
+      background: rgba(255,255,255,0.05);
+      color: white;
+    }
+    .sidebar a.active {
+      background: rgba(108, 43, 217, 0.2);
+      color: white;
+      border-left-color: var(--primary-light);
+    }
+
+    /* ===== TOP NAVBAR ===== */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 32px;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      position: fixed;
+      top: 0;
+      left: 260px;
+      right: 0;
+      z-index: 99;
+      height: 70px;
+    }
+    .navbar .logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .navbar .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    /* ----- NOTIFICATION BELL ----- */
+    .notification-wrapper {
+      position: relative;
+    }
+    .notif-btn {
+      position: relative;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: var(--transition);
+      color: var(--text-secondary);
+      /* ensure it's always visible */
+      display: inline-block;
+    }
+    .notif-btn:hover {
+      background: var(--bg);
+    }
+    .notif-count {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #EF4444;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid white;
+    }
+    .notif-count.visible {
+      display: flex;
+    }
+
+    .notif-dropdown {
+      position: absolute;
+      top: 45px;
+      right: 0;
+      width: 380px;
+      max-height: 450px;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+      display: none;
+      overflow: hidden;
+      z-index: 1000;
+      border: 1px solid var(--border);
+    }
+    .notif-dropdown.open {
+      display: block;
+      animation: slideDown 0.25s ease;
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .notif-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .notif-header h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    .notif-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .notif-actions button {
+      background: none;
+      border: none;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 12px;
+      border-radius: 6px;
+      transition: var(--transition);
+    }
+    .mark-all-read-btn {
+      color: var(--primary);
+    }
+    .mark-all-read-btn:hover {
+      background: rgba(108, 43, 217, 0.08);
+    }
+    .clear-all-btn {
+      color: #EF4444;
+    }
+    .clear-all-btn:hover {
+      background: rgba(239, 68, 68, 0.08);
+    }
+
+    #notifList {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 360px;
+      overflow-y: auto;
+    }
+    #notifList li {
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--text-secondary);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    #notifList li:hover {
+      background: var(--bg);
+    }
+    .empty-notifications {
+      text-align: center;
+      padding: 40px 20px !important;
+      color: var(--text-muted);
+    }
+    .empty-notifications .empty-icon {
+      font-size: 40px;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .notif-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .notif-item:hover {
+      background: var(--bg);
+    }
+    .notif-item .notif-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .notif-item .notif-content {
+      flex: 1;
+      min-width: 0;
+    }
+    .notif-item .notif-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+    .notif-item .notif-message {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+    .notif-item .notif-time {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .notif-item .unread-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 8px;
+    }
+    .notif-item.read {
+      opacity: 0.7;
+    }
+
+    /* ----- LOGOUT BUTTON ----- */
+    .logout-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: var(--transition);
+      font-family: inherit;
+    }
+    .logout-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(108, 43, 217, 0.3);
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main-content {
+      margin-left: 260px;
+      padding: 90px 40px 40px 40px;
+      flex: 1;
+      width: calc(100% - 260px);
+      min-height: 100vh;
+    }
+    .main-content h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    /* ===== PROFILE CARD ===== */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 32px 36px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      max-width: 600px;
+      transition: var(--transition);
+    }
+    .card:hover {
+      box-shadow: var(--shadow-hover);
+    }
+    .card label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+      margin-top: 16px;
+    }
+    .card label:first-of-type {
+      margin-top: 0;
+    }
+    .card input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      transition: var(--transition);
+      background: var(--bg);
+      font-family: inherit;
+      color: var(--text-primary);
+    }
+    .card input:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(108, 43, 217, 0.1);
+      background: white;
+    }
+    .card input::placeholder {
+      color: var(--text-muted);
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: var(--transition);
+      width: 100%;
+      margin-top: 20px;
+      background: var(--primary);
+      color: white;
+    }
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(108, 43, 217, 0.3);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 72px;
+        padding: 16px 0;
+      }
+      .sidebar a {
+        padding: 12px;
+        margin: 2px 6px;
+        justify-content: center;
+        font-size: 0;
+        border-radius: var(--radius-sm);
+      }
+      .navbar {
+        left: 72px;
+        padding: 12px 16px;
+      }
+      .navbar .logo {
+        font-size: 16px;
+      }
+      .main-content {
+        margin-left: 72px;
+        padding: 80px 16px 16px 16px;
+        width: calc(100% - 72px);
+      }
+      .card {
+        padding: 20px 16px;
+        max-width: 100%;
+      }
+      .notif-dropdown {
+        width: 320px;
+        right: -60px;
+      }
+    }
+    @media (max-width: 480px) {
+      .notif-dropdown {
+        width: 290px;
+        right: -40px;
+      }
+      .card {
+        padding: 16px;
+      }
+      .btn {
+        font-size: 14px;
+        padding: 10px 20px;
+      }
+    }
+  </style>
 </head>
 <body>
-     <div class="navbar">
-  <div class="logo">Admin Panel</div>
-  
-  <div class="navbar-right">
-    <div class="notification-wrapper">
-      <button id="notifBtn" class="notif-btn">
-        🔔
+
+  <!-- ===== TOP NAVBAR ===== -->
+  <div class="navbar">
+    <div class="logo">Admin Panel</div>
+
+    <div class="navbar-right">
+      <!-- Notification Bell -->
+      <div class="notification-wrapper">
+        <button id="notifBtn" class="notif-btn">🔔</button>
         <span id="notifCount" class="notif-count">0</span>
-      </button>
-      <div id="notifDropdown" class="notif-dropdown">
-        <ul id="notifList">
-          <li>No notifications</li>
-        </ul>
+        <div id="notifDropdown" class="notif-dropdown">
+          <div class="notif-header">
+            <h4>Notifications</h4>
+            <div class="notif-actions">
+              <button id="markAllReadBtn" class="mark-all-read-btn">Mark all read</button>
+              <button id="clearAllBtn" class="clear-all-btn">🗑️</button>
+            </div>
+          </div>
+          <ul id="notifList">
+            <li class="empty-notifications">
+              <span class="empty-icon">🔔</span>
+              <p>Loading notifications...</p>
+            </li>
+          </ul>
+        </div>
       </div>
+
+      <!-- Logout Button -->
+      <button id="logout-btn" class="logout-btn">Logout</button>
     </div>
-    <button id="logout-btn" class="logout-btn">Logout</button>
   </div>
-</div>
 
+  <!-- ===== SIDEBAR ===== -->
   <div class="sidebar">
-    <a href="dashboard.html">Dashboard</a>
-    <a href="user.html">Users</a>
-    <a href="jobs.html">Job Listings</a>
-    <a href="profile.html" class="active">Profile</a>
-
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="user.html">👥 Users</a>
+    <a href="jobs.html">💼 Job Listings</a>
+    <a href="profile.html" class="active">👤 Profile</a>
   </div>
 
+  <!-- ===== MAIN CONTENT ===== -->
   <div class="main-content">
-    <h1>Admin Profile</h1>
+    <h1>👤 Admin Profile</h1>
 
     <div class="card">
       <form id="profile-form">
-<label>Username</label>
-<input id="username" type="text" placeholder="Loading...">
+        <label>Username</label>
+        <input id="username" type="text" placeholder="Loading..." />
 
-<label>Email</label>
-<input id="email" type="email" placeholder="Loading...">
+        <label>Email</label>
+        <input id="email" type="email" placeholder="Loading..." />
 
-<label>Mobile</label>
-<input id="mobile" type="text" placeholder="Loading...">
+        <label>Mobile</label>
+        <input id="mobile" type="text" placeholder="Loading..." />
 
-<label>Current Password</label>
-<input id="current_password" type="password">
+        <label>Current Password</label>
+        <input id="current_password" type="password" placeholder="Enter current password" />
 
-<label>New Password</label>
-<input id="new_password" type="password">
+        <label>New Password</label>
+        <input id="new_password" type="password" placeholder="Enter new password" />
 
-<label>Confirm New Password</label>
-<input id="confirm_password" type="password">
+        <label>Confirm New Password</label>
+        <input id="confirm_password" type="password" placeholder="Confirm new password" />
 
         <button class="btn" type="submit">Update Profile</button>
       </form>
     </div>
   </div>
 
+  <!-- ===== EXISTING SCRIPTS (unchanged) ===== -->
   <script src="js/profile.js"></script>
-    <script src="js/utils.js"></script>
+  <script src="js/utils.js"></script>
 
+  <!-- ============================================
+       NOTIFICATION & LOGOUT FUNCTIONALITY
+       ============================================ -->
+  <script>
+    const API_URL = 'http://localhost:5001/api';
+
+    function getAuthToken() {
+      return localStorage.getItem('token');
+    }
+
+    // ---------- LOGOUT ----------
+    function logout() {
+      localStorage.clear();
+      window.location.href = '../Auth/Login.html';
+    }
+    document.getElementById('logout-btn').addEventListener('click', logout);
+
+    // ---------- NOTIFICATIONS ----------
+    function timeAgo(date) {
+      if (!date) return 'Just now';
+      try {
+        const now = new Date();
+        const past = new Date(date);
+        if (isNaN(past.getTime())) return 'Just now';
+        const diff = Math.floor((now - past) / 1000);
+        if (diff < 60) return diff + 's ago';
+        if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+        if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+        if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
+        return past.toLocaleDateString();
+      } catch (e) { return 'Just now'; }
+    }
+
+    function getNotificationIcon(type) {
+      const map = {
+        'application_status': '📝', 'job_alert': '💼', 'profile_update': '👤',
+        'system': '🔔', 'interview': '📅', 'job_approval': '✅'
+      };
+      return map[type] || '🔔';
+    }
+
+    function updateBadge(count) {
+      const badge = document.getElementById('notifCount');
+      if (badge) {
+        if (count > 0) {
+          badge.textContent = count > 99 ? '99+' : count;
+          badge.classList.add('visible');
+        } else {
+          badge.classList.remove('visible');
+        }
+      }
+    }
+
+    function renderNotifications(notifications) {
+      const list = document.getElementById('notifList');
+      if (!list) return;
+      if (!notifications || notifications.length === 0) {
+        list.innerHTML = `
+          <li class="empty-notifications">
+            <span class="empty-icon">🔔</span>
+            <p>No notifications yet</p>
+          </li>`;
+        return;
+      }
+      list.innerHTML = notifications.map(n => `
+        <li class="notif-item ${n.read ? 'read' : ''}" data-id="${n.id}">
+          <span class="notif-icon">${getNotificationIcon(n.type)}</span>
+          <div class="notif-content">
+            <div class="notif-title">${n.title || 'Notification'}</div>
+            <div class="notif-message">${n.message || ''}</div>
+            <div class="notif-time">${timeAgo(n.created_at)}</div>
+          </div>
+          ${!n.read ? '<span class="unread-dot"></span>' : ''}
+        </li>
+      `).join('');
+
+      document.querySelectorAll('.notif-item').forEach(el => {
+        el.addEventListener('click', function() {
+          const id = this.dataset.id;
+          const link = notifications.find(n => n.id == id)?.link || '';
+          handleNotificationClick(id, link);
+        });
+      });
+    }
+
+    async function fetchNotifications() {
+      try {
+        const token = getAuthToken();
+        if (!token) return;
+        const res = await fetch(`${API_URL}/notifications`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.status === 401) { window.location.href = '../Auth/Login.html'; return; }
+        const data = await res.json();
+        if (data.success) {
+          updateBadge(data.unreadCount);
+          renderNotifications(data.notifications);
+        }
+      } catch (e) { console.error('Fetch error:', e); }
+    }
+
+    async function markAsRead(id) {
+      try {
+        const token = getAuthToken();
+        if (!token) return;
+        await fetch(`${API_URL}/notifications/${id}/read`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const item = document.querySelector(`.notif-item[data-id="${id}"]`);
+        if (item) {
+          item.classList.add('read');
+          const dot = item.querySelector('.unread-dot');
+          if (dot) dot.remove();
+        }
+        const badge = document.getElementById('notifCount');
+        const current = parseInt(badge.textContent) || 0;
+        if (current > 0) updateBadge(current - 1);
+      } catch (e) { console.error('Mark read error:', e); }
+    }
+
+    async function handleNotificationClick(id, link) {
+      await markAsRead(id);
+      if (link) window.location.href = link;
+    }
+
+    async function markAllAsRead() {
+      try {
+        const token = getAuthToken();
+        if (!token) return;
+        await fetch(`${API_URL}/notifications/read-all`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        document.querySelectorAll('.notif-item').forEach(el => {
+          el.classList.add('read');
+          const dot = el.querySelector('.unread-dot');
+          if (dot) dot.remove();
+        });
+        updateBadge(0);
+      } catch (e) { console.error('Mark all read error:', e); }
+    }
+
+    async function clearAllNotifications() {
+      if (!confirm('Delete all notifications?')) return;
+      try {
+        const token = getAuthToken();
+        if (!token) return;
+        await fetch(`${API_URL}/notifications/clear-all`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        document.getElementById('notifList').innerHTML = `
+          <li class="empty-notifications">
+            <span class="empty-icon">🔔</span>
+            <p>No notifications</p>
+          </li>`;
+        updateBadge(0);
+      } catch (e) { console.error('Clear all error:', e); }
+    }
+
+    // Toggle dropdown
+    document.getElementById('notifBtn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      const dropdown = document.getElementById('notifDropdown');
+      dropdown.classList.toggle('open');
+      if (dropdown.classList.contains('open')) {
+        fetchNotifications();
+      }
+    });
+
+    document.addEventListener('click', function() {
+      document.getElementById('notifDropdown').classList.remove('open');
+    });
+
+    document.getElementById('markAllReadBtn').addEventListener('click', markAllAsRead);
+    document.getElementById('clearAllBtn').addEventListener('click', clearAllNotifications);
+
+    // Initial load & refresh
+    fetchNotifications();
+    setInterval(fetchNotifications, 30000);
+  </script>
 </body>
 </html>
-

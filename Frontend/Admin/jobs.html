@@ -4,18 +4,811 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin - Job Listings</title>
-  <link rel="stylesheet" href="style.css">
+  
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================
+       CSS VARIABLES ( consistent theme )
+       ============================================ */
+    :root {
+      --primary: #6C2BD9;
+      --primary-dark: #4A1A8A;
+      --primary-light: #8B5CF6;
+      --primary-gradient: linear-gradient(135deg, #6C2BD9, #8B5CF6);
+      --secondary: #1E293B;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #94A3B8;
+      --border: #E2E8F0;
+      --shadow: 0 4px 24px rgba(108, 43, 217, 0.08);
+      --shadow-hover: 0 12px 40px rgba(108, 43, 217, 0.15);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --success: #10B981;
+      --error: #EF4444;
+      --warning: #F59E0B;
+    }
+
+    /* ============================================
+       RESET & BASE
+       ============================================ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      display: flex;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ============================================
+       SIDEBAR
+       ============================================ */
+    .sidebar {
+      width: 260px;
+      background: var(--secondary);
+      color: white;
+      padding: 28px 0;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar .logo {
+      font-size: 22px;
+      font-weight: 800;
+      padding: 0 24px 28px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      letter-spacing: -0.5px;
+    }
+
+    .sidebar .logo span {
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .sidebar .logo .dot {
+      color: var(--primary-light);
+      -webkit-text-fill-color: var(--primary-light);
+    }
+
+    .sidebar .nav-section {
+      padding: 20px 0 8px 24px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: rgba(255,255,255,0.3);
+      font-weight: 600;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: var(--transition);
+      font-size: 14px;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      margin: 2px 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    .sidebar a .icon {
+      font-size: 18px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .sidebar a:hover {
+      background: rgba(255,255,255,0.05);
+      color: white;
+    }
+
+    .sidebar a.active {
+      background: rgba(108, 43, 217, 0.2);
+      color: white;
+      border-left-color: var(--primary-light);
+    }
+
+    .sidebar .sidebar-footer {
+      margin-top: auto;
+      padding: 20px 24px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .sidebar .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(239, 68, 68, 0.1);
+      border: none;
+      color: #F87171;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .sidebar .logout-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: #FCA5A5;
+    }
+
+    /* ============================================
+       TOP NAVBAR
+       ============================================ */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 32px;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      position: fixed;
+      top: 0;
+      left: 260px;
+      right: 0;
+      z-index: 99;
+      height: 70px;
+    }
+
+    .navbar .logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .navbar .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    /* Notification Bell */
+    .notification-wrapper {
+      position: relative;
+    }
+
+    .notif-btn {
+      position: relative;
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: var(--transition);
+      color: var(--text-secondary);
+    }
+
+    .notif-btn:hover {
+      background: var(--bg);
+    }
+
+    .notif-count {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #EF4444;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid white;
+    }
+
+    .notif-dropdown {
+      position: absolute;
+      top: 45px;
+      right: 0;
+      width: 380px;
+      max-height: 450px;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+      display: none;
+      overflow: hidden;
+      z-index: 1000;
+      border: 1px solid var(--border);
+    }
+
+    .notif-dropdown.open {
+      display: block;
+      animation: slideDown 0.25s ease;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to   { opacity: 1; transform: translateY(0);      }
+    }
+
+    .notif-dropdown ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 360px;
+      overflow-y: auto;
+    }
+
+    .notif-dropdown ul li {
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--text-secondary);
+      transition: var(--transition);
+      cursor: default;
+    }
+
+    .notif-dropdown ul li:hover {
+      background: var(--bg);
+    }
+
+    /* -------- STANDARD BUTTONS (neutral, clean) -------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 18px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+      text-decoration: none;
+      line-height: 1.4;
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+    .btn:hover {
+      background: #e2e8f0;
+    }
+
+    /* Primary */
+    .btn-primary {
+      background: #2563eb;
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    /* Secondary (outline style) */
+    .btn-secondary {
+      background: transparent;
+      border-color: #cbd5e1;
+      color: #475569;
+    }
+    .btn-secondary:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+
+    /* Success */
+    .btn-success {
+      background: #22c55e;
+      color: #fff;
+    }
+    .btn-success:hover {
+      background: #16a34a;
+    }
+
+    /* Danger */
+    .btn-danger {
+      background: #ef4444;
+      color: #fff;
+    }
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+
+    /* Warning */
+    .btn-warning {
+      background: #f59e0b;
+      color: #fff;
+    }
+    .btn-warning:hover {
+      background: #d97706;
+    }
+
+    /* Small size */
+    .btn-sm {
+      padding: 4px 12px;
+      font-size: 12px;
+    }
+    /* Large size */
+    .btn-lg {
+      padding: 12px 28px;
+      font-size: 16px;
+    }
+    /* -------- END STANDARD BUTTONS -------- */
+
+    /* Navbar logout (already styled as .btn) */
+    .navbar .logout-btn {
+      background: #ef4444;
+      color: #fff;
+      border: none;
+      padding: 6px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .navbar .logout-btn:hover {
+      background: #dc2626;
+    }
+
+    /* ============================================
+       MAIN CONTENT
+       ============================================ */
+    .main-content {
+      margin-left: 260px;
+      padding: 90px 40px 40px 40px;
+      flex: 1;
+      width: calc(100% - 260px);
+      min-height: 100vh;
+    }
+
+    .main-content h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .main-content .subtitle {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-bottom: 28px;
+    }
+
+    /* ============================================
+       CARD (Table Container)
+       ============================================ */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: var(--transition);
+      overflow: hidden;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-hover);
+    }
+
+    /* ============================================
+       TABLE
+       ============================================ */
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    thead {
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+    }
+
+    thead th {
+      padding: 14px 16px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+    }
+
+    tbody td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 14px;
+      vertical-align: middle;
+    }
+
+    tbody tr {
+      transition: var(--transition);
+    }
+
+    tbody tr:hover {
+      background: rgba(108, 43, 217, 0.03);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .job-title {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .company-name {
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* Status Badge */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+    .status-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .status-active {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+    .status-active .dot {
+      background: #10B981;
+    }
+
+    .status-pending {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+    .status-pending .dot {
+      background: #F59E0B;
+    }
+
+    .status-expired {
+      background: #FEE2E2;
+      color: #991B1B;
+    }
+    .status-expired .dot {
+      background: #EF4444;
+    }
+
+    .status-rejected {
+      background: #FEE2E2;
+      color: #991B1B;
+    }
+    .status-rejected .dot {
+      background: #EF4444;
+    }
+
+    /* Action Buttons – using standard button classes */
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .action-buttons .btn {
+      padding: 4px 12px;
+      font-size: 12px;
+      border-radius: 4px;
+      border: 1px solid transparent;
+    }
+    .action-buttons .btn-edit {
+      background: #dbeafe;
+      color: #1e40af;
+      border-color: #bfdbfe;
+    }
+    .action-buttons .btn-edit:hover {
+      background: #bfdbfe;
+    }
+    .action-buttons .btn-delete {
+      background: #fee2e2;
+      color: #991b1b;
+      border-color: #fecaca;
+    }
+    .action-buttons .btn-delete:hover {
+      background: #fecaca;
+    }
+    .action-buttons .btn-view {
+      background: #e0e7ff;
+      color: #3730a3;
+      border-color: #c7d2fe;
+    }
+    .action-buttons .btn-view:hover {
+      background: #c7d2fe;
+    }
+
+    /* ============================================
+       MODAL
+       ============================================ */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 36px 40px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.2);
+      animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+      from { opacity: 0; transform: scale(0.95) translateY(20px); }
+      to   { opacity: 1; transform: scale(1) translateY(0);      }
+    }
+
+    .modal-content .close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      font-size: 28px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: var(--transition);
+      background: none;
+      border: none;
+    }
+
+    .modal-content .close:hover {
+      color: var(--text-primary);
+      transform: rotate(90deg);
+    }
+
+    .modal-content h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      transition: var(--transition);
+      background: var(--bg);
+      font-family: 'Inter', sans-serif;
+      color: var(--text-primary);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(108, 43, 217, 0.1);
+      background: white;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-group .btn {
+      margin-right: 8px;
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 1024px) {
+      .main-content {
+        padding: 24px 28px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 72px;
+        padding: 16px 0;
+      }
+      .sidebar .logo {
+        font-size: 18px;
+        padding: 0 12px 20px 12px;
+        text-align: center;
+      }
+      .sidebar .logo span {
+        display: none;
+      }
+      .sidebar .logo .dot {
+        display: none;
+      }
+      .sidebar .nav-section {
+        display: none;
+      }
+      .sidebar a {
+        padding: 12px;
+        margin: 2px 6px;
+        justify-content: center;
+        font-size: 0;
+        border-radius: var(--radius-sm);
+      }
+      .sidebar a .icon {
+        font-size: 20px;
+        width: auto;
+      }
+      .sidebar a.active {
+        border-left: none;
+        background: rgba(108, 43, 217, 0.2);
+      }
+      .sidebar .sidebar-footer {
+        padding: 12px;
+      }
+      .sidebar .logout-btn {
+        justify-content: center;
+        padding: 12px;
+        font-size: 0;
+      }
+      .sidebar .logout-btn .icon {
+        font-size: 20px;
+      }
+
+      .navbar {
+        left: 72px;
+        padding: 12px 16px;
+      }
+      .navbar .logo {
+        font-size: 16px;
+      }
+
+      .main-content {
+        margin-left: 72px;
+        padding: 80px 16px 16px 16px;
+        width: calc(100% - 72px);
+      }
+
+      .card {
+        padding: 16px;
+      }
+
+      table {
+        font-size: 13px;
+      }
+      thead th, tbody td {
+        padding: 10px 12px;
+      }
+
+      .notif-dropdown {
+        width: 320px;
+        right: -60px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .action-buttons {
+        flex-direction: column;
+      }
+      .action-buttons .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .modal-content {
+        padding: 24px 20px;
+        margin: 12px;
+      }
+
+      .notif-dropdown {
+        width: 290px;
+        right: -40px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="navbar">
-  <div class="logo">Admin Panel</div>
+<!-- ============================================
+SIDEBAR
+============================================ -->
+<div class="sidebar">
+  <div class="logo">💼<span>Hire<span class="dot">.</span></span></div>
 
+  <div class="nav-section">Main</div>
+  <a href="dashboard.html"><span class="icon">📊</span> Dashboard</a>
+  <a href="user.html"><span class="icon">👥</span> Users</a>
+  <a href="jobs.html" class="active"><span class="icon">💼</span> Job Listings</a>
+  <a href="profile.html"><span class="icon">👤</span> Profile</a>
+
+  <div class="sidebar-footer">
+    <button id="logout-btn" class="logout-btn">
+      <span class="icon">🚪</span> Logout
+    </button>
+  </div>
+</div>
+
+<!-- ============================================
+TOP NAVBAR
+============================================ -->
+<div class="navbar">
+  <div class="logo">👑 Admin Panel</div>
   <div class="navbar-right">
+    <!-- Notification Bell -->
     <div class="notification-wrapper">
       <button id="notifBtn" class="notif-btn">
         🔔
-        <span id="notifCount" class="notif-count">0</span>
+        <span id="notifCount" class="notif-count" style="display: none;">0</span>
       </button>
       <div id="notifDropdown" class="notif-dropdown">
         <ul id="notifList">
@@ -27,19 +820,15 @@
   </div>
 </div>
 
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <a href="dashboard.html">Dashboard</a>
-    <a href="user.html">Users</a>
-    <a href="jobs.html" class="active">Job Listings</a>
-    <a href="profile.html">Profile</a>
-  </div>
+<!-- ============================================
+MAIN CONTENT
+============================================ -->
+<div class="main-content">
+  <h1>💼 Job Listings</h1>
+  <p class="subtitle">Manage all job postings across the platform</p>
 
-  <!-- Main Content -->
-  <div class="main-content">
-    <h1>Job Listings</h1>
-
-    <div class="card">
+  <div class="card">
+    <div class="table-wrapper">
       <table>
         <thead>
           <tr>
@@ -51,64 +840,94 @@
           </tr>
         </thead>
         <tbody id="jobTableBody">
-          <!-- Dynamic job rows will appear here -->
+          <!-- Dynamic job rows go here -->
+          <tr>
+            <td colspan="5" style="text-align:center; padding: 40px; color: var(--text-muted);">
+              <span style="font-size: 32px; display: block; margin-bottom: 8px;">⏳</span>
+              Loading jobs...
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
   </div>
+</div>
 
-
-
-
-
-
-
-   <!-- Edit Job Modal -->
-  <div id="editModal" class="modal" style="display: none;">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Edit Job</h2>
-      <form id="editJobForm">
-        <input type="hidden" id="editJobId">
-        <div class="form-group">
-          <label for="editTitle">Job Title:</label>
-          <input type="text" id="editTitle" required>
-        </div>
-        <div class="form-group">
-          <label for="editCompany">Company:</label>
-          <input type="text" id="editCompany" required>
-        </div>
-        <div class="form-group">
-          <label for="editLocation">Location:</label>
-          <input type="text" id="editLocation">
-        </div>
-        <div class="form-group">
-          <label for="editType">Job Type:</label>
-          <select id="editType">
-            <option value="Full-time">Full-time</option>
-            <option value="Part-time">Part-time</option>
-            <option value="Contract">Contract</option>
-            <option value="Internship">Internship</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="editSalary">Salary:</label>
-          <input type="text" id="editSalary">
-        </div>
-        <div class="form-group">
-          <label for="editDescription">Description:</label>
-          <textarea id="editDescription" rows="4"></textarea>
-        </div>
-        <div class="form-group">
-          <button type="submit" class="btn">Update Job</button>
-          <button type="button" class="btn" onclick="closeEditModal()">Cancel</button>
-        </div>
-      </form>
-    </div>
+<!-- ============================================
+EDIT JOB MODAL
+============================================ -->
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <button class="close" onclick="closeEditModal()">&times;</button>
+    <h2>✏️ Edit Job</h2>
+    <form id="editJobForm">
+      <input type="hidden" id="editJobId">
+      <div class="form-group">
+        <label for="editTitle">Job Title</label>
+        <input type="text" id="editTitle" required>
+      </div>
+      <div class="form-group">
+        <label for="editCompany">Company</label>
+        <input type="text" id="editCompany" required>
+      </div>
+      <div class="form-group">
+        <label for="editLocation">Location</label>
+        <input type="text" id="editLocation">
+      </div>
+      <div class="form-group">
+        <label for="editType">Job Type</label>
+        <select id="editType">
+          <option value="Full-time">Full-time</option>
+          <option value="Part-time">Part-time</option>
+          <option value="Contract">Contract</option>
+          <option value="Internship">Internship</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="editSalary">Salary</label>
+        <input type="text" id="editSalary">
+      </div>
+      <div class="form-group">
+        <label for="editDescription">Description</label>
+        <textarea id="editDescription" rows="4"></textarea>
+      </div>
+      <div class="form-group" style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button type="submit" class="btn btn-primary">💾 Update Job</button>
+        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+      </div>
+    </form>
   </div>
+</div>
 
-   <script src="js/auth-helper.js"></script> 
-   <script src="js/jobs.js"></script> 
+<!-- ============================================
+SCRIPTS
+============================================ -->
+<script src="js/auth-helper.js"></script>
+<script src="js/jobs.js"></script>
+
+<!-- Simple Modal Toggle (if not in jobs.js) -->
+<script>
+  function openEditModal(jobId) {
+    document.getElementById('editModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    // Populate form with job data (to be implemented in jobs.js)
+  }
+
+  function closeEditModal() {
+    document.getElementById('editModal').classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+
+  // Close modal on overlay click
+  document.getElementById('editModal').addEventListener('click', function(e) {
+    if (e.target === this) closeEditModal();
+  });
+
+  // Close modal on Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeEditModal();
+  });
+</script>
 
 </body>
 </html>

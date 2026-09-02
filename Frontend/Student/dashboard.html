@@ -2,57 +2,1195 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+  
+  <style>
+    /* ============================================
+       GOOGLE FONTS
+       ============================================ */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    /* ============================================
+       CSS VARIABLES
+       ============================================ */
+    :root {
+      --primary: #6C2BD9;
+      --primary-dark: #4A1A8A;
+      --primary-light: #8B5CF6;
+      --primary-gradient: linear-gradient(135deg, #6C2BD9, #8B5CF6);
+      --secondary: #1E293B;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #94A3B8;
+      --border: #E2E8F0;
+      --shadow: 0 4px 24px rgba(108, 43, 217, 0.08);
+      --shadow-hover: 0 12px 40px rgba(108, 43, 217, 0.15);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ============================================
+       RESET & BASE
+       ============================================ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      display: flex;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ============================================
+       SCROLLBAR
+       ============================================ */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary-light);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
+    }
+
+    /* ============================================
+       SIDEBAR
+       ============================================ */
+    .sidebar {
+      width: 260px;
+      background: var(--secondary);
+      color: white;
+      padding: 28px 0;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar .logo {
+      font-size: 22px;
+      font-weight: 800;
+      padding: 0 24px 28px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      letter-spacing: -0.5px;
+    }
+
+    .sidebar .logo span {
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .sidebar .logo .dot {
+      color: var(--primary-light);
+      -webkit-text-fill-color: var(--primary-light);
+    }
+
+    .sidebar .nav-section {
+      padding: 20px 0 8px 24px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: rgba(255,255,255,0.3);
+      font-weight: 600;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: var(--transition);
+      font-size: 14px;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      margin: 2px 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    .sidebar a .icon {
+      font-size: 18px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .sidebar a:hover {
+      background: rgba(255,255,255,0.05);
+      color: white;
+    }
+
+    .sidebar a.active {
+      background: rgba(108, 43, 217, 0.2);
+      color: white;
+      border-left-color: var(--primary-light);
+    }
+
+    .sidebar .sidebar-footer {
+      margin-top: auto;
+      padding: 20px 24px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .sidebar .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(239, 68, 68, 0.1);
+      border: none;
+      color: #F87171;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .sidebar .logout-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: #FCA5A5;
+    }
+
+    /* ============================================
+       MAIN CONTENT
+       ============================================ */
+    .main-content {
+      margin-left: 260px;
+      padding: 32px 40px;
+      flex: 1;
+      width: calc(100% - 260px);
+      min-height: 100vh;
+    }
+
+    /* ============================================
+       TOP NAVBAR
+       ============================================ */
+    .top-navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      background: var(--card-bg);
+      padding: 16px 24px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .top-navbar .welcome-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .top-navbar .welcome-text span {
+      color: var(--primary);
+    }
+
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .top-navbar .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-right: 16px;
+      border-right: 1px solid var(--border);
+    }
+
+    .top-navbar .user-info .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--primary-gradient);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .top-navbar .user-info .name {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    .logout-top-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .logout-top-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(108, 43, 217, 0.3);
+    }
+
+    /* ===== NOTIFICATION BELL ===== */
+    .notification-wrapper {
+      position: relative;
+    }
+
+    .notif-btn {
+      position: relative;
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: var(--transition);
+      color: var(--text-secondary);
+    }
+
+    .notif-btn:hover {
+      background: var(--bg);
+    }
+
+    .notif-count {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #EF4444;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid white;
+    }
+
+    .notif-dropdown {
+      position: absolute;
+      top: 45px;
+      right: 0;
+      width: 380px;
+      max-height: 450px;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+      display: none;
+      overflow: hidden;
+      z-index: 1000;
+      border: 1px solid var(--border);
+    }
+
+    .notif-dropdown.open {
+      display: block;
+      animation: slideDown 0.25s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .notif-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .notif-header h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .notif-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .notif-actions button {
+      background: none;
+      border: none;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 12px;
+      border-radius: 6px;
+      transition: var(--transition);
+    }
+
+    .mark-all-read-btn {
+      color: var(--primary);
+    }
+
+    .mark-all-read-btn:hover {
+      background: rgba(108, 43, 217, 0.08);
+    }
+
+    .clear-all-btn {
+      color: #EF4444;
+    }
+
+    .clear-all-btn:hover {
+      background: rgba(239, 68, 68, 0.08);
+    }
+
+    #notifList {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 360px;
+      overflow-y: auto;
+    }
+
+    #notifList::-webkit-scrollbar {
+      width: 4px;
+    }
+    #notifList::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+    #notifList::-webkit-scrollbar-thumb {
+      background: var(--primary-light);
+      border-radius: 10px;
+    }
+
+    .notif-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: var(--transition);
+      border-left: 3px solid transparent;
+    }
+
+    .notif-item:hover {
+      background: var(--bg);
+    }
+
+    .notif-item.unread {
+      background: rgba(108, 43, 217, 0.04);
+      border-left-color: var(--primary);
+    }
+
+    .notif-item.unread:hover {
+      background: rgba(108, 43, 217, 0.08);
+    }
+
+    .notif-item.read {
+      opacity: 0.7;
+    }
+
+    .notif-item .notif-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .notif-item .notif-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .notif-item .notif-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .notif-item .notif-message {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .notif-item .notif-time {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .notif-item .unread-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 8px;
+    }
+
+    .empty-notifications {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-notifications .empty-icon {
+      font-size: 40px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .empty-notifications p {
+      font-size: 14px;
+      margin: 0;
+    }
+
+    /* ============================================
+       STATS CARDS
+       ============================================ */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: var(--transition);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .stat-card .icon {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .stat-card h3 {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .stat-card .number {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .stat-card .number.purple {
+      color: var(--primary);
+    }
+    .stat-card .number.green {
+      color: #10B981;
+    }
+    .stat-card .number.orange {
+      color: #F59E0B;
+    }
+    .stat-card .number.blue {
+      color: #3B82F6;
+    }
+
+    /* ============================================
+       RECENT ACTIVITY
+       ============================================ */
+    .activity-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .activity-card h3 {
+      margin-bottom: 15px;
+      color: var(--text-primary);
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .activity-item {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-item .activity-title {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .activity-item .activity-company {
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .activity-item .activity-meta {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .activity-empty {
+      color: var(--text-muted);
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 1024px) {
+      .main-content {
+        padding: 24px 28px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 72px;
+        padding: 16px 0;
+      }
+      .sidebar .logo {
+        font-size: 18px;
+        padding: 0 12px 20px 12px;
+        text-align: center;
+      }
+      .sidebar .logo span {
+        display: none;
+      }
+      .sidebar .logo .dot {
+        display: none;
+      }
+      .sidebar .nav-section {
+        display: none;
+      }
+      .sidebar a {
+        padding: 12px;
+        margin: 2px 6px;
+        justify-content: center;
+        font-size: 0;
+        border-radius: var(--radius-sm);
+      }
+      .sidebar a .icon {
+        font-size: 20px;
+        width: auto;
+      }
+      .sidebar a.active {
+        border-left: none;
+        background: rgba(108, 43, 217, 0.2);
+      }
+      .sidebar .sidebar-footer {
+        padding: 12px;
+      }
+      .sidebar .logout-btn {
+        justify-content: center;
+        padding: 12px;
+        font-size: 0;
+      }
+      .sidebar .logout-btn .icon {
+        font-size: 20px;
+      }
+
+      .main-content {
+        margin-left: 72px;
+        padding: 16px 18px;
+        width: calc(100% - 72px);
+      }
+
+      .top-navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px 18px;
+      }
+      .top-navbar .navbar-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .notif-dropdown {
+        width: 320px;
+        right: -60px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      .notif-dropdown {
+        width: 290px;
+        right: -40px;
+      }
+      .activity-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="navbar">
-  <div class="logo">Student Panel</div>
 
-  <div class="navbar-right">
-    <div class="notification-wrapper">
-      <button id="notifBtn" class="notif-btn">
-        🔔
-        <span id="notifCount" class="notif-count">0</span>
+  <!-- ===== SIDEBAR ===== -->
+  <div class="sidebar">
+    <div class="logo">💼<span>Hire<span class="dot">.</span></span></div>
+
+    <div class="nav-section">Main</div>
+    <a href="dashboard.html" class="active"><span class="icon">📊</span> Dashboard</a>
+    <a href="job-list.html"><span class="icon">💼</span> Find Jobs</a>
+    <a href="applied-jobs.html"><span class="icon">📝</span> Applied Jobs</a>
+    <a href="profile.html"><span class="icon">👤</span> Profile</a>
+
+    <div class="sidebar-footer">
+      <button id="logout-btn" class="logout-btn">
+        <span class="icon">🚪</span> Logout
       </button>
-      <div id="notifDropdown" class="notif-dropdown">
-        <ul id="notifList">
-          <li>No notifications</li>
-        </ul>
+    </div>
+  </div>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="main-content">
+
+    <!-- Top Navbar -->
+    <div class="top-navbar">
+      <div class="welcome-text">
+        Welcome back, <span id="studentName">Student</span>! 👋
+      </div>
+      <div class="navbar-right">
+        <div class="user-info">
+          <div class="avatar" id="userAvatar">S</div>
+          <span class="name" id="userName">Student</span>
+        </div>
+        
+        <!-- Notification Bell -->
+        <div class="notification-wrapper">
+          <button id="notifBtn" class="notif-btn">
+            🔔
+            <span id="notifCount" class="notif-count" style="display: none;">0</span>
+          </button>
+          <div id="notifDropdown" class="notif-dropdown">
+            <div class="notif-header">
+              <h4>Notifications</h4>
+              <div class="notif-actions">
+                <button id="markAllReadBtn" class="mark-all-read-btn">Mark all read</button>
+                <button id="clearAllBtn" class="clear-all-btn">🗑️</button>
+              </div>
+            </div>
+            <ul id="notifList">
+              <li class="empty-notifications">
+                <span class="empty-icon">🔔</span>
+                <p>Loading notifications...</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <button id="logout-btn-top" class="logout-top-btn">Logout</button>
       </div>
     </div>
-    <button id="logout" class="logout-btn">Logout</button>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="icon">💼</div>
+        <h3>Total Jobs Available</h3>
+        <div class="number purple" id="totalJobs">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon">📝</div>
+        <h3>Applications Submitted</h3>
+        <div class="number green" id="totalApplications">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon">👤</div>
+        <h3>Profile Completion</h3>
+        <div class="number orange" id="profileCompletion">0%</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon">📬</div>
+        <h3>Application Status</h3>
+        <div class="number blue" id="applicationStatus">-</div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="activity-card">
+      <h3>📋 Recent Activity</h3>
+      <div id="recentActivity">
+        <div class="activity-empty">Loading activity...</div>
+      </div>
+    </div>
+
   </div>
-</div>
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <a href="dashboard.html">Dashboard</a>
-    <a href="job-list.html">Jobs</a>
-    <a href="applied-jobs.html">Applied Jobs</a>
-    <a href="profile.html">Profile</a>
-     <button id="logout-btn" class="logout-btn">Logout</button>
-  </div>
 
-  <!-- Main content -->
-  <div class="main-content">
-    <h1>Welcome, Student!</h1>
+  <!-- ===== SCRIPTS ===== -->
+  <script>
+    // ============================================
+    // CONFIGURATION
+    // ============================================
+    const API_URL = 'http://localhost:5001/api';
 
-    <div class="card">
-      <h3>📊 Total Jobs Available</h3>
-      <p>Loading...</p>
-    </div>
+    // ============================================
+    // CHECK LOGIN
+    // ============================================
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = '../Auth/Login.html';
+    }
 
-    <div class="card">
-      <h3>📝 Applications Submitted</h3>
-      <p>Loading...</p>
-    </div>
+    // ============================================
+    // GET USER INFO
+    // ============================================
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userName = user.username || 'Student';
+    document.getElementById('studentName').textContent = userName;
+    document.getElementById('userName').textContent = userName;
+    document.getElementById('userAvatar').textContent = userName.charAt(0).toUpperCase();
 
-    <div class="card">
-      <h3>👤 Profile Completion</h3>
-      <p>Loading...</p>
-    </div>
-  
+    // ============================================
+    // HELPER FUNCTIONS
+    // ============================================
+    function getAuthToken() {
+      return localStorage.getItem('token');
+    }
 
-  <script src="Js/dashboard.js"></script> 
+    // ✅ FIXED: timeAgo with proper error handling
+    function timeAgo(date) {
+      if (!date) return 'Just now';
+      
+      try {
+        const now = new Date();
+        const past = new Date(date);
+        
+        // Check if date is valid
+        if (isNaN(past.getTime())) {
+          return 'Just now';
+        }
+        
+        const diff = Math.floor((now - past) / 1000);
+        if (diff < 60) return `${diff}s ago`;
+        if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+        if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
+        return past.toLocaleDateString();
+      } catch (error) {
+        return 'Just now';
+      }
+    }
+
+    function getNotificationIcon(type) {
+      const icons = {
+        'application_status': '📝',
+        'job_alert': '💼',
+        'profile_update': '👤',
+        'system': '🔔',
+        'interview': '📅',
+        'job_approval': '✅',
+        'new_application': '📩'
+      };
+      return icons[type] || '🔔';
+    }
+
+    // ============================================
+    // LOGOUT
+    // ============================================
+    function logout() {
+      localStorage.clear();
+      window.location.href = '../Auth/Login.html';
+    }
+
+    document.getElementById('logout-btn').addEventListener('click', logout);
+    document.getElementById('logout-btn-top').addEventListener('click', logout);
+
+    // ============================================
+    // NOTIFICATION SYSTEM
+    // ============================================
+
+    function updateBadge(count) {
+      const badge = document.getElementById('notifCount');
+      if (badge) {
+        if (count > 0) {
+          badge.textContent = count > 99 ? '99+' : count;
+          badge.style.display = 'flex';
+        } else {
+          badge.style.display = 'none';
+        }
+      }
+    }
+
+    // ✅ FIXED: renderNotifications with safe date handling
+    function renderNotifications(notifications) {
+      const list = document.getElementById('notifList');
+      if (!list) return;
+
+      if (!notifications || notifications.length === 0) {
+        list.innerHTML = `
+          <li class="empty-notifications">
+            <span class="empty-icon">🔔</span>
+            <p>No notifications yet</p>
+          </li>
+        `;
+        return;
+      }
+
+      list.innerHTML = notifications.map(notif => {
+        // Safely get the date
+        const dateStr = notif.created_at || notif.createdAt || null;
+        
+        return `
+          <li class="notif-item ${notif.read ? 'read' : 'unread'}" 
+              data-id="${notif.id}">
+            <span class="notif-icon">${getNotificationIcon(notif.type)}</span>
+            <div class="notif-content">
+              <div class="notif-title">${notif.title || 'Notification'}</div>
+              <div class="notif-message">${notif.message || ''}</div>
+              <div class="notif-time">${timeAgo(dateStr)}</div>
+            </div>
+            ${!notif.read ? '<span class="unread-dot"></span>' : ''}
+          </li>
+        `;
+      }).join('');
+
+      // Add click listeners to notification items
+      document.querySelectorAll('.notif-item').forEach(item => {
+        item.addEventListener('click', function() {
+          const id = this.dataset.id;
+          const link = notifications.find(n => n.id == id)?.link || '';
+          handleNotificationClick(id, link);
+        });
+      });
+    }
+
+    async function fetchNotifications() {
+      try {
+        const token = getAuthToken();
+        if (!token) return;
+
+        const response = await fetch(`${API_URL}/notifications`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.status === 401) {
+          window.location.href = '../Auth/Login.html';
+          return;
+        }
+
+        const data = await response.json();
+        if (data.success) {
+          updateBadge(data.unreadCount);
+          renderNotifications(data.notifications);
+        }
+      } catch (error) {
+        console.error('Fetch error:', error);
+      }
+    }
+
+    async function handleNotificationClick(id, link) {
+      try {
+        await markAsRead(id);
+        if (link) {
+          window.location.href = link;
+        }
+      } catch (error) {
+        console.error('Click error:', error);
+      }
+    }
+
+    async function markAsRead(id) {
+      try {
+        const token = getAuthToken();
+        if (!token) return;
+
+        await fetch(`${API_URL}/notifications/${id}/read`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const item = document.querySelector(`.notif-item[data-id="${id}"]`);
+        if (item) {
+          item.classList.remove('unread');
+          item.classList.add('read');
+          const dot = item.querySelector('.unread-dot');
+          if (dot) dot.remove();
+        }
+
+        const badge = document.getElementById('notifCount');
+        if (badge) {
+          const current = parseInt(badge.textContent) || 0;
+          if (current > 0) {
+            updateBadge(current - 1);
+          }
+        }
+      } catch (error) {
+        console.error('Mark as read error:', error);
+      }
+    }
+
+    async function markAllAsRead() {
+      try {
+        const token = getAuthToken();
+        if (!token) return;
+
+        await fetch(`${API_URL}/notifications/read-all`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        document.querySelectorAll('.notif-item.unread').forEach(item => {
+          item.classList.remove('unread');
+          item.classList.add('read');
+          const dot = item.querySelector('.unread-dot');
+          if (dot) dot.remove();
+        });
+        updateBadge(0);
+      } catch (error) {
+        console.error('Mark all read error:', error);
+      }
+    }
+
+    async function clearAllNotifications() {
+      if (!confirm('Delete all notifications?')) return;
+
+      try {
+        const token = getAuthToken();
+        if (!token) return;
+
+        await fetch(`${API_URL}/notifications/clear-all`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const list = document.getElementById('notifList');
+        if (list) {
+          list.innerHTML = `
+            <li class="empty-notifications">
+              <span class="empty-icon">🔔</span>
+              <p>No notifications</p>
+            </li>
+          `;
+        }
+        updateBadge(0);
+      } catch (error) {
+        console.error('Clear all error:', error);
+      }
+    }
+
+    function toggleNotifications() {
+      const dropdown = document.getElementById('notifDropdown');
+      if (dropdown) {
+        dropdown.classList.toggle('open');
+        if (dropdown.classList.contains('open')) {
+          fetchNotifications();
+        }
+      }
+    }
+
+    // ============================================
+    // EVENT LISTENERS - NOTIFICATIONS
+    // ============================================
+    document.getElementById('notifBtn').addEventListener('click', toggleNotifications);
+    document.getElementById('markAllReadBtn').addEventListener('click', markAllAsRead);
+    document.getElementById('clearAllBtn').addEventListener('click', clearAllNotifications);
+
+    // Close dropdown on outside click
+    document.addEventListener('click', function(event) {
+      const dropdown = document.getElementById('notifDropdown');
+      const btn = document.getElementById('notifBtn');
+      if (dropdown && btn) {
+        if (!dropdown.contains(event.target) && !btn.contains(event.target)) {
+          dropdown.classList.remove('open');
+        }
+      }
+    });
+
+    // ============================================
+    // LOAD DASHBOARD STATS
+    // ============================================
+    async function loadStats() {
+      try {
+        const token = getAuthToken();
+        if (!token) {
+          console.error('❌ No token found');
+          return;
+        }
+
+        console.log('🔍 Fetching student stats...');
+        
+        const response = await fetch(`${API_URL}/student/stats`, {
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        console.log('📡 Response status:', response.status);
+
+        if (response.status === 401) {
+          console.error('❌ Unauthorized - redirecting to login');
+          window.location.href = '../Auth/Login.html';
+          return;
+        }
+
+        if (!response.ok) {
+          console.error('❌ Response not OK:', response.status);
+          const errorText = await response.text();
+          console.error('Error response:', errorText);
+          return;
+        }
+
+        const data = await response.json();
+        console.log('📊 Stats data received:', data);
+
+        if (data.success) {
+          document.getElementById('totalJobs').textContent = data.totalJobs || 0;
+          document.getElementById('totalApplications').textContent = data.totalApplications || 0;
+          document.getElementById('profileCompletion').textContent = data.profileCompletion || '0%';
+          document.getElementById('applicationStatus').textContent = data.applicationStatus || '-';
+          console.log('✅ Stats updated successfully');
+        } else {
+          console.error('❌ Stats API returned success: false', data);
+        }
+      } catch (error) {
+        console.error('❌ Load stats error:', error);
+        console.error('Error details:', error.message);
+      }
+    }
+
+    // ============================================
+    // LOAD RECENT ACTIVITY (FIXED)
+    // ============================================
+    async function loadRecentActivity() {
+      try {
+        const token = getAuthToken();
+        if (!token) return;
+
+        const response = await fetch(`${API_URL}/student/applications`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const applications = data.applications || [];
+          
+          const activityEl = document.getElementById('recentActivity');
+          
+          if (applications.length === 0) {
+            activityEl.innerHTML = `<div class="activity-empty">📭 No recent activity</div>`;
+          } else {
+            const recent = applications.slice(0, 5);
+            activityEl.innerHTML = recent.map(app => {
+              // ✅ FIXED: Safe date handling
+              const dateStr = app.created_at || app.createdAt || app.applied_at || null;
+              const jobTitle = app.Job?.title || 'Unknown Job';
+              const company = app.Job?.company || 'Unknown Company';
+              const status = app.status || 'pending';
+              
+              return `
+                <div class="activity-item">
+                  <div>
+                    <span class="activity-title">${jobTitle}</span>
+                    <span class="activity-company">@ ${company}</span>
+                  </div>
+                  <div class="activity-meta">
+                    ${status.charAt(0).toUpperCase() + status.slice(1)} • ${timeAgo(dateStr)}
+                  </div>
+                </div>
+              `;
+            }).join('');
+          }
+        }
+      } catch (error) {
+        console.error('Load activity error:', error);
+        document.getElementById('recentActivity').innerHTML = 
+          `<div class="activity-empty">❌ Failed to load activity</div>`;
+      }
+    }
+
+    // ============================================
+    // INITIALIZE
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🚀 Dashboard loading...');
+      fetchNotifications();
+      loadStats();
+      loadRecentActivity();
+      
+      // Refresh every 30 seconds
+      setInterval(() => {
+        fetchNotifications();
+        loadStats();
+      }, 30000);
+    });
+
+    // Reload stats when page becomes visible again
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) {
+        console.log('🔄 Page became visible - reloading data...');
+        loadStats();
+        loadRecentActivity();
+        fetchNotifications();
+      }
+    });
+  </script>
 </body>
 </html>

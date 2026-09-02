@@ -29,6 +29,11 @@ const apply = async (req, res) => {
     if (!jobId || !fullName || !email || !coverLetter) {
       return res.status(400).json({ error: "All fields are required" });
     }
+    if (!req.file) {
+    return res.status(400).json({
+        error: "Resume is required"
+    });
+}
 
     // Check for duplicate application BEFORE processing file
     const exists = await Application.findOne({ where: { job_id: jobId, user_id } });
@@ -41,7 +46,9 @@ const apply = async (req, res) => {
       return res.status(400).json({ error: "You have already applied for this job" });
     }
 
-    const resumePath = req.file ? req.file.path : null;
+   const resumePath = req.file
+    ? `/uploads/${req.file.filename}`
+    : null;
 
 
     const applicationData = {

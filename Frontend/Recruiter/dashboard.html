@@ -3,45 +3,901 @@
 <head>
   <title>Recruiter Dashboard</title>
   <link rel="stylesheet" href="css/recruiter.css">
+  
+  <style>
+    /* ============================================
+       RECRUITER DASHBOARD STYLES
+       ============================================ */
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      background: #f4f7fc;
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      width: 250px;
+      background: linear-gradient(180deg, #1a1a2e, #16213e);
+      color: white;
+      padding: 20px 0;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+
+    .sidebar h2 {
+      font-size: 24px;
+      padding: 20px 25px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      color: #a87bc9;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 14px 25px;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar a:hover {
+      background: rgba(255,255,255,0.05);
+      color: white;
+      border-left-color: #8a4baf;
+    }
+
+    .sidebar a.active {
+      background: rgba(106, 27, 154, 0.15);
+      color: white;
+      border-left-color: #8a4baf;
+    }
+
+    .sidebar .logout-btn {
+      display: block;
+      width: 100%;
+      padding: 14px 25px;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.7);
+      text-align: left;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
+      margin-top: 20px;
+    }
+
+    .sidebar .logout-btn:hover {
+      background: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+      border-left-color: #e74c3c;
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main {
+      margin-left: 250px;
+      padding: 30px;
+      flex: 1;
+      width: calc(100% - 250px);
+    }
+
+    .main h1 {
+      font-size: 32px;
+      color: #1a1a2e;
+      margin-bottom: 8px;
+    }
+
+    /* ===== TOP NAVBAR ===== */
+    .top-navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      background: white;
+      padding: 15px 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+
+    .top-navbar .welcome-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a2e;
+    }
+
+    .top-navbar .welcome-text span {
+      color: #6a1b9a;
+    }
+
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    /* ===== NOTIFICATION BELL ===== */
+    .notification-wrapper {
+      position: relative;
+    }
+
+    .notif-btn {
+      position: relative;
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+      color: #555;
+    }
+
+    .notif-btn:hover {
+      background: #f0edf5;
+    }
+
+    .notif-count {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #e74c3c;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid white;
+    }
+
+    .notif-dropdown {
+      position: absolute;
+      top: 45px;
+      right: 0;
+      width: 380px;
+      max-height: 450px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+      display: none;
+      overflow: hidden;
+      z-index: 1000;
+      border: 1px solid rgba(106, 27, 154, 0.06);
+    }
+
+    .notif-dropdown.open {
+      display: block;
+      animation: slideDown 0.25s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .notif-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      border-bottom: 1px solid #f0edf5;
+    }
+
+    .notif-header h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin: 0;
+    }
+
+    .notif-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .notif-actions button {
+      background: none;
+      border: none;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 12px;
+      border-radius: 6px;
+      transition: background 0.3s ease;
+    }
+
+    .mark-all-read-btn {
+      color: #6a1b9a;
+    }
+
+    .mark-all-read-btn:hover {
+      background: rgba(106, 27, 154, 0.08);
+    }
+
+    .clear-all-btn {
+      color: #e74c3c;
+    }
+
+    .clear-all-btn:hover {
+      background: rgba(231, 76, 60, 0.08);
+    }
+
+    #notifList {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 360px;
+      overflow-y: auto;
+    }
+
+    #notifList::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    #notifList::-webkit-scrollbar-track {
+      background: #f0edf5;
+    }
+
+    #notifList::-webkit-scrollbar-thumb {
+      background: #6a1b9a;
+      border-radius: 10px;
+    }
+
+    .notif-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
+      animation: fadeOut 0.3s ease;
+    }
+
+    .notif-item:hover {
+      background: #f8f6ff;
+    }
+
+    .notif-item.unread {
+      background: #faf8ff;
+      border-left-color: #6a1b9a;
+    }
+
+    .notif-item.unread:hover {
+      background: #f0edf5;
+    }
+
+    .notif-item.read {
+      opacity: 0.5;
+    }
+
+    .notif-item.removing {
+      animation: slideOut 0.3s ease forwards;
+    }
+
+    @keyframes slideOut {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+        max-height: 100px;
+      }
+      to {
+        opacity: 0;
+        transform: translateX(30px);
+        max-height: 0;
+        padding: 0 20px;
+        margin: 0;
+      }
+    }
+
+    .notif-item .notif-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .notif-item .notif-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .notif-item .notif-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin-bottom: 2px;
+    }
+
+    .notif-item .notif-message {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .notif-item .notif-time {
+      font-size: 11px;
+      color: #aaa;
+      margin-top: 4px;
+    }
+
+    .notif-item .unread-dot {
+      width: 8px;
+      height: 8px;
+      background: #6a1b9a;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 8px;
+    }
+
+    .empty-notifications {
+      text-align: center;
+      padding: 40px 20px;
+      color: #888;
+    }
+
+    .empty-notifications .empty-icon {
+      font-size: 40px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .empty-notifications p {
+      font-size: 14px;
+      margin: 0;
+    }
+
+    /* ===== DASHBOARD STATS ===== */
+    .dashboard-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(106, 27, 154, 0.06);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(106, 27, 154, 0.08);
+    }
+
+    .stat-card h3 {
+      font-size: 14px;
+      color: #888;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .stat-card p {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a1a2e;
+    }
+
+    .stat-card p.purple {
+      color: #6a1b9a;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 70px;
+      }
+      .sidebar h2 {
+        font-size: 16px;
+        padding: 15px;
+        text-align: center;
+      }
+      .sidebar a {
+        padding: 12px 15px;
+        font-size: 13px;
+        text-align: center;
+      }
+      .sidebar .logout-btn {
+        text-align: center;
+        font-size: 13px;
+      }
+      .main {
+        margin-left: 70px;
+        padding: 15px;
+        width: calc(100% - 70px);
+      }
+      .dashboard-stats {
+        grid-template-columns: 1fr 1fr;
+      }
+      .notif-dropdown {
+        width: 320px;
+        right: -60px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .dashboard-stats {
+        grid-template-columns: 1fr;
+      }
+      .notif-dropdown {
+        width: 290px;
+        right: -40px;
+      }
+    }
+
+    .logout-top-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s ease;
+    }
+
+    .logout-top-btn:hover {
+      background: #c0392b;
+    }
+
+    .reg-success-banner {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      z-index: 1000;
+      max-width: 300px;
+      font-size: 0.85em;
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
+  <!-- ===== SIDEBAR ===== -->
   <div class="sidebar">
-    <h2>Recruiter</h2>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="add-job.html">Add Job</a>
-    <a href="my-jobs.html">My Jobs</a>
-    <a href="applicants.html">Applicants</a>
-    <a href="profile.html">Profile</a>
-    <button class="logout-btn" onclick="logout()">Logout</button>
+    <h2>💼 Recruiter</h2>
+    <a href="dashboard.html" class="active">📊 Dashboard</a>
+    <a href="add-job.html">➕ Add Job</a>
+    <a href="my-jobs.html">📋 My Jobs</a>
+    <a href="applicants.html">👥 Applicants</a>
+    <a href="profile.html">👤 Profile</a>
+    <button class="logout-btn" onclick="logout()">🚪 Logout</button>
   </div>
 
+  <!-- ===== MAIN CONTENT ===== -->
   <div class="main">
-    <h1>Welcome, Recruiter</h1>
 
-    <!-- Registration Success Message -->
-    <div id="registrationSuccess" style="display: none; position: fixed; top: 20px; right: 20px; background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 15px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); z-index: 1000; max-width: 300px; font-size: 0.85em;">
+    <!-- Top Navbar -->
+    <div class="top-navbar">
+      <div class="welcome-text">
+        Welcome, <span id="recruiterName">Recruiter</span>! 👋
+      </div>
+      <div class="navbar-right">
+        <!-- Notification Bell -->
+        <div class="notification-wrapper">
+          <button id="notifBtn" class="notif-btn">
+            🔔
+            <span id="notifCount" class="notif-count" style="display: none;">0</span>
+          </button>
+          <div id="notifDropdown" class="notif-dropdown">
+            <div class="notif-header">
+              <h4>Notifications</h4>
+              <div class="notif-actions">
+                <button id="markAllReadBtn" class="mark-all-read-btn">Mark all read</button>
+                <button id="clearAllBtn" class="clear-all-btn">🗑️</button>
+              </div>
+            </div>
+            <ul id="notifList">
+              <li class="empty-notifications">
+                <span class="empty-icon">🔔</span>
+                <p>Loading notifications...</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <button onclick="logout()" class="logout-top-btn">Logout</button>
+      </div>
+    </div>
+
+    <!-- Registration Success Banner -->
+    <div id="registrationSuccess" class="reg-success-banner">
       <h4 style="margin: 0 0 10px 0; font-size: 1em;">🎉 Registration Successful!</h4>
       <p style="margin: 5px 0;"><strong>Email:</strong> <span id="regEmail"></span></p>
       <p style="margin: 5px 0;"><strong>Password:</strong> <span id="regPassword"></span></p>
       <p style="margin: 10px 0 0 0; font-size: 0.8em;">Please save these credentials.</p>
     </div>
 
+    <!-- Stats Cards -->
     <div class="dashboard-stats">
       <div class="stat-card">
         <h3>Total Jobs Posted</h3>
-        <p id="totalJobs">0</p>
+        <p class="purple" id="totalJobs">0</p>
       </div>
-
       <div class="stat-card">
         <h3>Total Applicants</h3>
-        <p id="totalApplicants">0</p>
+        <p class="purple" id="totalApplicants">0</p>
       </div>
     </div>
 
   </div>
 
-<!-- Example: correct path -->
-<script src="./js/recruiter.js"></script>
+  <script>
+    // ============================================
+    // CHECK LOGIN
+    // ============================================
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = '../Auth/Login.html';
+    }
+
+    // ============================================
+    // GET USER INFO
+    // ============================================
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    document.getElementById('recruiterName').textContent = user.username || 'Recruiter';
+
+    // ============================================
+    // LOGOUT FUNCTION
+    // ============================================
+    function logout() {
+      localStorage.clear();
+      window.location.href = '../Auth/Login.html';
+    }
+
+    // ============================================
+    // NOTIFICATION SYSTEM
+    // ============================================
+
+    const API_URL = 'http://localhost:5001/api';
+
+    function getAuthToken() {
+      return localStorage.getItem('token');
+    }
+
+    function timeAgo(date) {
+      if (!date) return 'Just now';
+      
+      try {
+        const now = new Date();
+        const past = new Date(date);
+        
+        if (isNaN(past.getTime())) {
+          return 'Just now';
+        }
+        
+        const diff = Math.floor((now - past) / 1000);
+        if (diff < 60) return `${diff}s ago`;
+        if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+        if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
+        return past.toLocaleDateString();
+      } catch (error) {
+        return 'Just now';
+      }
+    }
+
+    function getNotificationIcon(type) {
+      const icons = {
+        'application_status': '📝',
+        'job_alert': '💼',
+        'profile_update': '👤',
+        'system': '🔔',
+        'interview': '📅',
+        'job_approval': '✅',
+        'new_application': '👥'
+      };
+      return icons[type] || '🔔';
+    }
+
+    function updateBadge(count) {
+      const badge = document.getElementById('notifCount');
+      if (badge) {
+        if (count > 0) {
+          badge.textContent = count > 99 ? '99+' : count;
+          badge.style.display = 'flex';
+        } else {
+          badge.style.display = 'none';
+        }
+      }
+    }
+
+    async function fetchNotifications() {
+      try {
+        const token = getAuthToken();
+        if (!token) return;
+
+        const response = await fetch(`${API_URL}/notifications`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.status === 401) {
+          window.location.href = '../Auth/Login.html';
+          return;
+        }
+
+        const data = await response.json();
+        if (data.success) {
+          updateBadge(data.unreadCount);
+          renderNotifications(data.notifications);
+        }
+      } catch (error) {
+        console.error('Fetch error:', error);
+      }
+    }
+
+    function renderNotifications(notifications) {
+      const list = document.getElementById('notifList');
+      if (!list) return;
+
+      if (!notifications || notifications.length === 0) {
+        list.innerHTML = `
+          <li class="empty-notifications">
+            <span class="empty-icon">🔔</span>
+            <p>No notifications yet</p>
+          </li>
+        `;
+        return;
+      }
+
+      list.innerHTML = notifications.map(notif => {
+        const dateStr = notif.created_at || notif.createdAt || null;
+        
+        return `
+          <li class="notif-item ${notif.read ? 'read' : 'unread'}" 
+              data-id="${notif.id}">
+            <span class="notif-icon">${getNotificationIcon(notif.type)}</span>
+            <div class="notif-content">
+              <div class="notif-title">${notif.title}</div>
+              <div class="notif-message">${notif.message}</div>
+              <div class="notif-time">${timeAgo(dateStr)}</div>
+            </div>
+            ${!notif.read ? '<span class="unread-dot"></span>' : ''}
+          </li>
+        `;
+      }).join('');
+
+      // Add click listeners to notification items
+      document.querySelectorAll('.notif-item').forEach(item => {
+        item.addEventListener('click', function() {
+          const id = this.dataset.id;
+          handleNotificationClick(id);
+        });
+      });
+    }
+
+    // ✅ UPDATED: Click notification - mark as read and remove it
+    async function handleNotificationClick(id) {
+      try {
+        // Mark as read in backend
+        await markAsRead(id);
+        
+        // Remove the notification from the list with animation
+        const item = document.querySelector(`.notif-item[data-id="${id}"]`);
+        if (item) {
+          // Add removing class for animation
+          item.classList.add('removing');
+          
+          // Wait for animation to complete, then remove from DOM
+          setTimeout(() => {
+            item.remove();
+            
+            // Check if there are any notifications left
+            const remainingItems = document.querySelectorAll('.notif-item');
+            const list = document.getElementById('notifList');
+            
+            if (remainingItems.length === 0) {
+              list.innerHTML = `
+                <li class="empty-notifications">
+                  <span class="empty-icon">🔔</span>
+                  <p>No notifications yet</p>
+                </li>
+              `;
+            }
+          }, 300);
+        }
+      } catch (error) {
+        console.error('Click error:', error);
+      }
+    }
+
+    async function markAsRead(id) {
+      try {
+        const token = getAuthToken();
+        if (!token) return;
+
+        await fetch(`${API_URL}/notifications/${id}/read`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        // Update badge count
+        const badge = document.getElementById('notifCount');
+        if (badge) {
+          const current = parseInt(badge.textContent) || 0;
+          if (current > 0) {
+            updateBadge(current - 1);
+          }
+        }
+      } catch (error) {
+        console.error('Mark as read error:', error);
+      }
+    }
+
+    async function markAllAsRead() {
+      try {
+        const token = getAuthToken();
+        if (!token) return;
+
+        await fetch(`${API_URL}/notifications/read-all`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        // Remove all unread notifications with animation
+        const unreadItems = document.querySelectorAll('.notif-item.unread');
+        unreadItems.forEach((item, index) => {
+          setTimeout(() => {
+            item.classList.add('removing');
+            setTimeout(() => {
+              item.remove();
+              const list = document.getElementById('notifList');
+              const remainingItems = document.querySelectorAll('.notif-item');
+              if (remainingItems.length === 0) {
+                list.innerHTML = `
+                  <li class="empty-notifications">
+                    <span class="empty-icon">🔔</span>
+                    <p>No notifications yet</p>
+                  </li>
+                `;
+              }
+            }, 300);
+          }, index * 100);
+        });
+        
+        updateBadge(0);
+      } catch (error) {
+        console.error('Mark all read error:', error);
+      }
+    }
+
+    async function clearAllNotifications() {
+      if (!confirm('Delete all notifications?')) return;
+
+      try {
+        const token = getAuthToken();
+        if (!token) return;
+
+        await fetch(`${API_URL}/notifications/clear-all`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const list = document.getElementById('notifList');
+        if (list) {
+          list.innerHTML = `
+            <li class="empty-notifications">
+              <span class="empty-icon">🔔</span>
+              <p>No notifications</p>
+            </li>
+          `;
+        }
+        updateBadge(0);
+      } catch (error) {
+        console.error('Clear all error:', error);
+      }
+    }
+
+    function toggleNotifications() {
+      const dropdown = document.getElementById('notifDropdown');
+      if (dropdown) {
+        dropdown.classList.toggle('open');
+        if (dropdown.classList.contains('open')) {
+          fetchNotifications();
+        }
+      }
+    }
+
+    // ============================================
+    // EVENT LISTENERS
+    // ============================================
+    document.getElementById('notifBtn').addEventListener('click', toggleNotifications);
+    document.getElementById('markAllReadBtn').addEventListener('click', markAllAsRead);
+    document.getElementById('clearAllBtn').addEventListener('click', clearAllNotifications);
+
+    // Close dropdown on outside click
+    document.addEventListener('click', function(event) {
+      const dropdown = document.getElementById('notifDropdown');
+      const btn = document.getElementById('notifBtn');
+      if (dropdown && btn) {
+        if (!dropdown.contains(event.target) && !btn.contains(event.target)) {
+          dropdown.classList.remove('open');
+        }
+      }
+    });
+
+    // ============================================
+    // LOAD DASHBOARD STATS
+    // ============================================
+    async function loadStats() {
+      try {
+        const token = getAuthToken();
+        if (!token) return;
+
+        const response = await fetch(`${API_URL}/recruiter/stats`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          document.getElementById('totalJobs').textContent = data.totalJobs || 0;
+          document.getElementById('totalApplicants').textContent = data.totalApplicants || 0;
+        }
+      } catch (error) {
+        console.error('Load stats error:', error);
+      }
+    }
+
+    // ============================================
+    // CHECK FOR REGISTRATION SUCCESS
+    // ============================================
+    function checkRegistrationSuccess() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('registered') === 'true') {
+        const banner = document.getElementById('registrationSuccess');
+        document.getElementById('regEmail').textContent = params.get('email') || 'N/A';
+        document.getElementById('regPassword').textContent = params.get('password') || 'N/A';
+        banner.style.display = 'block';
+        
+        setTimeout(() => {
+          banner.style.display = 'none';
+        }, 10000);
+      }
+    }
+
+    // ============================================
+    // INITIALIZE
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+      checkRegistrationSuccess();
+      fetchNotifications();
+      loadStats();
+      
+      setInterval(fetchNotifications, 30000);
+    });
+  </script>
 </body>
 </html>

@@ -1,4 +1,3 @@
-// Backend/models/Job.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 const User = require("./User");
@@ -54,47 +53,67 @@ const Job = sequelize.define("Job", {
   timestamps: false,
 });
 
+// ============================================
+// RELATIONSHIPS
+// ============================================
 Job.belongsTo(User, { foreignKey: 'posted_by', as: 'poster' });
 User.hasMany(Job, { foreignKey: 'posted_by', as: 'jobs' });
 
-// Static methods for job operations
+// ============================================
+// STATIC METHODS
+// ============================================
+
+// Search jobs with filters
 Job.searchJobs = async function({ query, page = 1, limit = 10, filters = {} }) {
   const offset = (page - 1) * limit;
-  // ----homepage active--
-  const whereClause = { status: 'active' }; // Only show active jobs on homepage
+  const { Op } = require("sequelize");
+  
+  const whereClause = { status: 'active' };
   
   if (query) {
-    whereClause[require('sequelize').Op.or] = [
-      { title: { [require('sequelize').Op.like]: `%${query}%` } },
-      { company: { [require('sequelize').Op.like]: `%${query}%` } },
-      { description: { [require('sequelize').Op.like]: `%${query}%` } }
+    whereClause[Op.or] = [
+      { title: { [Op.like]: `%${query}%` } },
+      { company: { [Op.like]: `%${query}%` } },
+      { description: { [Op.like]: `%${query}%` } }
     ];
   }
   
   if (filters.type) whereClause.type = filters.type;
-  if (filters.location) whereClause.location = { [require('sequelize').Op.like]: `%${filters.location}%` };
+  if (filters.location) whereClause.location = { [Op.like]: `%${filters.location}%` };
+  
   if (filters.minSalary || filters.maxSalary) {
     whereClause.salary = {};
-    if (filters.minSalary) whereClause.salary[require('sequelize').Op.gte] = filters.minSalary;
-    if (filters.maxSalary) whereClause.salary[require('sequelize').Op.lte] = filters.maxSalary;
+    if (filters.minSalary) whereClause.salary[Op.gte] = filters.minSalary;
+    if (filters.maxSalary) whereClause.salary[Op.lte] = filters.maxSalary;
   }
   
   const { count, rows } = await Job.findAndCountAll({
     where: whereClause,
     limit,
     offset,
-    order: [['created_at', 'DESC']]
+    order: [['created_at', 'DESC']],
+    include: [{ 
+      model: User, 
+      attributes: ['id', 'username', 'email'], 
+      as: 'poster' 
+    }]
   });
   
   return { jobs: rows, total: count };
 };
 
+// Get job by ID with poster info
 Job.getJobById = async function(id) {
   return await Job.findByPk(id, {
-    include: [{ model: User, attributes: ['username', 'email'], as: 'poster' }]
+    include: [{ 
+      model: User, 
+      attributes: ['id', 'username', 'email'], 
+      as: 'poster' 
+    }]
   });
 };
 
+// Update job
 Job.updateJob = async function(id, fields) {
   const job = await Job.findByPk(id);
   if (!job) throw new Error('Job not found');
@@ -109,10 +128,43 @@ Job.updateJob = async function(id, fields) {
   return job;
 };
 
+// Delete job (will cascade delete applications via database)
 Job.deleteJob = async function(id) {
   const job = await Job.findByPk(id);
   if (!job) throw new Error('Job not found');
   await job.destroy();
+};
+
+// Get recruiter stats
+Job.getRecruiterStats = async function(recruiterId) {
+  try {
+    const totalJobs = await Job.count({
+      where: { posted_by: recruiterId }
+    });
+
+    const activeJobs = await Job.count({
+      where: { 
+        posted_by: recruiterId,
+        status: 'active'
+      }
+    });
+
+    const pendingJobs = await Job.count({
+      where: { 
+        posted_by: recruiterId,
+        status: 'pending'
+      }
+    });
+
+    return {
+      totalJobs,
+      activeJobs,
+      pendingJobs
+    };
+  } catch (error) {
+    console.error('Get recruiter stats error:', error);
+    return { totalJobs: 0, activeJobs: 0, pendingJobs: 0 };
+  }
 };
 
 module.exports = Job;

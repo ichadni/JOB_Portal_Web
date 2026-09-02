@@ -44,6 +44,28 @@ function checkAuth() {
   return true;
 }
 
+// ==================== ✅ Apply for Job ====================
+function applyForJob(jobId) {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Please login first');
+    window.location.href = '../Auth/Login.html';
+    return;
+  }
+
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  if (user.role !== 'student') {
+    alert('Only students can apply for jobs.');
+    return;
+  }
+
+  // Store job ID in localStorage as a fallback for Apply.html
+  localStorage.setItem('applyJobId', jobId);
+
+  // Redirect to Apply.html (one level up from Student folder)
+  window.location.href = `../Apply.html?id=${jobId}`;
+}
+
 // ==================== Job List Functions ====================
 async function fetchJobs(filters = {}) {
   const jobListDiv = document.getElementById("job-list");
@@ -97,6 +119,7 @@ async function fetchJobs(filters = {}) {
       return;
     }
 
+    // Render job cards with Apply Now button using the applyForJob function
     jobListDiv.innerHTML = jobs.map(job => `
       <div class="job-card">
         <h4>${escapeHTML(job.title || job.job_position)}</h4>
@@ -106,8 +129,8 @@ async function fetchJobs(filters = {}) {
         <p><strong>Skills:</strong> ${escapeHTML(job.skills || job.skills_required || "N/A")}</p>
         <p><strong>Type:</strong> ${escapeHTML(job.job_type || job.type || "N/A")}</p>
         <div style="display: flex; gap: 10px; margin-top: 15px;">
-          <a href="../Apply.html?id=${job.id}" class="btn">Apply Now</a>
-          <a href="job-details.html?id=${job.id}" class="btn">View Details</a>
+          <button onclick="applyForJob(${job.id})" class="btn" style="background:#6a1b9a;color:white;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;">Apply Now</button>
+          <a href="../job-details.html?id=${job.id}" class="btn" style="background:transparent;color:#6a1b9a;border:1px solid #6a1b9a;padding:8px 16px;border-radius:6px;text-decoration:none;">View Details</a>
         </div>
       </div>
     `).join("");

@@ -4,65 +4,700 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apply - JobPortal</title>
-  <link rel="stylesheet" href="apply.css">
+  <style>
+    /* ============================================
+       GOOGLE FONTS
+       ============================================ */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    /* ============================================
+       CSS VARIABLES
+       ============================================ */
+    :root {
+      --primary: #6C2BD9;
+      --primary-dark: #4A1A8A;
+      --primary-light: #8B5CF6;
+      --primary-gradient: linear-gradient(135deg, #6C2BD9, #8B5CF6);
+      --secondary: #1E293B;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #94A3B8;
+      --border: #E2E8F0;
+      --shadow: 0 4px 24px rgba(108, 43, 217, 0.08);
+      --shadow-hover: 0 12px 40px rgba(108, 43, 217, 0.15);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --success: #10B981;
+      --error: #EF4444;
+    }
+
+    /* ============================================
+       RESET & BASE
+       ============================================ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ============================================
+       HEADER
+       ============================================ */
+    .header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      box-shadow: var(--shadow);
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .header .logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .header .logo span {
+      color: var(--primary);
+    }
+
+    .header .nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+    }
+
+    .header .nav a:hover {
+      background: var(--bg);
+      color: var(--primary);
+    }
+
+    /* ============================================
+       MAIN CONTAINER
+       ============================================ */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    /* ============================================
+       JOB DETAILS
+       ============================================ */
+    .job-details {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+
+    .job-details .job-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .job-details h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .job-details .company-name {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 17px;
+    }
+
+    .job-details .job-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+      padding: 14px 16px;
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+    }
+
+    .job-details .job-meta .meta-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .job-details .job-meta .meta-item .label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .job-details .job-meta .meta-item .value {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-top: 2px;
+    }
+
+    .job-details .job-description {
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-top: 12px;
+      font-size: 15px;
+    }
+
+    .job-tag {
+      display: inline-block;
+      padding: 3px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .job-tag-full-time { background: #D1FAE5; color: #065F46; }
+    .job-tag-part-time { background: #FEF3C7; color: #92400E; }
+    .job-tag-contract { background: #DBEAFE; color: #1E40AF; }
+    .job-tag-internship { background: #FCE4EC; color: #880E4F; }
+
+    /* ============================================
+       APPLY FORM
+       ============================================ */
+    .apply-form-section {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 32px 36px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .apply-form-section h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .form-group label .required {
+      color: var(--error);
+      margin-left: 2px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      transition: var(--transition);
+      background: var(--bg);
+      font-family: 'Inter', sans-serif;
+      color: var(--text-primary);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(108, 43, 217, 0.1);
+      background: white;
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: var(--text-muted);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .form-group input[type="file"] {
+      padding: 10px 12px;
+      background: var(--bg);
+      cursor: pointer;
+    }
+
+    .form-group input[type="file"]::file-selector-button {
+      padding: 8px 16px;
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      margin-right: 12px;
+      transition: var(--transition);
+    }
+
+    .form-group input[type="file"]::file-selector-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(108, 43, 217, 0.3);
+    }
+
+    .file-info {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .btn-submit {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(108, 43, 217, 0.3);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-submit .spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .btn-submit.loading .spinner {
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .apply-msg {
+      margin-top: 16px;
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 500;
+      display: none;
+    }
+
+    .apply-msg.success {
+      display: block;
+      background: #D1FAE5;
+      color: #065F46;
+      border: 1px solid #A7F3D0;
+    }
+
+    .apply-msg.error {
+      display: block;
+      background: #FEE2E2;
+      color: #991B1B;
+      border: 1px solid #FCA5A5;
+    }
+
+    /* ============================================
+       FOOTER
+       ============================================ */
+    .footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--text-muted);
+      font-size: 14px;
+      border-top: 1px solid var(--border);
+      margin-top: 32px;
+      background: var(--card-bg);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px 16px;
+      }
+      .job-details {
+        padding: 20px 18px;
+      }
+      .apply-form-section {
+        padding: 20px 18px;
+      }
+      .job-details .job-meta {
+        grid-template-columns: 1fr 1fr;
+      }
+      .header-inner {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .job-details .job-meta {
+        grid-template-columns: 1fr;
+      }
+      .job-details .job-header {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- ===== HEADER ===== -->
   <header class="header">
-    <div class="container header-inner">
-      <h1 class="logo">HireWaY</h1>
+    <div class="header-inner">
+      <a href="index.html" class="logo">Hire<span>Way</span></a>
       <nav class="nav">
-        <a href="./index.html">Home</a>
+        <a href="./Student/dashboard.html">Dashboard</a>
+        <a href="./Student/job-list.html">Jobs</a>
+        <a href="./Student/applied-jobs.html">My Applications</a>
+        <a href="./Student/profile.html">Profile</a>
+        <a href="#" id="logoutNav" style="color:#e74c3c;">Logout</a>
       </nav>
     </div>
   </header>
 
-  <!-- Job Details -->
+  <!-- ===== MAIN CONTENT ===== -->
   <main class="container">
+
+    <!-- Job Details -->
     <section id="job-details" class="job-details">
-      <h2 id="jobTitle">Job Title</h2>
-      <p><strong>Company:</strong> <span id="jobCompany"></span></p>
-      <p><strong>Location:</strong> <span id="jobLocation"></span></p>
-      <p><strong>Salary:</strong> <span id="jobSalary"></span></p>
-      <p><strong>Type:</strong> <span id="jobType"></span></p>
-      <p><strong>Description:</strong> <span id="jobDescription"></span></p>
+      <div class="job-header">
+        <div>
+          <h2 id="jobTitle">Loading job details...</h2>
+          <div class="company-name" id="jobCompany">-</div>
+        </div>
+        <span class="job-tag job-tag-full-time" id="jobTypeTag">Full Time</span>
+      </div>
+
+      <div class="job-meta">
+        <div class="meta-item">
+          <span class="label">📍 Location</span>
+          <span class="value" id="jobLocation">N/A</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">💰 Salary</span>
+          <span class="value" id="jobSalary">N/A</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">📋 Job Type</span>
+          <span class="value" id="jobType">N/A</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">📅 Posted</span>
+          <span class="value" id="jobPosted">N/A</span>
+        </div>
+      </div>
+
+      <div class="job-description" id="jobDescription">
+        Loading description...
+      </div>
     </section>
 
     <!-- Application Form -->
     <section class="apply-form-section">
-      <h3>Apply for this job</h3>
-      <form id="applyForm">
+      <h3>📝 Submit Your Application</h3>
+
+      <form id="applyForm" enctype="multipart/form-data">
         <div class="form-group">
-          <label for="applicantName">Full Name</label>
-          <input type="text" id="applicantName" name="name" required>
+          <label for="applicantName">Full Name <span class="required">*</span></label>
+          <input type="text" id="applicantName" name="name" placeholder="Enter your full name" required>
         </div>
 
         <div class="form-group">
-          <label for="applicantEmail">Email</label>
-          <input type="email" id="applicantEmail" name="email" required>
+          <label for="applicantEmail">Email <span class="required">*</span></label>
+          <input type="email" id="applicantEmail" name="email" placeholder="Enter your email address" required>
         </div>
 
         <div class="form-group">
-          <label for="resume">Resume (PDF)</label>
-          <input type="file" id="resume" name="resume" accept=".pdf" required>
+          <label for="resume">Resume (PDF) <span class="required">*</span></label>
+          <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" required>
+          <div class="file-info">Accepted formats: PDF, DOC, DOCX (Max 5MB)</div>
         </div>
 
         <div class="form-group">
-          <label for="coverLetter">Cover Letter</label>
-          <textarea id="coverLetter" name="coverLetter" rows="5" required></textarea>
+          <label for="coverLetter">Cover Letter <span class="required">*</span></label>
+          <textarea id="coverLetter" name="cover_letter" rows="5" placeholder="Tell us why you're the right candidate for this position..." required></textarea>
         </div>
 
-        <button type="submit" class="btn-submit">Submit Application</button>
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <span class="spinner"></span>
+          Submit Application
+        </button>
         <p id="applyMsg" class="apply-msg"></p>
       </form>
     </section>
+
   </main>
 
+  <!-- ===== FOOTER ===== -->
   <footer class="footer">
-    <p>© 2025 JobPortal. All rights reserved.</p>
+    <p>© 2025 HireWay. All rights reserved.</p>
   </footer>
 
-  <script src="apply.js" defer></script>
+  <!-- ============================================
+  SCRIPTS – FULLY CORRECTED
+  ============================================ -->
+  <script>
+    // ============================================
+    // CONFIGURATION
+    // ============================================
+    const API_URL = 'http://localhost:5001/api';
+
+    // ============================================
+    // CHECK LOGIN
+    // ============================================
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = './Auth/Login.html';
+    }
+
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (user.role !== 'student') {
+      alert('Only students can apply for jobs.');
+      window.location.href = './Student/dashboard.html';
+    }
+
+    // ============================================
+    // LOGOUT
+    // ============================================
+    document.getElementById('logoutNav').addEventListener('click', function(e) {
+      e.preventDefault();
+      localStorage.clear();
+      window.location.href = './Auth/Login.html';
+    });
+
+    // ============================================
+    // GET JOB ID – WITH FALLBACK
+    // ============================================
+    let jobId = new URLSearchParams(window.location.search).get('id');
+
+    if (!jobId) {
+      const stored = localStorage.getItem('applyJobId');
+      if (stored) {
+        console.log('✅ Using stored job ID:', stored);
+        jobId = stored;
+        window.history.replaceState({}, '', `Apply.html?id=${stored}`);
+      }
+    }
+
+    if (!jobId) {
+      document.getElementById('jobTitle').textContent = '❌ No job selected';
+      document.getElementById('jobDescription').textContent = 'Please go back and select a job.';
+      document.getElementById('submitBtn').disabled = true;
+      document.getElementById('submitBtn').textContent = 'No Job Selected';
+
+      const msgEl = document.getElementById('applyMsg');
+      msgEl.className = 'apply-msg error';
+      msgEl.innerHTML = `
+        ❌ No job selected. Please go back.
+        <br><br>
+        <button onclick="window.location.href='./Student/job-list.html'" 
+                style="background:#6a1b9a;color:white;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600;">
+          ← Back to Jobs
+        </button>
+      `;
+      throw new Error('No job ID provided');
+    }
+
+    localStorage.setItem('applyJobId', jobId);
+
+    // ============================================
+    // LOAD JOB DETAILS
+    // ============================================
+    async function loadJobDetails() {
+      try {
+        const response = await fetch(`${API_URL}/jobs/${jobId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.status === 401) {
+          window.location.href = './Auth/Login.html';
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error('Failed to load job details');
+        }
+
+        const job = await response.json();
+
+        document.getElementById('jobTitle').textContent = job.title || 'N/A';
+        document.getElementById('jobCompany').textContent = job.company || 'N/A';
+        document.getElementById('jobLocation').textContent = job.location || 'N/A';
+        document.getElementById('jobSalary').textContent = job.salary || 'N/A';
+        document.getElementById('jobType').textContent = job.type || 'N/A';
+        document.getElementById('jobPosted').textContent = job.created_at ? new Date(job.created_at).toLocaleDateString() : 'N/A';
+        document.getElementById('jobDescription').textContent = job.description || 'No description available.';
+
+        const typeTag = document.getElementById('jobTypeTag');
+        const jobType = (job.type || 'Full-Time').toLowerCase().replace(' ', '-');
+        typeTag.className = `job-tag job-tag-${jobType}`;
+        typeTag.textContent = job.type || 'Full Time';
+
+        if (user.email) {
+          document.getElementById('applicantEmail').value = user.email;
+        }
+        if (user.full_name) {
+          document.getElementById('applicantName').value = user.full_name;
+        } else if (user.username) {
+          document.getElementById('applicantName').value = user.username;
+        }
+
+      } catch (error) {
+        console.error('Load job details error:', error);
+        document.getElementById('jobTitle').textContent = '❌ Error loading job';
+        document.getElementById('jobDescription').textContent = 'Failed to load job details. Please try again.';
+      }
+    }
+
+    // ============================================
+    // SUBMIT APPLICATION
+    // ============================================
+    document.getElementById('applyForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const submitBtn = document.getElementById('submitBtn');
+      const msgEl = document.getElementById('applyMsg');
+
+      msgEl.className = 'apply-msg';
+      msgEl.textContent = '';
+
+      const name = document.getElementById('applicantName').value.trim();
+      const email = document.getElementById('applicantEmail').value.trim();
+      const coverLetter = document.getElementById('coverLetter').value.trim();
+      const resumeFile = document.getElementById('resume').files[0];
+
+      // Validation
+      if (!name || !email || !coverLetter) {
+        msgEl.className = 'apply-msg error';
+        msgEl.textContent = '❌ Please fill in all required fields.';
+        return;
+      }
+
+      if (!resumeFile) {
+        msgEl.className = 'apply-msg error';
+        msgEl.textContent = '❌ Please upload your resume.';
+        return;
+      }
+
+      if (resumeFile.size > 5 * 1024 * 1024) {
+        msgEl.className = 'apply-msg error';
+        msgEl.textContent = '❌ File size exceeds 5MB.';
+        return;
+      }
+
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      if (!allowedTypes.includes(resumeFile.type)) {
+        msgEl.className = 'apply-msg error';
+        msgEl.textContent = '❌ Please upload a PDF, DOC, or DOCX file.';
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('job_id', jobId);
+      formData.append('name', name);
+      formData.append('email', email);
+      formData.append('cover_letter', coverLetter);
+      formData.append('resume', resumeFile);
+
+      submitBtn.classList.add('loading');
+      submitBtn.disabled = true;
+
+      try {
+       const response = await fetch(`${API_URL}/applications`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          msgEl.className = 'apply-msg success';
+          msgEl.textContent = '✅ Application submitted successfully! Redirecting...';
+          document.getElementById('applyForm').reset();
+          localStorage.removeItem('applyJobId');
+          setTimeout(() => {
+            window.location.href = './Student/applied-jobs.html';
+          }, 2500);
+        } else {
+          msgEl.className = 'apply-msg error';
+          msgEl.textContent = `❌ ${data.error || 'Submission failed.'}`;
+        }
+      } catch (error) {
+        console.error('Submit error:', error);
+        msgEl.className = 'apply-msg error';
+        msgEl.textContent = '❌ Network error. Please try again.';
+      } finally {
+        submitBtn.classList.remove('loading');
+        submitBtn.disabled = false;
+      }
+    });
+
+    // ============================================
+    // INITIALIZE
+    // ============================================
+    loadJobDetails();
+  </script>
 </body>
 </html>

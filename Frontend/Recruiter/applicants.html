@@ -1,59 +1,1228 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Applicants</title>
-  <link rel="stylesheet" href="css/recruiter.css">
-</head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Applicants - Recruiter</title>
+  
+  <style>
+    /* ============================================
+       GOOGLE FONTS
+       ============================================ */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
+    /* ============================================
+       CSS VARIABLES
+       ============================================ */
+    :root {
+      --primary: #6C2BD9;
+      --primary-dark: #4A1A8A;
+      --primary-light: #8B5CF6;
+      --primary-gradient: linear-gradient(135deg, #6C2BD9, #8B5CF6);
+      --secondary: #1E293B;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #94A3B8;
+      --border: #E2E8F0;
+      --shadow: 0 4px 24px rgba(108, 43, 217, 0.08);
+      --shadow-hover: 0 12px 40px rgba(108, 43, 217, 0.15);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ============================================
+       RESET & BASE
+       ============================================ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      display: flex;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ============================================
+       SCROLLBAR
+       ============================================ */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary-light);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
+    }
+
+    /* ============================================
+       SIDEBAR
+       ============================================ */
+    .sidebar {
+      width: 260px;
+      background: var(--secondary);
+      color: white;
+      padding: 28px 0;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar .logo {
+      font-size: 22px;
+      font-weight: 800;
+      padding: 0 24px 28px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      letter-spacing: -0.5px;
+    }
+
+    .sidebar .logo span {
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .sidebar .logo .dot {
+      color: var(--primary-light);
+      -webkit-text-fill-color: var(--primary-light);
+    }
+
+    .sidebar .nav-section {
+      padding: 20px 0 8px 24px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: rgba(255,255,255,0.3);
+      font-weight: 600;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: var(--transition);
+      font-size: 14px;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      margin: 2px 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    .sidebar a .icon {
+      font-size: 18px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .sidebar a:hover {
+      background: rgba(255,255,255,0.05);
+      color: white;
+    }
+
+    .sidebar a.active {
+      background: rgba(108, 43, 217, 0.2);
+      color: white;
+      border-left-color: var(--primary-light);
+    }
+
+    .sidebar .sidebar-footer {
+      margin-top: auto;
+      padding: 20px 24px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .sidebar .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(239, 68, 68, 0.1);
+      border: none;
+      color: #F87171;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .sidebar .logout-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: #FCA5A5;
+    }
+
+    /* ============================================
+       MAIN CONTENT
+       ============================================ */
+    .main-content {
+      margin-left: 260px;
+      padding: 32px 40px;
+      flex: 1;
+      width: calc(100% - 260px);
+      min-height: 100vh;
+    }
+
+    /* ============================================
+       TOP NAVBAR
+       ============================================ */
+    .top-navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      background: var(--card-bg);
+      padding: 16px 24px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .top-navbar .page-title h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.3px;
+    }
+
+    .top-navbar .page-title p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .top-navbar .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .top-navbar .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-right: 16px;
+      border-right: 1px solid var(--border);
+    }
+
+    .top-navbar .user-info .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--primary-gradient);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .top-navbar .user-info .name {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    .logout-top-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .logout-top-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(108, 43, 217, 0.3);
+    }
+
+    /* ============================================
+       STATS BAR
+       ============================================ */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .stat-item {
+      background: var(--card-bg);
+      padding: 16px 20px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .stat-item .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-item .stat-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 4px;
+    }
+
+    .stat-item .stat-value .highlight {
+      color: var(--primary);
+    }
+
+    /* ============================================
+       FILTER SECTION
+       ============================================ */
+    .filter-section {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+      background: var(--card-bg);
+      padding: 16px 24px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+
+    .filter-section .filter-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .filter-section select {
+      padding: 10px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      background: var(--bg);
+      cursor: pointer;
+      min-width: 180px;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      color: var(--text-primary);
+    }
+
+    .filter-section select:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(108, 43, 217, 0.1);
+      background: white;
+    }
+
+    .filter-section .btn-clear {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .filter-section .btn-clear:hover {
+      background: var(--bg);
+      color: var(--text-primary);
+    }
+
+    /* ============================================
+       TABLE
+       ============================================ */
+    .table-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table-header h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .table-header .count-badge {
+      background: var(--primary-gradient);
+      color: white;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      padding: 0 4px 4px 4px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    thead {
+      background: var(--bg);
+    }
+
+    thead th {
+      padding: 14px 18px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+    }
+
+    tbody td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 14px;
+      vertical-align: middle;
+    }
+
+    tbody tr {
+      transition: var(--transition);
+    }
+
+    tbody tr:hover {
+      background: rgba(108, 43, 217, 0.03);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .applicant-name {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .job-title {
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .applicant-email {
+      color: var(--text-secondary);
+    }
+
+    .cover-letter-cell {
+      max-width: 180px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    /* ===== STATUS BADGES ===== */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+    .status-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .status-pending {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+    .status-pending .dot {
+      background: #F59E0B;
+    }
+
+    .status-reviewed {
+      background: #DBEAFE;
+      color: #1E40AF;
+    }
+    .status-reviewed .dot {
+      background: #3B82F6;
+    }
+
+    .status-shortlisted {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+    .status-shortlisted .dot {
+      background: #10B981;
+    }
+
+    .status-interview {
+      background: #EDE9FE;
+      color: #5B21B6;
+    }
+    .status-interview .dot {
+      background: #7C3AED;
+    }
+
+    .status-accepted {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+    .status-accepted .dot {
+      background: #059669;
+    }
+
+    .status-rejected {
+      background: #FEE2E2;
+      color: #991B1B;
+    }
+    .status-rejected .dot {
+      background: #EF4444;
+    }
+
+    /* ===== ACTION BUTTONS ===== */
+    .action-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .action-cell select {
+      padding: 6px 10px;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      font-size: 12px;
+      background: white;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      color: var(--text-primary);
+      min-width: 110px;
+    }
+
+    .action-cell select:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+
+    .btn-update {
+      padding: 6px 14px;
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      white-space: nowrap;
+    }
+
+    .btn-update:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(108, 43, 217, 0.3);
+    }
+
+    .btn-update:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ✅ FIXED: Resume Button */
+    .btn-resume {
+      display: inline-block;
+      padding: 6px 14px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .btn-resume:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(108, 43, 217, 0.3);
+    }
+
+    .btn-resume:active {
+      transform: translateY(0);
+    }
+
+    /* ===== EMPTY STATE ===== */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .empty-state .empty-icon {
+      font-size: 56px;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .empty-state h3 {
+      font-size: 20px;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .empty-state p {
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 1024px) {
+      .main-content {
+        padding: 24px 28px;
+      }
+      table {
+        font-size: 13px;
+      }
+      thead th, tbody td {
+        padding: 10px 14px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 72px;
+        padding: 16px 0;
+      }
+      .sidebar .logo {
+        font-size: 18px;
+        padding: 0 12px 20px 12px;
+        text-align: center;
+      }
+      .sidebar .logo span {
+        display: none;
+      }
+      .sidebar .logo .dot {
+        display: none;
+      }
+      .sidebar .nav-section {
+        display: none;
+      }
+      .sidebar a {
+        padding: 12px;
+        margin: 2px 6px;
+        justify-content: center;
+        font-size: 0;
+        border-radius: var(--radius-sm);
+      }
+      .sidebar a .icon {
+        font-size: 20px;
+        width: auto;
+      }
+      .sidebar a.active {
+        border-left: none;
+        background: rgba(108, 43, 217, 0.2);
+      }
+      .sidebar .sidebar-footer {
+        padding: 12px;
+      }
+      .sidebar .logout-btn {
+        justify-content: center;
+        padding: 12px;
+        font-size: 0;
+      }
+      .sidebar .logout-btn .icon {
+        font-size: 20px;
+      }
+
+      .main-content {
+        margin-left: 72px;
+        padding: 16px 18px;
+        width: calc(100% - 72px);
+      }
+
+      .top-navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px 18px;
+      }
+      .top-navbar .navbar-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .stats-bar {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .filter-section {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 16px 18px;
+      }
+      .filter-section select {
+        width: 100%;
+        min-width: unset;
+      }
+
+      .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 14px 18px;
+      }
+
+      .action-cell {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .action-cell select {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-bar {
+        grid-template-columns: 1fr;
+      }
+      
+      table {
+        font-size: 12px;
+      }
+      thead th, tbody td {
+        padding: 8px 10px;
+      }
+      
+      /* Mobile card view */
+      thead {
+        display: none;
+      }
+      tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--text-secondary);
+        font-size: 12px;
+      }
+      tbody tr {
+        display: block;
+        border-bottom: 2px solid var(--border);
+        padding: 4px 0;
+      }
+      tbody tr:last-child {
+        border-bottom: none;
+      }
+      .cover-letter-cell {
+        max-width: 120px;
+      }
+    }
+  </style>
+</head>
 <body>
+
+  <!-- ============================================
+  SIDEBAR
+  ============================================ -->
   <div class="sidebar">
-    <h2>Recruiter</h2>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="add-job.html">Add Job</a>
-    <a href="my-jobs.html">My Jobs</a>
-    <a href="applicants.html">Applicants</a>
-    <a href="profile.html">Profile</a>
-    <button class="logout-btn" onclick="logout()">Logout</button>
+    <div class="logo">💼<span>Hire<span class="dot">.</span></span></div>
+
+    <div class="nav-section">Main</div>
+    <a href="dashboard.html"><span class="icon">📊</span> Dashboard</a>
+    <a href="add-job.html"><span class="icon">➕</span> Add Job</a>
+    <a href="my-jobs.html"><span class="icon">📋</span> My Jobs</a>
+    <a href="applicants.html" class="active"><span class="icon">👥</span> Applicants</a>
+    <a href="profile.html"><span class="icon">👤</span> Profile</a>
+
+    <div class="sidebar-footer">
+      <button id="logout-btn" class="logout-btn">
+        <span class="icon">🚪</span> Logout
+      </button>
+    </div>
   </div>
 
-  <div class="main">
-    <h1>Applicants List</h1>
+  <!-- ============================================
+  MAIN CONTENT
+  ============================================ -->
+  <div class="main-content">
 
+    <!-- Top Navbar -->
+    <div class="top-navbar">
+      <div class="page-title">
+        <h1>👥 Applicants</h1>
+        <p>Manage all job applications</p>
+      </div>
+      <div class="navbar-right">
+        <div class="user-info">
+          <div class="avatar" id="userAvatar">R</div>
+          <span class="name" id="userName">Recruiter</span>
+        </div>
+        <button id="logout-top" class="logout-top-btn">Logout</button>
+      </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-label">Total Applicants</div>
+        <div class="stat-value"><span class="highlight" id="totalApplicants">0</span></div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Pending</div>
+        <div class="stat-value"><span class="highlight" id="pendingCount">0</span></div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Shortlisted</div>
+        <div class="stat-value"><span class="highlight" id="shortlistedCount">0</span></div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Accepted</div>
+        <div class="stat-value"><span class="highlight" id="acceptedCount">0</span></div>
+      </div>
+    </div>
+
+    <!-- Filter Section -->
     <div class="filter-section">
+      <span class="filter-label">🔍 Filter:</span>
       <select id="jobFilter">
         <option value="">All Jobs</option>
       </select>
       <select id="statusFilter">
         <option value="">All Status</option>
-        <option value="pending">Pending</option>
-        <option value="reviewed">Reviewed</option>
-        <option value="accepted">Accepted</option>
-        <option value="rejected">Rejected</option>
+        <option value="pending">⏳ Pending</option>
+        <option value="reviewed">📋 Reviewed</option>
+        <option value="shortlisted">⭐ Shortlisted</option>
+        <option value="interview">📅 Interview</option>
+        <option value="accepted">✅ Accepted</option>
+        <option value="rejected">❌ Rejected</option>
       </select>
+      <button class="btn-clear" onclick="clearFilters()">✕ Clear</button>
     </div>
 
-    <table class="applicants-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Job Applied</th>
-          <th>Email</th>
-          <th>Cover Letter</th>
-          <th>Resume</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-
-      <tbody id="applicantsTable"></tbody>
-    </table>
-
-    <div id="noApplicants" style="display: none; text-align: center; padding: 40px;">
-      <p>No applicants found.</p>
+    <!-- Table -->
+    <div class="table-card">
+      <div class="table-header">
+        <h3>📋 All Applications</h3>
+        <span class="count-badge" id="applicantCount">0 Applicants</span>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Job</th>
+              <th>Email</th>
+              <th>Cover Letter</th>
+              <th>Resume</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="applicantsTable">
+            <tr>
+              <td colspan="7">
+                <div class="empty-state">
+                  <span class="empty-icon">⏳</span>
+                  <h3>Loading applicants...</h3>
+                  <p>Please wait while we fetch the data.</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
   </div>
 
-   <script src="js/applicants.js"></script> 
+  <!-- ============================================
+  SCRIPTS
+  ============================================ -->
+  <script>
+    // ============================================
+    // CONFIGURATION
+    // ============================================
+    const API_URL = 'http://localhost:5001/api';
+
+    // ============================================
+    // CHECK LOGIN
+    // ============================================
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = '../Auth/Login.html';
+    }
+
+    // ============================================
+    // GET USER INFO
+    // ============================================
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userName = user.username || 'Recruiter';
+    document.getElementById('userName').textContent = userName;
+    document.getElementById('userAvatar').textContent = userName.charAt(0).toUpperCase();
+
+    // ============================================
+    // LOGOUT
+    // ============================================
+    function logout() {
+      localStorage.clear();
+      window.location.href = '../Auth/Login.html';
+    }
+
+    document.getElementById('logout-btn').addEventListener('click', logout);
+    document.getElementById('logout-top').addEventListener('click', logout);
+
+    // ============================================
+    // STATE
+    // ============================================
+    let allApplicants = [];
+
+    // ============================================
+    // LOAD APPLICANTS
+    // ============================================
+    async function loadApplicants() {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        const response = await fetch(`${API_URL}/recruiter/applicants`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.status === 401) {
+          window.location.href = '../Auth/Login.html';
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error('Failed to load applicants');
+        }
+
+        const data = await response.json();
+        allApplicants = data.applicants || data || [];
+        
+        renderApplicants(allApplicants);
+        populateJobFilter(allApplicants);
+        updateStats(allApplicants);
+
+      } catch (error) {
+        console.error('Load applicants error:', error);
+        document.getElementById('applicantsTable').innerHTML = `
+          <tr>
+            <td colspan="7">
+              <div class="empty-state">
+                <span class="empty-icon">❌</span>
+                <h3>Error Loading Applicants</h3>
+                <p>${error.message}</p>
+                <button onclick="loadApplicants()" style="margin-top:15px;padding:10px 24px;background:#6a1b9a;color:white;border:none;border-radius:8px;cursor:pointer;">🔄 Retry</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    // ============================================
+    // UPDATE STATS
+    // ============================================
+    function updateStats(applicants) {
+      const total = applicants.length;
+      const pending = applicants.filter(a => a.status === 'pending' || !a.status).length;
+      const shortlisted = applicants.filter(a => a.status === 'shortlisted' || a.status === 'interview').length;
+      const accepted = applicants.filter(a => a.status === 'accepted').length;
+
+      document.getElementById('totalApplicants').textContent = total;
+      document.getElementById('pendingCount').textContent = pending;
+      document.getElementById('shortlistedCount').textContent = shortlisted;
+      document.getElementById('acceptedCount').textContent = accepted;
+    }
+
+    // ============================================
+    // POPULATE JOB FILTER
+    // ============================================
+    function populateJobFilter(applicants) {
+      const jobFilter = document.getElementById('jobFilter');
+      const jobSet = new Set();
+
+      applicants.forEach(app => {
+        const jobTitle = app.job || 'Unknown Job';
+        jobSet.add(jobTitle);
+      });
+
+      jobFilter.innerHTML = '<option value="">All Jobs</option>';
+      jobSet.forEach(jobTitle => {
+        const option = document.createElement('option');
+        option.value = jobTitle;
+        option.textContent = jobTitle;
+        jobFilter.appendChild(option);
+      });
+    }
+
+    // ============================================
+    // GET STATUS CLASS
+    // ============================================
+    function getStatusClass(status) {
+      const classes = {
+        'pending': 'status-pending',
+        'reviewed': 'status-reviewed',
+        'shortlisted': 'status-shortlisted',
+        'interview': 'status-interview',
+        'accepted': 'status-accepted',
+        'rejected': 'status-rejected'
+      };
+      return classes[status] || 'status-pending';
+    }
+
+    function getStatusLabel(status) {
+      return status ? status.charAt(0).toUpperCase() + status.slice(1) : 'Pending';
+    }
+
+    // ============================================
+    // RENDER APPLICANTS - ✅ FIXED RESUME LINK
+    // ============================================
+    function renderApplicants(applicants) {
+      const tbody = document.getElementById('applicantsTable');
+      const countBadge = document.getElementById('applicantCount');
+
+      const jobFilter = document.getElementById('jobFilter').value;
+      const statusFilter = document.getElementById('statusFilter').value;
+
+      let filtered = applicants;
+
+      if (jobFilter) {
+        filtered = filtered.filter(app => {
+          const jobTitle = app.job_title || app.Job?.title || app.job?.title || 'Unknown Job';
+          return jobTitle === jobFilter;
+        });
+      }
+
+      if (statusFilter) {
+        filtered = filtered.filter(app => {
+          const status = app.status || 'pending';
+          return status.toLowerCase() === statusFilter.toLowerCase();
+        });
+      }
+
+      countBadge.textContent = filtered.length + ' Applicants';
+
+      if (!filtered || filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7">
+              <div class="empty-state">
+                <span class="empty-icon">📭</span>
+                <h3>No Applicants Found</h3>
+                <p>${applicants.length === 0 ? 'No one has applied to your jobs yet.' : 'No applicants match your filters.'}</p>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(app => {
+        const status = app.status || 'pending';
+        const statusClass = getStatusClass(status);
+        const statusLabel = getStatusLabel(status);
+        
+        const name = app.full_name || app.name || app.User?.username || 'Unknown';
+        const email = app.email || app.User?.email || 'N/A';
+        const jobTitle = app.job || 'Unknown Job';
+        const coverLetter = app.cover_letter || app.coverLetter || 'No cover letter';
+        const resumeUrl = app.resume_path || app.resumeUrl || null;
+
+let cleanResumeUrl = null;
+
+if (resumeUrl) {
+    cleanResumeUrl = String(resumeUrl)
+        .replace(/\\/g, '/')
+        .split('/')
+        .pop();
+}
+
+const resumeLink = cleanResumeUrl
+    ? `<a href="http://localhost:5001/uploads/${encodeURIComponent(cleanResumeUrl)}"
+         class="btn-resume"
+         onclick="event.stopPropagation();"
+         rel="noopener noreferrer">
+         📄 View Resume
+       </a>`
+    : '<span style="color:#94A3B8;font-size:13px;">N/A</span>';
+
+        return `
+          <tr>
+            <td data-label="Name" class="applicant-name">${name}</td>
+            <td data-label="Job" class="job-title">${jobTitle}</td>
+            <td data-label="Email" class="applicant-email">${email}</td>
+            <td data-label="Cover Letter" class="cover-letter-cell" title="${coverLetter}">${coverLetter.substring(0, 50)}${coverLetter.length > 50 ? '...' : ''}</td>
+            <td data-label="Resume">${resumeLink}</td>
+            <td data-label="Status">
+              <span class="status-badge ${statusClass}">
+                <span class="dot"></span>
+                ${statusLabel}
+              </span>
+            </td>
+            <td data-label="Actions">
+              <div class="action-cell">
+                <select id="statusSelect_${app.id}">
+                  <option value="pending" ${status === 'pending' ? 'selected' : ''}>⏳ Pending</option>
+                  <option value="reviewed" ${status === 'reviewed' ? 'selected' : ''}>📋 Reviewed</option>
+                  <option value="shortlisted" ${status === 'shortlisted' ? 'selected' : ''}>⭐ Shortlisted</option>
+                  <option value="interview" ${status === 'interview' ? 'selected' : ''}>📅 Interview</option>
+                  <option value="accepted" ${status === 'accepted' ? 'selected' : ''}>✅ Accepted</option>
+                  <option value="rejected" ${status === 'rejected' ? 'selected' : ''}>❌ Rejected</option>
+                </select>
+                <button class="btn-update" onclick="updateStatus(${app.id})">Update</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // ============================================
+    // UPDATE STATUS
+    // ============================================
+    async function updateStatus(applicationId) {
+      const select = document.getElementById(`statusSelect_${applicationId}`);
+      if (!select) return;
+
+      const status = select.value;
+      const btn = select.closest('.action-cell').querySelector('.btn-update');
+      
+      btn.disabled = true;
+      btn.textContent = '⏳ Saving...';
+
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          alert('Please login again');
+          return;
+        }
+
+        const response = await fetch(`${API_URL}/recruiter/applications/${applicationId}/status`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ status })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Update the status badge
+          const row = select.closest('tr');
+          const badge = row.querySelector('.status-badge');
+          if (badge) {
+            const statusClass = getStatusClass(status);
+            const statusLabel = getStatusLabel(status);
+            badge.className = `status-badge ${statusClass}`;
+            badge.innerHTML = `<span class="dot"></span> ${statusLabel}`;
+          }
+          
+          alert('✅ Status updated successfully!');
+          loadApplicants(); // Refresh stats
+        } else {
+          alert('❌ ' + (data.error || 'Failed to update status'));
+        }
+      } catch (error) {
+        console.error('Update status error:', error);
+        alert('❌ Error updating status');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Update';
+      }
+    }
+
+    // ============================================
+    // CLEAR FILTERS
+    // ============================================
+    function clearFilters() {
+      document.getElementById('jobFilter').value = '';
+      document.getElementById('statusFilter').value = '';
+      renderApplicants(allApplicants);
+    }
+
+    // ============================================
+    // EVENT LISTENERS
+    // ============================================
+    document.getElementById('jobFilter').addEventListener('change', () => renderApplicants(allApplicants));
+    document.getElementById('statusFilter').addEventListener('change', () => renderApplicants(allApplicants));
+
+    // ============================================
+    // INITIALIZE
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+      loadApplicants();
+    });
+  </script>
 </body>
 </html>

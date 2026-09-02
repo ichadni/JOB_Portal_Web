@@ -2,70 +2,900 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body><div class="navbar">
-  <div class="logo">Student Panel</div>
+  <style>
+    /* ============================================
+       GOOGLE FONTS
+       ============================================ */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-  <div class="navbar-right">
-    <div class="notification-wrapper">
-      <button id="notifBtn" class="notif-btn">
-        🔔
-        <span id="notifCount" class="notif-count">0</span>
-      </button>
-      <div id="notifDropdown" class="notif-dropdown">
-        <ul id="notifList">
-          <li>No notifications</li>
-        </ul>
-      </div>
-    </div>
-    <button id="logout" class="logout-btn">Logout</button>
+    /* ============================================
+       CSS VARIABLES
+       ============================================ */
+    :root {
+      --primary: #6C2BD9;
+      --primary-dark: #4A1A8A;
+      --primary-light: #8B5CF6;
+      --primary-gradient: linear-gradient(135deg, #6C2BD9, #8B5CF6);
+      --secondary: #1E293B;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #94A3B8;
+      --border: #E2E8F0;
+      --shadow: 0 4px 24px rgba(108, 43, 217, 0.08);
+      --shadow-hover: 0 12px 40px rgba(108, 43, 217, 0.15);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ============================================
+       RESET & BASE
+       ============================================ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      display: flex;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ============================================
+       SCROLLBAR
+       ============================================ */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary-light);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
+    }
+
+    /* ============================================
+       SIDEBAR
+       ============================================ */
+    .sidebar {
+      width: 260px;
+      background: var(--secondary);
+      color: white;
+      padding: 28px 0;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar .logo {
+      font-size: 22px;
+      font-weight: 800;
+      padding: 0 24px 28px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      letter-spacing: -0.5px;
+    }
+
+    .sidebar .logo span {
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .sidebar .logo .dot {
+      color: var(--primary-light);
+      -webkit-text-fill-color: var(--primary-light);
+    }
+
+    .sidebar .nav-section {
+      padding: 20px 0 8px 24px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: rgba(255,255,255,0.3);
+      font-weight: 600;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: var(--transition);
+      font-size: 14px;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      margin: 2px 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    .sidebar a .icon {
+      font-size: 18px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .sidebar a:hover {
+      background: rgba(255,255,255,0.05);
+      color: white;
+    }
+
+    .sidebar a.active {
+      background: rgba(108, 43, 217, 0.2);
+      color: white;
+      border-left-color: var(--primary-light);
+    }
+
+    .sidebar .sidebar-footer {
+      margin-top: auto;
+      padding: 20px 24px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .sidebar .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(239, 68, 68, 0.1);
+      border: none;
+      color: #F87171;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .sidebar .logout-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: #FCA5A5;
+    }
+
+    /* ============================================
+       MAIN CONTENT
+       ============================================ */
+    .main-content {
+      margin-left: 260px;
+      padding: 32px 40px;
+      flex: 1;
+      width: calc(100% - 260px);
+      min-height: 100vh;
+    }
+
+    /* ============================================
+       TOP NAVBAR
+       ============================================ */
+    .top-navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      background: var(--card-bg);
+      padding: 16px 24px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .top-navbar .page-title h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.3px;
+    }
+
+    .top-navbar .page-title p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .top-navbar .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .top-navbar .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-right: 16px;
+      border-right: 1px solid var(--border);
+    }
+
+    .top-navbar .user-info .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--primary-gradient);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .top-navbar .user-info .name {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    .logout-top-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .logout-top-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(108, 43, 217, 0.3);
+    }
+
+    /* ============================================
+       PROFILE HEADER
+       ============================================ */
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      background: var(--card-bg);
+      padding: 24px 28px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+
+    .profile-avatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: var(--primary-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+      box-shadow: 0 4px 16px rgba(108, 43, 217, 0.25);
+    }
+
+    .profile-info h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .profile-info p {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: 2px;
+    }
+
+    .profile-info .profile-role {
+      display: inline-block;
+      background: var(--primary-gradient);
+      color: white;
+      padding: 2px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    /* ============================================
+       CARDS
+       ============================================ */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: var(--transition);
+      margin-bottom: 24px;
+      max-width: 100%;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-hover);
+    }
+
+    .card .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .card .card-header h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card .card-header .badge {
+      background: var(--primary-gradient);
+      color: white;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .card input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      margin-bottom: 12px;
+      transition: var(--transition);
+      background: var(--bg);
+      font-family: 'Inter', sans-serif;
+      color: var(--text-primary);
+    }
+
+    .card input:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(108, 43, 217, 0.1);
+      background: white;
+    }
+
+    .card input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .card .input-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      width: 100%;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(108, 43, 217, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--text-secondary);
+      border: 1.5px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--border);
+      transform: translateY(-2px);
+      box-shadow: none;
+    }
+
+    /* ============================================
+       SUCCESS / ERROR MESSAGES
+       ============================================ */
+    .message {
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 16px;
+      font-size: 14px;
+      font-weight: 500;
+      display: none;
+    }
+
+    .message-success {
+      background: #D1FAE5;
+      color: #065F46;
+      border: 1px solid #A7F3D0;
+    }
+
+    .message-error {
+      background: #FEE2E2;
+      color: #991B1B;
+      border: 1px solid #FCA5A5;
+    }
+
+    .message.show {
+      display: block;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 1024px) {
+      .main-content {
+        padding: 24px 28px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 72px;
+        padding: 16px 0;
+      }
+      .sidebar .logo {
+        font-size: 18px;
+        padding: 0 12px 20px 12px;
+        text-align: center;
+      }
+      .sidebar .logo span {
+        display: none;
+      }
+      .sidebar .logo .dot {
+        display: none;
+      }
+      .sidebar .nav-section {
+        display: none;
+      }
+      .sidebar a {
+        padding: 12px;
+        margin: 2px 6px;
+        justify-content: center;
+        font-size: 0;
+        border-radius: var(--radius-sm);
+      }
+      .sidebar a .icon {
+        font-size: 20px;
+        width: auto;
+      }
+      .sidebar a.active {
+        border-left: none;
+        background: rgba(108, 43, 217, 0.2);
+      }
+      .sidebar .sidebar-footer {
+        padding: 12px;
+      }
+      .sidebar .logout-btn {
+        justify-content: center;
+        padding: 12px;
+        font-size: 0;
+      }
+      .sidebar .logout-btn .icon {
+        font-size: 20px;
+      }
+
+      .main-content {
+        margin-left: 72px;
+        padding: 16px 18px;
+        width: calc(100% - 72px);
+      }
+
+      .top-navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px 18px;
+      }
+      .top-navbar .navbar-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .card {
+        padding: 18px 16px;
+      }
+
+      .card .input-group {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .profile-avatar {
+        width: 70px;
+        height: 70px;
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================
+SIDEBAR
+============================================ -->
+<div class="sidebar">
+  <div class="logo">💼<span>Hire<span class="dot">.</span></span></div>
+
+  <div class="nav-section">Main</div>
+  <a href="dashboard.html"><span class="icon">📊</span> Dashboard</a>
+  <a href="job-list.html"><span class="icon">💼</span> Jobs</a>
+  <a href="applied-jobs.html"><span class="icon">📝</span> Applied Jobs</a>
+  <a href="profile.html" class="active"><span class="icon">👤</span> Profile</a>
+
+  <div class="sidebar-footer">
+    <button id="logout-btn" class="logout-btn">
+      <span class="icon">🚪</span> Logout
+    </button>
   </div>
 </div>
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <a href="dashboard.html">Dashboard</a>
-    <a href="job-list.html">Jobs</a>
-    <a href="applied-jobs.html">Applied Jobs</a>
-    <a href="profile.html">Profile</a>
+
+<!-- ============================================
+MAIN CONTENT
+============================================ -->
+<div class="main-content">
+
+  <!-- Top Navbar -->
+  <div class="top-navbar">
+    <div class="page-title">
+      <h1>👤 My Profile</h1>
+      <p>Manage your personal information</p>
+    </div>
+    <div class="navbar-right">
+      <div class="user-info">
+        <div class="avatar" id="userAvatar">S</div>
+        <span class="name" id="userName">Student</span>
+      </div>
+      <button id="logout-top" class="logout-top-btn">Logout</button>
+    </div>
   </div>
 
-  <!-- Main content -->
-  <div class="main-content">
-    <h1>My Profile</h1>
-
-    <div class="profile-photo" style="text-align: center; margin-bottom: 20px;">
-      <img id="profileImage" src="picture/programmer.png" alt="Profile Photo" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
-      <br>
-      <input type="file" id="uploadPhoto" accept="image/*" style="margin-top: 10px;">
+  <!-- Profile Header -->
+  <div class="profile-header">
+    <div class="profile-avatar" id="profileAvatar">S</div>
+    <div class="profile-info">
+      <h2 id="profileName">Student</h2>
+      <p id="profileEmail">student@example.com</p>
+      <span class="profile-role">🎓 Student</span>
     </div>
+  </div>
 
-    <form id="profile-form" class="card">
-      <h3>Personal Information</h3>
-      <input type="text" id="fullNameInput" placeholder="Full Name">
-      <input type="text" id="usernameInput" placeholder="Username">
-      <input type="email" id="emailInput" placeholder="Email">
-      <input type="text" id="mobileInput" placeholder="Phone">
-      <button type="submit" class="btn">Update Profile</button>
-    </form>
+  <!-- Messages -->
+  <div id="successMessage" class="message message-success">✅ Profile updated successfully!</div>
+  <div id="errorMessage" class="message message-error">❌ Failed to update profile. Please try again.</div>
 
-    <div class="card">
-      <h3>Skills</h3>
-      <input type="text" id="skillsInput" placeholder="Skills">
-      <button class="btn" onclick="updateSkills()">Update Skills</button>
+  <!-- Personal Information -->
+  <form id="profile-form" class="card">
+    <div class="card-header">
+      <h3>📋 Personal Information</h3>
+      <span class="badge">Edit</span>
     </div>
+    <input type="text" id="fullNameInput" placeholder="Full Name">
+    <input type="text" id="usernameInput" placeholder="Username">
+    <input type="email" id="emailInput" placeholder="Email Address">
+    <input type="text" id="mobileInput" placeholder="Phone Number">
+    <button type="submit" class="btn">Update Profile</button>
+  </form>
 
-    <form id="password-form" class="card">
-      <h3>Change Password</h3>
-      <input type="password" id="currentPassword" placeholder="Current Password">
-      <input type="password" id="newPassword" placeholder="New Password">
-      <input type="password" id="confirmPassword" placeholder="Confirm New Password">
-      <button type="submit" class="btn">Update Password</button>
-    </form>
-     
-  
+  <!-- Skills -->
+  <div class="card">
+    <div class="card-header">
+      <h3>⚡ Skills</h3>
+      <span class="badge">Add</span>
+    </div>
+    <input type="text" id="skillsInput" placeholder="Enter skills (comma separated)">
+    <button id="updateSkillsBtn" class="btn">Update Skills</button>
+  </div>
 
-  <script src="Js/profile.js"></script>
+  <!-- Change Password -->
+  <form id="password-form" class="card">
+    <div class="card-header">
+      <h3>🔒 Change Password</h3>
+      <span class="badge">Secure</span>
+    </div>
+    <input type="password" id="currentPassword" placeholder="Current Password">
+    <input type="password" id="newPassword" placeholder="New Password (min 6 characters)">
+    <input type="password" id="confirmPassword" placeholder="Confirm New Password">
+    <button type="submit" class="btn">Update Password</button>
+  </form>
+
+</div>
+
+<!-- ============================================
+SCRIPTS
+============================================ -->
+<script>
+  // ============================================
+  // CONFIGURATION
+  // ============================================
+  const API_URL = 'http://localhost:5001/api';
+
+  // ============================================
+  // CHECK LOGIN
+  // ============================================
+  const token = localStorage.getItem('token');
+  if (!token) {
+    window.location.href = '../Auth/Login.html';
+  }
+
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  document.getElementById('userName').textContent = user.username || 'Student';
+  document.getElementById('userAvatar').textContent = (user.username || 'S').charAt(0).toUpperCase();
+  document.getElementById('profileAvatar').textContent = (user.username || 'S').charAt(0).toUpperCase();
+  document.getElementById('profileName').textContent = user.username || 'Student';
+  document.getElementById('profileEmail').textContent = user.email || 'student@example.com';
+
+  // ============================================
+  // LOGOUT
+  // ============================================
+  function logout() {
+    localStorage.clear();
+    window.location.href = '../Auth/Login.html';
+  }
+
+  document.getElementById('logout-btn').addEventListener('click', logout);
+  document.getElementById('logout-top').addEventListener('click', logout);
+
+  // ============================================
+  // MESSAGE HELPERS
+  // ============================================
+  function showMessage(type, message) {
+    const successEl = document.getElementById('successMessage');
+    const errorEl = document.getElementById('errorMessage');
+
+    successEl.classList.remove('show');
+    errorEl.classList.remove('show');
+
+    if (type === 'success') {
+      successEl.textContent = message || '✅ Profile updated successfully!';
+      successEl.classList.add('show');
+      setTimeout(() => successEl.classList.remove('show'), 5000);
+    } else {
+      errorEl.textContent = message || '❌ Failed to update profile. Please try again.';
+      errorEl.classList.add('show');
+      setTimeout(() => errorEl.classList.remove('show'), 5000);
+    }
+  }
+
+  // ============================================
+  // LOAD PROFILE
+  // ============================================
+  async function loadProfile() {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      const response = await fetch(`${API_URL}/student/profile`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (response.status === 401) {
+        window.location.href = '../Auth/Login.html';
+        return;
+      }
+
+      if (!response.ok) throw new Error('Failed to load profile');
+
+      const data = await response.json();
+
+      document.getElementById('fullNameInput').value = data.full_name || '';
+      document.getElementById('usernameInput').value = data.username || '';
+      document.getElementById('emailInput').value = data.email || '';
+      document.getElementById('mobileInput').value = data.mobile || '';
+      document.getElementById('skillsInput').value = data.skills || '';
+
+      // Update profile header
+      const name = data.username || 'Student';
+      document.getElementById('profileName').textContent = data.full_name || name;
+      document.getElementById('profileEmail').textContent = data.email || 'student@example.com';
+      document.getElementById('profileAvatar').textContent = name.charAt(0).toUpperCase();
+      document.getElementById('userName').textContent = name;
+      document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+
+    } catch (error) {
+      console.error('Load profile error:', error);
+      showMessage('error', 'Failed to load profile data.');
+    }
+  }
+
+  // ============================================
+  // UPDATE PROFILE
+  // ============================================
+  document.getElementById('profile-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      showMessage('error', 'Please login first.');
+      return;
+    }
+
+    const formData = {
+      full_name: document.getElementById('fullNameInput').value.trim(),
+      username: document.getElementById('usernameInput').value.trim(),
+      email: document.getElementById('emailInput').value.trim(),
+      mobile: document.getElementById('mobileInput').value.trim()
+    };
+
+    try {
+      const response = await fetch(`${API_URL}/student/profile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        showMessage('success', '✅ Profile updated successfully!');
+        // Update stored user data
+        const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+        storedUser.username = formData.username;
+        localStorage.setItem('user', JSON.stringify(storedUser));
+        // Reload profile
+        loadProfile();
+      } else {
+        showMessage('error', data.error || 'Failed to update profile.');
+      }
+    } catch (error) {
+      console.error('Update profile error:', error);
+      showMessage('error', 'Network error. Please try again.');
+    }
+  });
+
+  // ============================================
+  // UPDATE SKILLS
+  // ============================================
+  document.getElementById('updateSkillsBtn').addEventListener('click', async function() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      showMessage('error', 'Please login first.');
+      return;
+    }
+
+    const skills = document.getElementById('skillsInput').value.trim();
+
+    try {
+      const response = await fetch(`${API_URL}/student/profile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ skills })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        showMessage('success', '✅ Skills updated successfully!');
+      } else {
+        showMessage('error', data.error || 'Failed to update skills.');
+      }
+    } catch (error) {
+      console.error('Update skills error:', error);
+      showMessage('error', 'Network error. Please try again.');
+    }
+  });
+
+  // ============================================
+  // UPDATE PASSWORD
+  // ============================================
+  document.getElementById('password-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      showMessage('error', 'Please login first.');
+      return;
+    }
+
+    const currentPassword = document.getElementById('currentPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      showMessage('error', 'Please fill in all password fields.');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      showMessage('error', 'New passwords do not match.');
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      showMessage('error', 'New password must be at least 6 characters.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/student/profile/password`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          current_password: currentPassword,
+          new_password: newPassword
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        showMessage('success', '✅ Password updated successfully!');
+        document.getElementById('currentPassword').value = '';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmPassword').value = '';
+      } else {
+        showMessage('error', data.error || 'Failed to update password.');
+      }
+    } catch (error) {
+      console.error('Update password error:', error);
+      showMessage('error', 'Network error. Please try again.');
+    }
+  });
+
+  // ============================================
+  // INITIALIZE
+  // ============================================
+  document.addEventListener('DOMContentLoaded', function() {
+    loadProfile();
+  });
+</script>
 </body>
 </html>

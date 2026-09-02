@@ -22,9 +22,9 @@ router.post("/resume", (req, res) => {
     }
 
     res.json({
-      resumeUrl: req.file.path,
-      message: "Resume uploaded successfully!"
-    });
+  resumeUrl: req.file.filename,
+  message: "Resume uploaded successfully!"
+});
   });
 });
 

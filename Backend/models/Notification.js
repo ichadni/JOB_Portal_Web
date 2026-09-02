@@ -24,12 +24,16 @@ const Notification = db.define('Notification', {
     allowNull: false
   },
   type: {
-    type: DataTypes.ENUM('application_status', 'job_alert', 'profile_update', 'system'),
+    type: DataTypes.ENUM('application_status', 'job_alert', 'profile_update', 'system', 'interview'),
     defaultValue: 'system'
   },
   read: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
+  },
+  link: {
+    type: DataTypes.STRING,
+    allowNull: true
   },
   created_at: {
     type: DataTypes.DATE,

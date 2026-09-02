@@ -1,55 +1,785 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Add Job</title>
-  <link rel="stylesheet" href="css/recruiter.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Job - Recruiter</title>
+  <style>
+    /* ============================================
+       GOOGLE FONTS
+       ============================================ */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    /* ============================================
+       CSS VARIABLES
+       ============================================ */
+    :root {
+      --primary: #6C2BD9;
+      --primary-dark: #4A1A8A;
+      --primary-light: #8B5CF6;
+      --primary-gradient: linear-gradient(135deg, #6C2BD9, #8B5CF6);
+      --secondary: #1E293B;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #94A3B8;
+      --border: #E2E8F0;
+      --shadow: 0 4px 24px rgba(108, 43, 217, 0.08);
+      --shadow-hover: 0 12px 40px rgba(108, 43, 217, 0.15);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --success: #10B981;
+      --error: #EF4444;
+    }
+
+    /* ============================================
+       RESET & BASE
+       ============================================ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      display: flex;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ============================================
+       SCROLLBAR
+       ============================================ */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary-light);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
+    }
+
+    /* ============================================
+       SIDEBAR
+       ============================================ */
+    .sidebar {
+      width: 260px;
+      background: var(--secondary);
+      color: white;
+      padding: 28px 0;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar .logo {
+      font-size: 22px;
+      font-weight: 800;
+      padding: 0 24px 28px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      letter-spacing: -0.5px;
+    }
+
+    .sidebar .logo span {
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .sidebar .logo .dot {
+      color: var(--primary-light);
+      -webkit-text-fill-color: var(--primary-light);
+    }
+
+    .sidebar .nav-section {
+      padding: 20px 0 8px 24px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: rgba(255,255,255,0.3);
+      font-weight: 600;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: var(--transition);
+      font-size: 14px;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      margin: 2px 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    .sidebar a .icon {
+      font-size: 18px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .sidebar a:hover {
+      background: rgba(255,255,255,0.05);
+      color: white;
+    }
+
+    .sidebar a.active {
+      background: rgba(108, 43, 217, 0.2);
+      color: white;
+      border-left-color: var(--primary-light);
+    }
+
+    .sidebar .sidebar-footer {
+      margin-top: auto;
+      padding: 20px 24px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .sidebar .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(239, 68, 68, 0.1);
+      border: none;
+      color: #F87171;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .sidebar .logout-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: #FCA5A5;
+    }
+
+    /* ============================================
+       MAIN CONTENT
+       ============================================ */
+    .main-content {
+      margin-left: 260px;
+      padding: 32px 40px;
+      flex: 1;
+      width: calc(100% - 260px);
+      min-height: 100vh;
+    }
+
+    /* ============================================
+       TOP NAVBAR
+       ============================================ */
+    .top-navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      background: var(--card-bg);
+      padding: 16px 24px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .top-navbar .page-title h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.3px;
+    }
+
+    .top-navbar .page-title p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .top-navbar .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .top-navbar .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-right: 16px;
+      border-right: 1px solid var(--border);
+    }
+
+    .top-navbar .user-info .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--primary-gradient);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .top-navbar .user-info .name {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    .logout-top-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .logout-top-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(108, 43, 217, 0.3);
+    }
+
+    /* ============================================
+       FORM CARD
+       ============================================ */
+    .form-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 32px 36px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      max-width: 750px;
+      transition: var(--transition);
+    }
+
+    .form-card:hover {
+      box-shadow: var(--shadow-hover);
+    }
+
+    .form-card .form-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--bg);
+    }
+
+    .form-card .form-header h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-card .form-header .badge {
+      background: var(--primary-gradient);
+      color: white;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .form-group label .required {
+      color: var(--error);
+      margin-left: 2px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      transition: var(--transition);
+      background: var(--bg);
+      font-family: 'Inter', sans-serif;
+      color: var(--text-primary);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(108, 43, 217, 0.1);
+      background: white;
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: var(--text-muted);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .btn-submit {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(108, 43, 217, 0.3);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-submit .spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .btn-submit.loading .spinner {
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ============================================
+       SUCCESS / ERROR MESSAGES
+       ============================================ */
+    .message {
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      margin-top: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      display: none;
+      animation: slideDown 0.3s ease;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message-success {
+      background: #D1FAE5;
+      color: #065F46;
+      border: 1px solid #A7F3D0;
+    }
+
+    .message-error {
+      background: #FEE2E2;
+      color: #991B1B;
+      border: 1px solid #FCA5A5;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 1024px) {
+      .main-content {
+        padding: 24px 28px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 72px;
+        padding: 16px 0;
+      }
+      .sidebar .logo {
+        font-size: 18px;
+        padding: 0 12px 20px 12px;
+        text-align: center;
+      }
+      .sidebar .logo span {
+        display: none;
+      }
+      .sidebar .logo .dot {
+        display: none;
+      }
+      .sidebar .nav-section {
+        display: none;
+      }
+      .sidebar a {
+        padding: 12px;
+        margin: 2px 6px;
+        justify-content: center;
+        font-size: 0;
+        border-radius: var(--radius-sm);
+      }
+      .sidebar a .icon {
+        font-size: 20px;
+        width: auto;
+      }
+      .sidebar a.active {
+        border-left: none;
+        background: rgba(108, 43, 217, 0.2);
+      }
+      .sidebar .sidebar-footer {
+        padding: 12px;
+      }
+      .sidebar .logout-btn {
+        justify-content: center;
+        padding: 12px;
+        font-size: 0;
+      }
+      .sidebar .logout-btn .icon {
+        font-size: 20px;
+      }
+
+      .main-content {
+        margin-left: 72px;
+        padding: 16px 18px;
+        width: calc(100% - 72px);
+      }
+
+      .top-navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px 18px;
+      }
+      .top-navbar .navbar-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .form-card {
+        padding: 20px 16px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .form-card {
+        padding: 16px 14px;
+      }
+    }
+  </style>
 </head>
-
 <body>
+
+  <!-- ============================================
+  SIDEBAR
+  ============================================ -->
   <div class="sidebar">
-    <h2>Recruiter</h2>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="add-job.html">Add Job</a>
-    <a href="my-jobs.html">My Jobs</a>
-    <a href="applicants.html">Applicants</a>
-    <a href="profile.html">Profile</a>
-    <button class="logout-btn" onclick="logout()">Logout</button>
+    <div class="logo">💼<span>Hire<span class="dot">.</span></span></div>
+
+    <div class="nav-section">Main</div>
+    <a href="dashboard.html"><span class="icon">📊</span> Dashboard</a>
+    <a href="add-job.html" class="active"><span class="icon">➕</span> Add Job</a>
+    <a href="my-jobs.html"><span class="icon">📋</span> My Jobs</a>
+    <a href="applicants.html"><span class="icon">👥</span> Applicants</a>
+    <a href="profile.html"><span class="icon">👤</span> Profile</a>
+
+    <div class="sidebar-footer">
+      <button id="logout-btn" class="logout-btn">
+        <span class="icon">🚪</span> Logout
+      </button>
+    </div>
   </div>
 
-  <div class="main">
-    <h1>Add New Job</h1>
+  <!-- ============================================
+  MAIN CONTENT
+  ============================================ -->
+  <div class="main-content">
 
-    <form id="jobForm" class="card">
-      <label>Job Title *</label>
-      <input type="text" id="title" required>
+    <!-- Top Navbar -->
+    <div class="top-navbar">
+      <div class="page-title">
+        <h1>➕ Post a New Job</h1>
+        <p>Fill in the details below to create a new job listing</p>
+      </div>
+      <div class="navbar-right">
+        <div class="user-info">
+          <div class="avatar" id="userAvatar">R</div>
+          <span class="name" id="userName">Recruiter</span>
+        </div>
+        <button id="logout-top" class="logout-top-btn">Logout</button>
+      </div>
+    </div>
 
-      <label>Company *</label>
-      <input type="text" id="company" required>
+    <!-- Form -->
+    <div class="form-card">
+      <div class="form-header">
+        <h2>📋 Job Details</h2>
+        <span class="badge">New Listing</span>
+      </div>
 
-      <label>Location *</label>
-      <input type="text" id="location" required>
+      <form id="jobForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Job Title <span class="required">*</span></label>
+            <input type="text" id="title" placeholder="e.g., Senior Software Engineer" required>
+          </div>
+          <div class="form-group">
+            <label>Company <span class="required">*</span></label>
+            <input type="text" id="company" placeholder="e.g., Google" required>
+          </div>
+        </div>
 
-      <label>Salary</label>
-      <input type="number" id="salary" placeholder="e.g., 50000">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Location <span class="required">*</span></label>
+            <input type="text" id="location" placeholder="e.g., Dhaka, Bangladesh" required>
+          </div>
+          <div class="form-group">
+            <label>Salary</label>
+            <input type="number" id="salary" placeholder="e.g., 50000">
+          </div>
+        </div>
 
-      <label>Job Type</label>
-      <select id="type">
-        <option value="Full-Time">Full-Time</option>
-        <option value="Part-Time">Part-Time</option>
-        <option value="Internship">Internship</option>
-        <option value="Contract">Contract</option>
-      </select>
+        <div class="form-group">
+          <label>Job Type</label>
+          <select id="type">
+            <option value="Full-Time">Full-Time</option>
+            <option value="Part-Time">Part-Time</option>
+            <option value="Internship">Internship</option>
+            <option value="Contract">Contract</option>
+            <option value="Remote">Remote</option>
+            <option value="Hybrid">Hybrid</option>
+          </select>
+        </div>
 
-      <label>Description</label>
-      <textarea id="description" rows="6" placeholder="Job description, requirements, responsibilities..."></textarea>
+        <div class="form-group">
+          <label>Job Description</label>
+          <textarea id="description" rows="6" placeholder="Describe the job, responsibilities, requirements, benefits..."></textarea>
+        </div>
 
-      <button type="submit" class="btn">Post Job</button>
-    </form>
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <span class="spinner"></span>
+          Post Job
+        </button>
+      </form>
 
-    <p id="msg"></p>
+      <!-- Message -->
+      <div id="msg" class="message"></div>
+    </div>
 
   </div>
 
-   <script src="js/add-job.js"></script> 
+  <!-- ============================================
+  SCRIPTS
+  ============================================ -->
+  <script>
+    // ============================================
+    // CONFIGURATION
+    // ============================================
+    const API_URL = 'http://localhost:5001/api';
+
+    // ============================================
+    // CHECK LOGIN
+    // ============================================
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = '../Auth/Login.html';
+    }
+
+    // ============================================
+    // GET USER INFO
+    // ============================================
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userName = user.username || 'Recruiter';
+    document.getElementById('userName').textContent = userName;
+    document.getElementById('userAvatar').textContent = userName.charAt(0).toUpperCase();
+
+    // ============================================
+    // LOGOUT
+    // ============================================
+    function logout() {
+      localStorage.clear();
+      window.location.href = '../Auth/Login.html';
+    }
+
+    document.getElementById('logout-btn').addEventListener('click', logout);
+    document.getElementById('logout-top').addEventListener('click', logout);
+
+    // ============================================
+    // SHOW MESSAGE
+    // ============================================
+    function showMessage(type, text) {
+      const msgEl = document.getElementById('msg');
+      msgEl.className = 'message show';
+      msgEl.classList.add(type === 'success' ? 'message-success' : 'message-error');
+      msgEl.textContent = text;
+      
+      setTimeout(() => {
+        msgEl.classList.remove('show');
+      }, 6000);
+    }
+
+    // ============================================
+    // SUBMIT FORM
+    // ============================================
+    document.getElementById('jobForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const title = document.getElementById('title').value.trim();
+      const company = document.getElementById('company').value.trim();
+      const location = document.getElementById('location').value.trim();
+      const salary = document.getElementById('salary').value.trim();
+      const type = document.getElementById('type').value;
+      const description = document.getElementById('description').value.trim();
+
+      // Validate required fields
+      if (!title || !company || !location) {
+        showMessage('error', 'Please fill in all required fields (*)');
+        return;
+      }
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.classList.add('loading');
+      submitBtn.disabled = true;
+
+      try {
+        // ✅ Try both possible endpoints
+        let response;
+        let data;
+
+        // First try: /api/jobs
+        try {
+          response = await fetch(`${API_URL}/jobs`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+              title,
+              company,
+              location,
+              salary: salary || null,
+              type,
+              description: description || ''
+            })
+          });
+          data = await response.json();
+        } catch (firstError) {
+          // If first fails, try: /api/recruiter/jobs
+          console.log('Trying /api/recruiter/jobs...');
+          response = await fetch(`${API_URL}/recruiter/jobs`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+              title,
+              company,
+              location,
+              salary: salary || null,
+              type,
+              description: description || ''
+            })
+          });
+          data = await response.json();
+        }
+
+        if (response && response.ok) {
+          showMessage('success', '✅ Job posted successfully!');
+          document.getElementById('jobForm').reset();
+          
+          setTimeout(() => {
+            window.location.href = 'my-jobs.html';
+          }, 2000);
+        } else {
+          showMessage('error', data?.error || 'Failed to post job. Please try again.');
+        }
+      } catch (error) {
+        console.error('Submit error:', error);
+        showMessage('error', 'Network error. Please try again.');
+      } finally {
+        submitBtn.classList.remove('loading');
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
 </body>
 </html>

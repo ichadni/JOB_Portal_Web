@@ -1,344 +1,564 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --primary: #7c3aed;
+    --primary-dark: #5b21b6;
+    --primary-light: #a78bfa;
+
+    --dark: #0f172a;
+    --dark-2: #1e293b;
+
+    --bg: #f5f7fb;
+    --white: #ffffff;
+
+    --text: #111827;
+    --text-light: #64748b;
+    --border: #e5e7eb;
+
+    --success: #10b981;
+    --danger: #ef4444;
+
+    --shadow: 0 10px 40px rgba(15, 23, 42, 0.08);
+}
+
+/* =========================
+   BODY
+========================= */
 
 body {
-  background:#0d1b2a;
-  color: white;
-  display: flex;
-  min-height: 100vh;
+    font-family: "Inter", sans-serif;
+    background:
+        radial-gradient(circle at 80% 10%, rgba(124, 58, 237, 0.08), transparent 25%),
+        #f5f7fb;
+
+    color: var(--text);
+    min-height: 100vh;
 }
 
-/* ====================== Sidebar ====================== */
+/* =========================
+   SIDEBAR
+========================= */
+
 .sidebar {
-  width: 240px;
-  background: #4e6781;
-  padding: 25px;
-  display: flex;
-  flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    width: 250px;
+    height: 100vh;
+
+    background: linear-gradient(
+        180deg,
+        #111827 0%,
+        #172033 100%
+    );
+
+    padding: 28px 16px;
+
+    display: flex;
+    flex-direction: column;
+
+    box-shadow: 8px 0 30px rgba(15, 23, 42, 0.08);
+
+    z-index: 100;
 }
+
+/* Logo */
 
 .sidebar h2 {
-  color: #64ffda;
-  margin-bottom: 25px;
+    color: white;
+
+    font-size: 23px;
+    font-weight: 800;
+
+    letter-spacing: -0.5px;
+
+    padding: 8px 14px 30px;
+
+    margin-bottom: 20px;
+
+    border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
+.sidebar h2::before {
+    content: "💼";
+    margin-right: 9px;
+}
+
+/* Navigation */
+
 .sidebar a {
-  color: #64ffda;
-  padding: 12px 10px;
-  margin-bottom: 12px;
-  display: block;
-  border-radius: 6px;
-  transition: 0.3s;
-  direction: none;
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    padding: 13px 16px;
+
+    margin: 4px 0;
+
+    color: #94a3b8;
+
     text-decoration: none;
-  font-size: 16px;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    border-radius: 10px;
+
+    transition: all 0.25s ease;
+}
+
+.sidebar a::before {
+    margin-right: 12px;
+    font-size: 16px;
+}
+
+.sidebar a:nth-of-type(1)::before {
+    content: "▦";
+}
+
+.sidebar a:nth-of-type(2)::before {
+    content: "＋";
+}
+
+.sidebar a:nth-of-type(3)::before {
+    content: "▤";
+}
+
+.sidebar a:nth-of-type(4)::before {
+    content: "♙";
+}
+
+.sidebar a:nth-of-type(5)::before {
+    content: "⚙";
 }
 
 .sidebar a:hover {
-  background: #0d1b2a;
-  transform: translateX(5px);
+    background: rgba(124, 58, 237, 0.12);
+    color: white;
+
+    transform: translateX(3px);
 }
 
+/* Active profile */
+
+.sidebar a[href="profile.html"] {
+    background: linear-gradient(
+        90deg,
+        rgba(124, 58, 237, 0.28),
+        rgba(124, 58, 237, 0.08)
+    );
+
+    color: white;
+
+    box-shadow:
+        inset 3px 0 0 #8b5cf6,
+        0 4px 15px rgba(124, 58, 237, 0.1);
+}
+
+/* Logout */
+
 .logout-btn {
-  background: #ef5350;
-  color: white;
-  border: none;
-  padding: 12px 10px;
-  margin-top: 20px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.3s;
-  font-size: 16px;
-  font-weight: bold;
+    margin-top: auto;
+
+    width: 100%;
+
+    padding: 13px 16px;
+
+    border: 1px solid rgba(239,68,68,0.15);
+
+    border-radius: 10px;
+
+    background: rgba(239,68,68,0.08);
+
+    color: #f87171;
+
+    font-family: inherit;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.25s;
 }
 
 .logout-btn:hover {
-  background: #f44336;
-  transform: translateX(5px);
+    background: rgba(239,68,68,0.16);
+    color: #fca5a5;
+
+    transform: translateY(-2px);
 }
 
-/* ====================== Main Area ====================== */
+/* =========================
+   MAIN
+========================= */
+
 .main {
-  flex: 1;
-  padding: 30px;
+    margin-left: 250px;
+
+    min-height: 100vh;
+
+    padding: 45px 55px;
 }
 
-/* ====================== Cards ====================== */
+/* =========================
+   HEADER
+========================= */
+
+.main h1 {
+    position: relative;
+
+    font-size: 30px;
+    font-weight: 800;
+
+    letter-spacing: -1px;
+
+    color: #0f172a;
+
+    margin-bottom: 5px;
+}
+
+.main h1::after {
+    content: "Manage your account information and security settings";
+
+    display: block;
+
+    margin-top: 8px;
+
+    font-size: 14px;
+    font-weight: 400;
+
+    letter-spacing: 0;
+
+    color: #64748b;
+}
+
+/* =========================
+   PROFILE CARD
+========================= */
+
 .card {
-  background: #7396db;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  transition: 0.3s;
+    position: relative;
+
+    max-width: 850px;
+
+    margin-top: 32px;
+
+    background: rgba(255,255,255,0.95);
+
+    border: 1px solid rgba(226,232,240,0.8);
+
+    border-radius: 22px;
+
+    padding: 0 42px 42px;
+
+    box-shadow:
+        0 20px 60px rgba(15,23,42,0.08),
+        0 2px 8px rgba(15,23,42,0.03);
+
+    overflow: hidden;
 }
 
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.3);
+/* =========================
+   PROFILE TOP AREA
+========================= */
+
+.card::before {
+    content: "";
+    display: block;
+
+    height: 125px;
+
+    margin: 0 -42px 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4c1d95,
+            #7c3aed 50%,
+            #a78bfa
+        );
 }
 
-/* ====================== Buttons ====================== */
+/* Profile avatar */
+
+.card::after {
+    content: "R";
+
+    position: absolute;
+
+    top: 75px;
+    left: 42px;
+
+    width: 88px;
+    height: 88px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: linear-gradient(
+        135deg,
+        #ffffff,
+        #f5f3ff
+    );
+
+    color: #6d28d9;
+
+    font-size: 32px;
+    font-weight: 800;
+
+    border: 5px solid white;
+
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+/* =========================
+   FORM
+========================= */
+
+.card label {
+    display: block;
+
+    margin-top: 25px;
+    margin-bottom: 8px;
+
+    color: #334155;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.card label:first-of-type {
+    margin-top: 58px;
+}
+
+.card input {
+    width: 100%;
+
+    height: 48px;
+
+    padding: 0 15px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 10px;
+
+    background: #f8fafc;
+
+    color: #0f172a;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition: all 0.25s ease;
+}
+
+.card input:hover {
+    background: white;
+    border-color: #cbd5e1;
+}
+
+.card input:focus {
+    background: white;
+
+    border-color: #8b5cf6;
+
+    box-shadow:
+        0 0 0 4px rgba(124,58,237,0.09);
+
+    transform: translateY(-1px);
+}
+
+/* =========================
+   PASSWORD SECTION
+========================= */
+
+.card label:nth-of-type(4) {
+    margin-top: 38px;
+
+    padding-top: 30px;
+
+    border-top: 1px solid #e5e7eb;
+
+    position: relative;
+}
+
+.card label:nth-of-type(4)::before {
+    content: "Security";
+
+    display: block;
+
+    margin-bottom: 18px;
+
+    color: #111827;
+
+    font-size: 17px;
+    font-weight: 700;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
 .btn {
-  background: #64ffda;
-  color: #0d1b2a;
-  padding: 10px 18px;
-  border: none;
-  cursor: pointer;
-  border-radius: 6px;
-  margin-top: 10px;
-  transition: 0.3s;
-  font-weight: bold;
+    position: relative;
+
+    width: 100%;
+
+    height: 50px;
+
+    margin-top: 32px;
+
+    border: none;
+
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6d28d9,
+            #8b5cf6
+        );
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 20px rgba(124,58,237,0.25);
+
+    transition: all 0.25s ease;
+}
+
+.btn::before {
+    content: "✓";
+    margin-right: 8px;
+
+    font-size: 15px;
 }
 
 .btn:hover {
-  background: #50e6c0;
-  transform: scale(1.05);
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 28px rgba(124,58,237,0.35);
 }
 
-/* ====================== Inputs ====================== */
-input, select, textarea {
-  width: 100%;
-  padding: 12px;
-  margin-top: 12px;
-  margin-bottom: 15px;
-  border: 1px solid #64ffda;
-  border-radius: 6px;
-  background: #0d1b2a;
-  color: white;
+.btn:active {
+    transform: translateY(0);
 }
 
-textarea {
-  height: 120px;
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+    .sidebar {
+        width: 220px;
+    }
+
+    .main {
+        margin-left: 220px;
+        padding: 35px 30px;
+    }
+
+    .card {
+        max-width: 100%;
+    }
 }
 
-/* ====================== Table ====================== */
-table {
-  width: 100%;
-  margin-top: 15px;
-  border-collapse: collapse;
-}
+/* =========================
+   MOBILE
+========================= */
 
-table th, table td {
-  padding: 12px;
-  border-bottom: 1px solid #64ffda;
-}
+@media (max-width: 650px) {
 
-table th {
-  background: #8f9ab1;
-  color: #64ffda;
-}
+    .sidebar {
+        position: relative;
 
-table tr:hover {
-  background: #5b7fa5;
-}
+        width: 100%;
+        height: auto;
+        min-height: auto;
 
-/* ====================== Job Actions ====================== */
-.job-actions {
-  margin-top: 15px;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
+        padding: 15px;
 
-.btn-edit {
-  background: #ffa726;
-  color: white;
-}
+        display: block;
+    }
 
-.btn-edit:hover {
-  background: #ff9800;
-}
+    .sidebar h2 {
+        text-align: center;
 
-.btn-delete {
-  background: #ef5350;
-  color: white;
-}
+        padding-bottom: 15px;
+    }
 
-.btn-delete:hover {
-  background: #f44336;
-}
+    .sidebar a {
+        display: inline-flex;
 
-.btn-view {
-  background: #42a5f5;
-  color: white;
-}
+        padding: 9px 10px;
 
-.btn-view:hover {
-  background: #2196f3;
-}
+        margin: 2px;
+    }
 
-.btn-small {
-  padding: 5px 10px;
-  font-size: 12px;
-  margin: 0;
-}
+    .logout-btn {
+        margin-top: 12px;
+    }
 
-/* ====================== Status Badges ====================== */
-.status {
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: bold;
-  text-transform: uppercase;
-}
+    .main {
+        margin-left: 0;
 
-.status.pending {
-  background: #ffa726;
-  color: white;
-}
+        padding: 28px 16px;
+    }
 
-.status.reviewed {
-  background: #42a5f5;
-  color: white;
-}
+    .main h1 {
+        font-size: 25px;
+    }
 
-.status.accepted {
-  background: #66bb6a;
-  color: white;
-}
+    .card {
+        margin-top: 25px;
 
-.status.rejected {
-  background: #ef5350;
-  color: white;
-}
+        padding: 0 20px 28px;
 
-/* ====================== Filter Section ====================== */
-.filter-section {
-  background: #1b2a49;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  display: flex;
-  gap: 15px;
-  align-items: center;
-}
+        border-radius: 18px;
+    }
 
-.filter-section select {
-  flex: 1;
-  margin: 0;
-  min-width: 150px;
-}
+    .card::before {
+        margin-left: -20px;
+        margin-right: -20px;
 
-.filter-section label {
-  color: #64ffda;
-  font-weight: bold;
-}
+        height: 105px;
+    }
 
-/* ====================== Applicants Table ====================== */
-.applicants-table {
-  background: #1b2a49;
-  border-radius: 12px;
-  overflow: hidden;
-}
+    .card::after {
+        left: 20px;
+        top: 60px;
 
-.applicants-table th {
-  background: #0d1b2a;
-  color: #64ffda;
-  font-weight: bold;
-}
+        width: 78px;
+        height: 78px;
 
-.applicants-table td {
-  vertical-align: middle;
-}
+        font-size: 27px;
+    }
 
-.status-select {
-  padding: 5px;
-  font-size: 12px;
-  background: #0d1b2a;
-  color: white;
-  border: 1px solid #64ffda;
-}
-
-/* ====================== Dashboard Stats ====================== */
-.dashboard-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
-}
-
-.stat-card {
-  background: #1b2a49;
-  padding: 25px;
-  border-radius: 12px;
-  text-align: center;
-  transition: 0.3s;
-}
-
-.stat-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.3);
-}
-
-.stat-card h3 {
-  color: #64ffda;
-  margin-bottom: 10px;
-  font-size: 16px;
-}
-
-.stat-card p {
-  font-size: 32px;
-  font-weight: bold;
-  color: white;
-}
-
-/* ====================== Form Enhancements ====================== */
-form label {
-  display: block;
-  margin-bottom: 5px;
-  color: #64ffda;
-  font-weight: bold;
-}
-
-form input:focus,
-form select:focus,
-form textarea:focus {
-  outline: none;
-  border-color: #50e6c0;
-  box-shadow: 0 0 0 2px rgba(100, 255, 218, 0.2);
-}
-
-/* ====================== Messages ====================== */
-#msg {
-  margin-top: 15px;
-  padding: 10px;
-  border-radius: 6px;
-  font-weight: bold;
-}
-
-/* ====================== Responsive ====================== */
-@media (max-width: 768px) {
-  body {
-    flex-direction: column;
-  }
-  .sidebar {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    overflow-x: auto;
-  }
-  .sidebar a {
-    margin-right: 15px;
-  }
-  .main {
-    padding: 15px;
-  }
-  .filter-section {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .job-actions {
-    flex-direction: column;
-  }
-  .applicants-table {
-    font-size: 14px;
-  }
-  .applicants-table th,
-  .applicants-table td {
-    padding: 8px;
-  }
+    .card label:first-of-type {
+        margin-top: 52px;
+    }
 }

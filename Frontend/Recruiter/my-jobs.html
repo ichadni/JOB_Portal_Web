@@ -1,27 +1,1117 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>My Jobs</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Jobs - Recruiter</title>
   <link rel="stylesheet" href="css/recruiter.css">
+  
+  <style>
+    /* ============================================
+       MY JOBS STYLES
+       ============================================ */
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      background: #f4f7fc;
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      width: 250px;
+      background: linear-gradient(180deg, #1a1a2e, #16213e);
+      color: white;
+      padding: 20px 0;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      z-index: 100;
+    }
+
+    .sidebar h2 {
+      font-size: 24px;
+      padding: 20px 25px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      color: #a87bc9;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 14px 25px;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar a:hover {
+      background: rgba(255,255,255,0.05);
+      color: white;
+      border-left-color: #8a4baf;
+    }
+
+    .sidebar a.active {
+      background: rgba(106, 27, 154, 0.15);
+      color: white;
+      border-left-color: #8a4baf;
+    }
+
+    .sidebar .logout-btn {
+      display: block;
+      width: 100%;
+      padding: 14px 25px;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.7);
+      text-align: left;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
+      margin-top: 20px;
+    }
+
+    .sidebar .logout-btn:hover {
+      background: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+      border-left-color: #e74c3c;
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main {
+      margin-left: 250px;
+      padding: 30px;
+      flex: 1;
+      width: calc(100% - 250px);
+    }
+
+    .main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .main-header h1 {
+      font-size: 28px;
+      color: #1a1a2e;
+    }
+
+    .main-header .job-count {
+      background: #6a1b9a;
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* ===== TOP NAVBAR ===== */
+    .top-navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      background: white;
+      padding: 15px 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+
+    .top-navbar .welcome-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a2e;
+    }
+
+    .top-navbar .welcome-text span {
+      color: #6a1b9a;
+    }
+
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logout-top-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .logout-top-btn:hover {
+      background: #c0392b;
+    }
+
+    /* ===== JOB CARDS ===== */
+    .job-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px 25px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      border-left: 4px solid #6a1b9a;
+      transition: all 0.3s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .job-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(106, 27, 154, 0.12);
+    }
+
+    .job-card .job-info {
+      flex: 1;
+    }
+
+    .job-card .job-info h3 {
+      font-size: 18px;
+      color: #1a1a2e;
+      margin-bottom: 4px;
+    }
+
+    .job-card .job-info .company {
+      color: #6a1b9a;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .job-card .job-info .details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 8px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .job-card .job-info .details span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .job-card .job-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .job-card .job-actions button {
+      padding: 8px 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-view {
+      background: #e8f0fe;
+      color: #1a73e8;
+    }
+
+    .btn-view:hover {
+      background: #d2e3fc;
+      transform: translateY(-2px);
+    }
+
+    .btn-edit {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .btn-edit:hover {
+      background: #ffe69c;
+      transform: translateY(-2px);
+    }
+
+    .btn-delete {
+      background: #fce4ec;
+      color: #c62828;
+    }
+
+    .btn-delete:hover {
+      background: #f8bbd0;
+      transform: translateY(-2px);
+    }
+
+    .job-status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+
+    .status-active {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-expired {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .status-rejected {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    /* ===== EMPTY STATE ===== */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+
+    .empty-state .empty-icon {
+      font-size: 64px;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .empty-state h3 {
+      font-size: 22px;
+      color: #1a1a2e;
+      margin-bottom: 8px;
+    }
+
+    .empty-state p {
+      color: #888;
+      font-size: 16px;
+    }
+
+    .empty-state .btn-add {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 32px;
+      background: #6a1b9a;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .empty-state .btn-add:hover {
+      background: #4a0a6a;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(106, 27, 154, 0.3);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 70px;
+      }
+      .sidebar h2 {
+        font-size: 16px;
+        padding: 15px;
+        text-align: center;
+      }
+      .sidebar a {
+        padding: 12px 15px;
+        font-size: 13px;
+        text-align: center;
+      }
+      .sidebar .logout-btn {
+        text-align: center;
+        font-size: 13px;
+      }
+      .main {
+        margin-left: 70px;
+        padding: 15px;
+        width: calc(100% - 70px);
+      }
+      .job-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+      .job-card .job-actions {
+        width: 100%;
+      }
+      .job-card .job-actions button {
+        flex: 1;
+      }
+      .main-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .top-navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .top-navbar .navbar-right {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .job-card .job-info .details {
+        flex-direction: column;
+        gap: 5px;
+      }
+    }
+
+    /* ===== MODAL STYLES ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      padding: 35px 40px;
+      max-width: 700px;
+      width: 90%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      animation: modalSlideIn 0.3s ease;
+      position: relative;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 28px;
+      cursor: pointer;
+      color: #888;
+      background: none;
+      border: none;
+      transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+      color: #333;
+      transform: rotate(90deg);
+    }
+
+    .modal-content h2 {
+      font-size: 24px;
+      color: #1a1a2e;
+      margin-bottom: 5px;
+    }
+
+    .modal-content .modal-company {
+      color: #6a1b9a;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .modal-content .modal-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 15px;
+      background: #f8f6ff;
+      border-radius: 10px;
+      margin: 15px 0;
+    }
+
+    .modal-content .modal-details .item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-content .modal-details .item .label {
+      font-size: 11px;
+      color: #888;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .modal-content .modal-details .item .value {
+      font-size: 15px;
+      font-weight: 500;
+      color: #1a1a2e;
+      margin-top: 2px;
+    }
+
+    .modal-content .modal-description {
+      color: #555;
+      line-height: 1.7;
+      margin: 15px 0;
+    }
+
+    .modal-content .modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .modal-content .modal-actions button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .modal-content .modal-actions .btn-edit-modal {
+      background: #6a1b9a;
+      color: white;
+    }
+
+    .modal-content .modal-actions .btn-edit-modal:hover {
+      background: #4a0a6a;
+    }
+
+    .modal-content .modal-actions .btn-close-modal {
+      background: #e0e0e0;
+      color: #333;
+    }
+
+    .modal-content .modal-actions .btn-close-modal:hover {
+      background: #ccc;
+    }
+
+    /* ===== EDIT FORM INSIDE MODAL ===== */
+    .edit-form {
+      display: none;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px solid #f0edf5;
+    }
+
+    .edit-form.active {
+      display: block;
+    }
+
+    .edit-form .form-group {
+      margin-bottom: 15px;
+    }
+
+    .edit-form .form-group label {
+      display: block;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 5px;
+      font-size: 13px;
+    }
+
+    .edit-form .form-group input,
+    .edit-form .form-group select,
+    .edit-form .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s ease;
+    }
+
+    .edit-form .form-group input:focus,
+    .edit-form .form-group select:focus,
+    .edit-form .form-group textarea:focus {
+      border-color: #6a1b9a;
+      outline: none;
+    }
+
+    .edit-form .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .edit-form .btn-save-edit {
+      background: #6a1b9a;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .edit-form .btn-save-edit:hover {
+      background: #4a0a6a;
+    }
+
+    .edit-form .btn-save-edit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .edit-form .btn-cancel-edit {
+      background: #e0e0e0;
+      color: #333;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .edit-form .btn-cancel-edit:hover {
+      background: #ccc;
+    }
+
+    @media (max-width: 480px) {
+      .modal-content {
+        padding: 20px;
+      }
+      .modal-content .modal-details {
+        grid-template-columns: 1fr;
+      }
+      .modal-content .modal-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 
 <body>
+
+  <!-- ===== SIDEBAR ===== -->
   <div class="sidebar">
-    <h2>Recruiter</h2>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="add-job.html">Add Job</a>
-    <a href="my-jobs.html">My Jobs</a>
-    <a href="applicants.html">Applicants</a>
-    <a href="profile.html">Profile</a>
-    <button class="logout-btn" onclick="logout()">Logout</button>
+    <h2>💼 Recruiter</h2>
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="add-job.html">➕ Add Job</a>
+    <a href="my-jobs.html" class="active">📋 My Jobs</a>
+    <a href="applicants.html">👥 Applicants</a>
+    <a href="profile.html">👤 Profile</a>
+    <button class="logout-btn" onclick="logout()">🚪 Logout</button>
   </div>
 
+  <!-- ===== MAIN CONTENT ===== -->
   <div class="main">
-    <h1>My Posted Jobs</h1>
 
-    <div id="jobList"></div>
+    <!-- Top Navbar -->
+    <div class="top-navbar">
+      <div class="welcome-text">
+        📋 My Posted Jobs <span id="jobCountBadge"></span>
+      </div>
+      <div class="navbar-right">
+        <span id="userNameDisplay" style="font-weight:500;color:#333;">👤 Recruiter</span>
+        <button class="logout-top-btn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <!-- Main Header -->
+    <div class="main-header">
+      <h1>📋 My Jobs</h1>
+      <span class="job-count" id="totalJobsCount">0 Jobs</span>
+    </div>
+
+    <!-- Job List -->
+    <div id="jobList">
+      <div class="empty-state">
+        <span class="empty-icon">📭</span>
+        <h3>No Jobs Posted Yet</h3>
+        <p>Start by posting your first job opportunity!</p>
+        <a href="add-job.html" class="btn-add">➕ Post a Job</a>
+      </div>
+    </div>
+
   </div>
 
-  <script src="js/my-jobs.js"></script>
+  <!-- ===== VIEW/EDIT JOB MODAL ===== -->
+  <div id="jobModal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+
+      <!-- View Mode -->
+      <div id="viewMode">
+        <h2 id="modalTitle">Job Title</h2>
+        <div class="modal-company" id="modalCompany">Company Name</div>
+        <div class="modal-details">
+          <div class="item">
+            <span class="label">📍 Location</span>
+            <span class="value" id="modalLocation">N/A</span>
+          </div>
+          <div class="item">
+            <span class="label">💰 Salary</span>
+            <span class="value" id="modalSalary">N/A</span>
+          </div>
+          <div class="item">
+            <span class="label">📋 Job Type</span>
+            <span class="value" id="modalType">N/A</span>
+          </div>
+          <div class="item">
+            <span class="label">📅 Posted</span>
+            <span class="value" id="modalPosted">N/A</span>
+          </div>
+        </div>
+        <div class="modal-description" id="modalDescription">
+          Job description goes here...
+        </div>
+        <div class="modal-actions">
+          <button class="btn-edit-modal" id="modalEditBtn" onclick="openEditMode()">✏️ Edit Job</button>
+          <button class="btn-close-modal" onclick="closeModal()">Close</button>
+        </div>
+      </div>
+
+      <!-- Edit Mode -->
+      <div id="editMode" class="edit-form">
+        <h3 style="margin-bottom:15px;color:#1a1a2e;">✏️ Edit Job</h3>
+        <form id="editJobForm">
+          <div class="form-group">
+            <label>Job Title <span style="color:#e74c3c;">*</span></label>
+            <input type="text" id="editTitle" required>
+          </div>
+          <div class="form-group">
+            <label>Company <span style="color:#e74c3c;">*</span></label>
+            <input type="text" id="editCompany" required>
+          </div>
+          <div class="form-group">
+            <label>Location <span style="color:#e74c3c;">*</span></label>
+            <input type="text" id="editLocation" required>
+          </div>
+          <div class="form-group">
+            <label>Salary</label>
+            <input type="text" id="editSalary" placeholder="e.g., 50000">
+          </div>
+          <div class="form-group">
+            <label>Job Type</label>
+            <select id="editType">
+              <option value="Full-Time">Full-Time</option>
+              <option value="Part-Time">Part-Time</option>
+              <option value="Internship">Internship</option>
+              <option value="Contract">Contract</option>
+              <option value="Remote">Remote</option>
+              <option value="Hybrid">Hybrid</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="editStatus">
+              <option value="active">Active</option>
+              <option value="pending">Pending</option>
+              <option value="expired">Expired</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="editDescription" rows="4" placeholder="Job description..."></textarea>
+          </div>
+          <button type="submit" class="btn-save-edit" id="saveEditBtn">💾 Save Changes</button>
+          <button type="button" class="btn-cancel-edit" onclick="closeEditMode()">Cancel</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // CHECK LOGIN
+    // ============================================
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = '../Auth/Login.html';
+    }
+
+    // ============================================
+    // GET USER INFO
+    // ============================================
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    document.getElementById('userNameDisplay').textContent = '👤 ' + (user.username || 'Recruiter');
+
+    // ============================================
+    // LOGOUT FUNCTION
+    // ============================================
+    function logout() {
+      localStorage.clear();
+      window.location.href = '../Auth/Login.html';
+    }
+
+    // ============================================
+    // LOAD MY JOBS
+    // ============================================
+    const API_URL = 'http://localhost:5001/api';
+    let currentJobs = [];
+    let currentEditJobId = null;
+
+    async function loadMyJobs() {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        let response;
+        let data;
+
+        try {
+          response = await fetch(`${API_URL}/recruiter/jobs`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          data = await response.json();
+        } catch (firstError) {
+          response = await fetch(`${API_URL}/jobs/recruiter/jobs`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          data = await response.json();
+        }
+
+        if (response.status === 401) {
+          window.location.href = '../Auth/Login.html';
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error('Failed to load jobs');
+        }
+
+        currentJobs = data.jobs || data || [];
+        renderJobs(currentJobs);
+
+      } catch (error) {
+        console.error('Load jobs error:', error);
+        document.getElementById('jobList').innerHTML = `
+          <div class="empty-state">
+            <span class="empty-icon">❌</span>
+            <h3>Error Loading Jobs</h3>
+            <p>${error.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    // ============================================
+    // RENDER JOBS
+    // ============================================
+    function renderJobs(jobs) {
+      const container = document.getElementById('jobList');
+      const totalCount = document.getElementById('totalJobsCount');
+
+      if (!jobs || jobs.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <span class="empty-icon">📭</span>
+            <h3>No Jobs Posted Yet</h3>
+            <p>Start by posting your first job opportunity!</p>
+            <a href="add-job.html" class="btn-add">➕ Post a Job</a>
+          </div>
+        `;
+        totalCount.textContent = '0 Jobs';
+        return;
+      }
+
+      totalCount.textContent = jobs.length + ' Jobs';
+
+      container.innerHTML = jobs.map(job => {
+        const statusClass = job.status === 'active' ? 'status-active' : 
+                           job.status === 'pending' ? 'status-pending' : 'status-expired';
+        const statusLabel = job.status ? job.status.charAt(0).toUpperCase() + job.status.slice(1) : 'Active';
+
+        return `
+          <div class="job-card">
+            <div class="job-info">
+              <h3>
+                ${job.title}
+                <span class="job-status ${statusClass}">${statusLabel}</span>
+              </h3>
+              <div class="company">${job.company}</div>
+              <div class="details">
+                <span>📍 ${job.location || 'N/A'}</span>
+                <span>💰 ${job.salary || 'N/A'}</span>
+                <span>📋 ${job.type || 'N/A'}</span>
+                <span>📅 ${job.created_at ? new Date(job.created_at).toLocaleDateString() : 'N/A'}</span>
+              </div>
+            </div>
+            <div class="job-actions">
+              <button class="btn-view" onclick="viewJob(${job.id})">👁️ View</button>
+              <button class="btn-edit" onclick="editJob(${job.id})">✏️ Edit</button>
+              <button class="btn-delete" onclick="deleteJob(${job.id})">🗑️ Delete</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ============================================
+    // VIEW JOB - Opens Modal
+    // ============================================
+    function viewJob(id) {
+      const job = currentJobs.find(j => j.id === id);
+      if (!job) {
+        alert('Job not found');
+        return;
+      }
+
+      // Fill view mode
+      document.getElementById('modalTitle').textContent = job.title;
+      document.getElementById('modalCompany').textContent = job.company;
+      document.getElementById('modalLocation').textContent = job.location || 'N/A';
+      document.getElementById('modalSalary').textContent = job.salary || 'N/A';
+      document.getElementById('modalType').textContent = job.type || 'N/A';
+      document.getElementById('modalPosted').textContent = job.created_at ? new Date(job.created_at).toLocaleDateString() : 'N/A';
+      document.getElementById('modalDescription').textContent = job.description || 'No description available.';
+
+      // Store job ID for edit
+      currentEditJobId = job.id;
+
+      // Show view mode, hide edit mode
+      document.getElementById('viewMode').style.display = 'block';
+      document.getElementById('editMode').classList.remove('active');
+
+      // Show modal
+      document.getElementById('jobModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // ============================================
+    // OPEN EDIT MODE
+    // ============================================
+    function openEditMode() {
+      const job = currentJobs.find(j => j.id === currentEditJobId);
+      if (!job) {
+        alert('Job not found');
+        return;
+      }
+
+      // Fill edit form
+      document.getElementById('editTitle').value = job.title || '';
+      document.getElementById('editCompany').value = job.company || '';
+      document.getElementById('editLocation').value = job.location || '';
+      document.getElementById('editSalary').value = job.salary || '';
+      document.getElementById('editType').value = job.type || 'Full-Time';
+      document.getElementById('editStatus').value = job.status || 'active';
+      document.getElementById('editDescription').value = job.description || '';
+
+      // Show edit mode, hide view mode
+      document.getElementById('viewMode').style.display = 'none';
+      document.getElementById('editMode').classList.add('active');
+    }
+
+    // ============================================
+    // CLOSE EDIT MODE
+    // ============================================
+    function closeEditMode() {
+      document.getElementById('viewMode').style.display = 'block';
+      document.getElementById('editMode').classList.remove('active');
+    }
+
+    // ============================================
+    // CLOSE MODAL
+    // ============================================
+    function closeModal() {
+      document.getElementById('jobModal').classList.remove('active');
+      document.body.style.overflow = 'auto';
+      closeEditMode();
+    }
+
+    // ============================================
+    // EDIT JOB - Open Modal with Edit Mode
+    // ============================================
+    function editJob(id) {
+      // First view the job, then open edit mode
+      viewJob(id);
+      // Open edit mode after a short delay
+      setTimeout(() => {
+        openEditMode();
+      }, 300);
+    }
+
+    // ============================================
+    // SAVE EDIT
+    // ============================================
+    document.getElementById('editJobForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const submitBtn = document.getElementById('saveEditBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = '⏳ Saving...';
+
+      const updatedData = {
+        title: document.getElementById('editTitle').value.trim(),
+        company: document.getElementById('editCompany').value.trim(),
+        location: document.getElementById('editLocation').value.trim(),
+        salary: document.getElementById('editSalary').value.trim(),
+        type: document.getElementById('editType').value,
+        status: document.getElementById('editStatus').value,
+        description: document.getElementById('editDescription').value.trim()
+      };
+
+      // Validate required fields
+      if (!updatedData.title || !updatedData.company || !updatedData.location) {
+        alert('❌ Please fill in all required fields (*)');
+        submitBtn.disabled = false;
+        submitBtn.textContent = '💾 Save Changes';
+        return;
+      }
+
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          alert('Please login again');
+          return;
+        }
+
+        let response;
+
+        try {
+          response = await fetch(`${API_URL}/recruiter/jobs/${currentEditJobId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(updatedData)
+          });
+        } catch (firstError) {
+          response = await fetch(`${API_URL}/jobs/${currentEditJobId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(updatedData)
+          });
+        }
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert('✅ Job updated successfully!');
+          closeModal();
+          loadMyJobs();
+        } else {
+          alert('❌ ' + (data.error || 'Failed to update job'));
+        }
+      } catch (error) {
+        console.error('Update error:', error);
+        alert('❌ Error updating job');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '💾 Save Changes';
+      }
+    });
+
+    // ============================================
+    // DELETE JOB
+    // ============================================
+    async function deleteJob(id) {
+      if (!confirm('Are you sure you want to delete this job? This action cannot be undone.')) return;
+
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        let response;
+
+        try {
+          response = await fetch(`${API_URL}/recruiter/jobs/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+        } catch (firstError) {
+          response = await fetch(`${API_URL}/jobs/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+        }
+
+        if (response.ok) {
+          alert('✅ Job deleted successfully!');
+          loadMyJobs();
+        } else {
+          const data = await response.json();
+          alert('❌ ' + (data.error || 'Failed to delete job'));
+        }
+      } catch (error) {
+        console.error('Delete error:', error);
+        alert('❌ Error deleting job');
+      }
+    }
+
+    // ============================================
+    // CLOSE MODAL ON OVERLAY CLICK
+    // ============================================
+    document.getElementById('jobModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+
+    // ============================================
+    // CLOSE MODAL ON ESCAPE KEY
+    // ============================================
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+
+    // ============================================
+    // INITIALIZE
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+      loadMyJobs();
+    });
+  </script>
 </body>
 </html>

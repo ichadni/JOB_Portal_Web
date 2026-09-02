@@ -2,7 +2,11 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const Job = require("../models/Job");
 const Application = require("../models/Application");
+const notificationHelper = require("../utils/notificationHelper");
 
+// ============================================
+// GET STUDENT PROFILE
+// ============================================
 const getStudentProfile = async (req, res) => {
   try {
     const userId = req.user?.id;
@@ -17,11 +21,14 @@ const getStudentProfile = async (req, res) => {
 
     res.json(user);
   } catch (err) {
-    console.error(err);
+    console.error("Get student profile error:", err);
     res.status(500).json({ error: "Server error" });
   }
 };
 
+// ============================================
+// UPDATE STUDENT PROFILE
+// ============================================
 const updateStudentProfile = async (req, res) => {
   try {
     const userId = req.user?.id;
@@ -79,11 +86,14 @@ const updateStudentProfile = async (req, res) => {
       } 
     });
   } catch (err) {
-    console.error(err);
+    console.error("Update student profile error:", err);
     res.status(500).json({ error: "Server error" });
   }
 };
 
+// ============================================
+// GET STUDENT DASHBOARD
+// ============================================
 const getStudentDashboard = async (req, res) => {
   try {
     const userId = req.user?.id;
@@ -126,4 +136,151 @@ const getStudentDashboard = async (req, res) => {
   }
 };
 
-module.exports = { getStudentProfile, updateStudentProfile, getStudentDashboard };
+// ============================================
+// ✅ GET STUDENT STATS (For Dashboard)
+// ============================================
+const getStudentStats = async (req, res) => {
+  try {
+    const studentId = req.user.id;
+
+    // Get total jobs available
+    const totalJobs = await Job.count({
+      where: { status: 'active' }
+    });
+
+    // Get total applications submitted by this student
+    const totalApplications = await Application.count({
+      where: { user_id: studentId }
+    });
+
+    // Profile completion
+    const user = await User.findByPk(studentId);
+    let completion = 0;
+    if (user) {
+      const fields = ['full_name', 'skills', 'education', 'experience'];
+      let filled = 0;
+      fields.forEach(field => {
+        if (user[field] && user[field].toString().trim() !== '') filled++;
+      });
+      completion = Math.round((filled / fields.length) * 100);
+    }
+
+    // ✅ FIXED: Use 'id' instead of 'created_at'
+    const latestApplication = await Application.findOne({
+      where: { user_id: studentId },
+      order: [['id', 'DESC']]  // ← Changed this line
+    });
+
+    const applicationStatus = latestApplication ? latestApplication.status : '-';
+
+    res.json({
+      success: true,
+      totalJobs,
+      totalApplications,
+      profileCompletion: `${completion}%`,
+      applicationStatus
+    });
+
+  } catch (err) {
+    console.error("Get student stats error:", err);
+    res.status(500).json({ error: "Failed to get student stats" });
+  }
+};
+
+// ============================================
+// ✅ APPLY FOR JOB (With Notifications)
+// ============================================
+const applyForJob = async (req, res) => {
+  try {
+    const studentId = req.user.id;
+    const { job_id, cover_letter } = req.body;
+
+    if (!job_id) {
+      return res.status(400).json({ error: "Job ID is required" });
+    }
+
+    // Check if job exists
+    const job = await Job.findByPk(job_id);
+    if (!job) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+
+    // Check if already applied
+    const existingApplication = await Application.findOne({
+      where: { user_id: studentId, job_id }
+    });
+
+    if (existingApplication) {
+      return res.status(400).json({ error: "You have already applied for this job" });
+    }
+
+    // Get student info
+    const student = await User.findByPk(studentId);
+
+    // Create application
+    const application = await Application.create({
+      user_id: studentId,
+      job_id,
+      cover_letter: cover_letter || '',
+      status: 'pending',
+      full_name: student.full_name || student.username,
+      email: student.email
+    });
+
+    // ============================================
+    // SEND NOTIFICATIONS
+    // ============================================
+
+    try {
+      // 1. Notify student
+      await notificationHelper.sendToUser(
+        studentId,
+        'Application Submitted ✅',
+        `You have successfully applied for "${job.title}" at ${job.company}`,
+        'application_status',
+        '/Student/applied-jobs.html'
+      );
+
+      // 2. Notify recruiter
+      if (job.posted_by) {
+        await notificationHelper.sendToRecruiter(
+          job.posted_by,
+          'New Application Received 📩',
+          `${student.username || 'A student'} applied for your job: "${job.title}"`,
+          'new_application',
+          '/Recruiter/applicants.html'
+        );
+      }
+
+      // 3. Notify admins
+      await notificationHelper.sendToAdmins(
+        'New Job Application',
+        `${student.username || 'A student'} applied for "${job.title}" at ${job.company}`,
+        'system',
+        '/Admin/applications.html'
+      );
+
+      console.log(`✅ Notifications sent for application by student ${studentId}`);
+    } catch (notifError) {
+      console.error('⚠️ Notification error:', notifError.message);
+    }
+
+    res.json({
+      success: true,
+      message: "Application submitted successfully",
+      application
+    });
+
+  } catch (err) {
+    console.error("Apply for job error:", err);
+    res.status(500).json({ error: "Server error: " + err.message });
+  }
+};
+
+module.exports = { 
+  getStudentProfile, 
+  updateStudentProfile, 
+  getStudentDashboard,
+  getStudentStats,
+  applyForJob
+};
