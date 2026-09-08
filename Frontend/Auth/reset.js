@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const API_BASE = "http://localhost:5001/api/auth";
+  const API_BASE = "/api/auth";
   
   // Get all elements
   const emailInput = document.getElementById("resetEmail");

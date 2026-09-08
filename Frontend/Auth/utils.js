@@ -2,7 +2,7 @@
 
 // API base URL
 const API_BASE = (function () {
-  return window.API_BASE || (location.origin.includes('file:') ? 'http://localhost:5000' : location.origin + '/api');
+  return window.API_BASE || location.origin + '/api';
 })();
 
 // Escape HTML to prevent XSS

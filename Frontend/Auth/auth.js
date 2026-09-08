@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const API_BASE = "http://localhost:5001/api/auth";
+  const API_BASE = "/api/auth";
 
   // Preserve redirect parameter when navigating to register
   const registerLink = document.getElementById("register-link");

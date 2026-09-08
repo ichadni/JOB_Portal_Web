@@ -24,7 +24,7 @@ async function fetchWithAuth(url, options = {}) {
   };
   
   try {
-    const response = await fetch(`http://localhost:5001/api${url}`, finalOptions);
+    const response = await fetch(`/api${url}`, finalOptions);
     
     if (response.status === 401 || response.status === 403) {
       localStorage.removeItem('token');

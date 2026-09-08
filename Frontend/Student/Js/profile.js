@@ -1,5 +1,5 @@
 // Base URL for backend API
-const API_BASE = "http://localhost:5001";
+const API_BASE = "";
 
 // Get form elements
 const profileForm = document.getElementById("profile-form");

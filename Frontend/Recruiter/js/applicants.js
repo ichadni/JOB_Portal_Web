@@ -1,4 +1,4 @@
-const API = "http://localhost:5001/api";
+const API = "/api";
 
 // Get auth token
 function getAuthToken() {
@@ -123,7 +123,7 @@ function displayApplicants(applicants) {
       </td>
       <td>
         ${app.resume_path ?
-          `<a href="http://localhost:5001${app.resume_path}" target="_blank" class="btn btn-small">View Resume</a>` :
+          `<a href="${app.resume_path}" target="_blank" class="btn btn-small">View Resume</a>` :
           'No resume'
         }
       </td>

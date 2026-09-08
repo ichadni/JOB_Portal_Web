@@ -2,10 +2,10 @@
   "name": "job-portal-backend",
   "version": "1.0.0",
   "description": "Job Portal Backend",
-  "main": "Server.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node Server.js",
-    "dev": "nodemon Server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
@@ -23,7 +23,6 @@
     "mysql2": "^3.15.3",
     "nodemailer": "^7.0.10",
     "sequelize": "^6.37.7",
-    "socket.io": "^4.8.1",
     "uuid": "^13.0.0"
   },
   "devDependencies": {

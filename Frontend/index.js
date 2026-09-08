@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Fetch all jobs from backend
   async function fetchJobs() {
     try {
-      const res = await fetch('http://localhost:5001/api/jobs');
+      const res = await fetch('/api/jobs');
       if (!res.ok) throw new Error('Failed to fetch jobs');
 
       const data = await res.json();

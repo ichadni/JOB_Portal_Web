@@ -909,7 +909,7 @@
     // ============================================
     // CONFIGURATION
     // ============================================
-    const API_URL = 'http://localhost:5001/api';
+    const API_URL = '/api';
 
     // ============================================
     // CHECK LOGIN
@@ -1107,7 +1107,7 @@ if (resumeUrl) {
 }
 
 const resumeLink = cleanResumeUrl
-    ? `<a href="http://localhost:5001/uploads/${encodeURIComponent(cleanResumeUrl)}"
+    ? `<a href="/uploads/${encodeURIComponent(cleanResumeUrl)}"
          class="btn-resume"
          onclick="event.stopPropagation();"
          rel="noopener noreferrer">

@@ -33,6 +33,8 @@ const frontendPath = path.resolve(__dirname, '../Frontend');
 console.log(`Serving Frontend from: ${frontendPath}`);
 app.use(express.static(frontendPath));
 
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);

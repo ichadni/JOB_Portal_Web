@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.log("Token value:", token.substring(0, 20) + "...");
       
       // Try with full URL first
-      const API_BASE = "http://localhost:5001";
+      const API_BASE = "";
       const res = await fetch(`${API_BASE}/api/auth/me`, {
         method: "GET",
         headers: {
@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       console.log("Updating profile with data:", updateData);
       
-      const API_BASE = "http://localhost:5001";
+      const API_BASE = "";
       const updateRes = await fetch(`${API_BASE}/api/auth/update-profile`, {
         method: "PUT",
         headers: {
