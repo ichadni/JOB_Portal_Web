@@ -7,6 +7,10 @@
     {
       "source": "/uploads/:path*",
       "destination": "https://job-portal-web-28g2.onrender.com/uploads/:path*"
+    },
+    {
+      "source": "/Auth/register",
+      "destination": "/Auth/Register.html"
     }
   ],
   "cleanUrls": true

@@ -9,6 +9,10 @@
       "destination": "https://job-portal-web-28g2.onrender.com/uploads/:path*"
     },
     {
+      "source": "/Auth/register",
+      "destination": "/Frontend/Auth/Register.html"
+    },
+    {
       "source": "/",
       "destination": "/Frontend/index.html"
     },
