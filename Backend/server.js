@@ -51,10 +51,13 @@ app.use('/api/notifications', notificationRoutes);
 const PORT = process.env.PORT || 5001;
 (async () => {
   try {
+    await sequelize.authenticate();
+    console.log("Database connection established.");
     await sequelize.sync();
-    console.log("✅ Database synced successfully.");
-    app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
+    console.log("Database synced successfully.");
+    app.listen(PORT, "0.0.0.0", () => console.log(`Server listening on port ${PORT}`));
   } catch (err) {
-    console.error("❌ Unable to start server:", err);
+    console.error("Unable to start server:", err);
+    process.exitCode = 1;
   }
 })();

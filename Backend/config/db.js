@@ -11,18 +11,11 @@ const sequelize = new Sequelize(
   {
     host: process.env.DB_HOST || "localhost",
     dialect: "mysql",
+    dialectOptions: {
+      connectTimeout: 10000
+    },
     logging: false
   }
 );
-
-// Test connection
-(async () => {
-  try {
-    await sequelize.authenticate();
-    console.log("✅ MySQL connected via Sequelize");
-  } catch (err) {
-    console.error("❌ Unable to connect:", err);
-  }
-})();
 
 module.exports = sequelize;
