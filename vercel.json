@@ -1,0 +1,21 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://job-portal-web-28g2.onrender.com/api/:path*"
+    },
+    {
+      "source": "/uploads/:path*",
+      "destination": "https://job-portal-web-28g2.onrender.com/uploads/:path*"
+    },
+    {
+      "source": "/",
+      "destination": "/Frontend/index.html"
+    },
+    {
+      "source": "/:path*",
+      "destination": "/Frontend/:path*"
+    }
+  ],
+  "cleanUrls": true
+}
