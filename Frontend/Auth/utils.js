@@ -1,5 +1,19 @@
 // utils.js
 
+function getStoredUser() {
+  const rawUser = localStorage.getItem('user');
+  if (!rawUser || rawUser === 'undefined' || rawUser === 'null') return null;
+
+  try {
+    const parsedUser = JSON.parse(rawUser);
+    return parsedUser && typeof parsedUser === 'object' ? parsedUser : null;
+  } catch (error) {
+    console.warn('Invalid user data found in localStorage. Clearing it.');
+    localStorage.removeItem('user');
+    return null;
+  }
+}
+
 // API base URL
 const API_BASE = (function () {
   return window.API_BASE || location.origin + '/api';
@@ -22,8 +36,8 @@ function setAuthUI() {
 
   const token = localStorage.getItem('token');
   if (token) {
-    const userJson = localStorage.getItem('user');
-    const name = userJson ? escapeHTML(JSON.parse(userJson).username) : 'Account';
+    const user = getStoredUser();
+    const name = user ? escapeHTML(user.username) : 'Account';
 
     link.textContent = `Hi, ${name}`;
     link.href = '#';

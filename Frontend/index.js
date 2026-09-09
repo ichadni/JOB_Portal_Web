@@ -1,3 +1,17 @@
+function getStoredUser() {
+  const rawUser = localStorage.getItem('user');
+  if (!rawUser || rawUser === 'undefined' || rawUser === 'null') return null;
+
+  try {
+    const parsedUser = JSON.parse(rawUser);
+    return parsedUser && typeof parsedUser === 'object' ? parsedUser : null;
+  } catch (error) {
+    console.warn('Invalid user data found in localStorage. Clearing it.');
+    localStorage.removeItem('user');
+    return null;
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const jobListEl = document.getElementById('job-list');
   const searchForm = document.querySelector('form');
@@ -57,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.applyJob = function(id) {
     const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const user = getStoredUser() || {};
 
     if (!token) {
         // Not logged in, redirect to login page with redirect query

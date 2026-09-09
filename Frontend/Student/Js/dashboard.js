@@ -1,5 +1,19 @@
 const API_BASE = "/api";
 
+function getStoredUser() {
+  const rawUser = localStorage.getItem('user');
+  if (!rawUser || rawUser === 'undefined' || rawUser === 'null') return null;
+
+  try {
+    const parsedUser = JSON.parse(rawUser);
+    return parsedUser && typeof parsedUser === 'object' ? parsedUser : null;
+  } catch (error) {
+    console.warn('Invalid user data found in localStorage. Clearing it.');
+    localStorage.removeItem('user');
+    return null;
+  }
+}
+
 function getAuthHeaders() {
   const token = localStorage.getItem('token');
   if (!token) return {};
@@ -14,7 +28,7 @@ function setupLogout() {
 
 document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem('token');
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = getStoredUser();
 
   if (!token || !user || user.role !== 'student') {
     window.location.href = "../Auth/login.html";

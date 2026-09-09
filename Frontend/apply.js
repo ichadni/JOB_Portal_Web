@@ -1,6 +1,20 @@
 // ==================== Backend Base URL ====================
 const API_BASE = "/api";
 
+function getStoredUser() {
+  const rawUser = localStorage.getItem('user');
+  if (!rawUser || rawUser === 'undefined' || rawUser === 'null') return null;
+
+  try {
+    const parsedUser = JSON.parse(rawUser);
+    return parsedUser && typeof parsedUser === 'object' ? parsedUser : null;
+  } catch (error) {
+    console.warn('Invalid user data found in localStorage. Clearing it.');
+    localStorage.removeItem('user');
+    return null;
+  }
+}
+
 // ==================== Utility Functions ====================
 function getAuthHeaders() {
   const token = localStorage.getItem('token');
@@ -18,7 +32,7 @@ function getQueryParams() {
 // ==================== Auth Check ====================
 function checkAuth() {
   const token = localStorage.getItem('token');
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = getStoredUser();
 
   console.log("Apply page auth check:", { hasToken: !!token, user });
 
@@ -74,7 +88,7 @@ async function handleApplicationSubmit(e) {
   e.preventDefault();
 
   const jobId = getQueryParams().id;
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = getStoredUser();
 
   // Create new FormData
   const formData = new FormData();
@@ -177,7 +191,7 @@ async function initializeApplyPage() {
     applyForm.addEventListener('submit', handleApplicationSubmit);
     
     // Pre-fill user data if available
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = getStoredUser();
     if (user) {
       const nameField = document.getElementById('applicantName');
       const emailField = document.getElementById('applicantEmail');

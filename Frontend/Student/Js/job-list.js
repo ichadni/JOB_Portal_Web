@@ -22,7 +22,7 @@ function escapeHTML(str) {
 // ==================== Auth & Role Check ====================
 function checkAuth() {
   const token = localStorage.getItem('token');
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = getStoredUser();
 
   console.log("Auth check:", { hasToken: !!token, user });
 
@@ -53,7 +53,7 @@ function applyForJob(jobId) {
     return;
   }
 
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const user = getStoredUser() || {};
   if (user.role !== 'student') {
     alert('Only students can apply for jobs.');
     return;

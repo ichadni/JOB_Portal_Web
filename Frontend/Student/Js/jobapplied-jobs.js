@@ -1,6 +1,20 @@
 // ==================== Backend Base URL ====================
 const API_BASE = "/api";
 
+function getStoredUser() {
+    const rawUser = localStorage.getItem('user');
+    if (!rawUser || rawUser === 'undefined' || rawUser === 'null') return null;
+
+    try {
+        const parsedUser = JSON.parse(rawUser);
+        return parsedUser && typeof parsedUser === 'object' ? parsedUser : null;
+    } catch (error) {
+        console.warn('Invalid user data found in localStorage. Clearing it.');
+        localStorage.removeItem('user');
+        return null;
+    }
+}
+
 // ==================== Utility Functions ====================
 function escapeHTML(str) {
     if (!str) return '';
@@ -22,7 +36,7 @@ function getAuthHeaders() {
 // ==================== Auth Check ====================
 document.addEventListener("DOMContentLoaded", () => {
     const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = getStoredUser();
 
     if (!token) {
         // Redirect to login if not authenticated
@@ -52,7 +66,7 @@ async function loadAppliedJobs() {
 
     console.log("Loading applied jobs...");
     console.log("Token:", localStorage.getItem('token'));
-    console.log("User:", JSON.parse(localStorage.getItem('user')));
+    console.log("User:", getStoredUser());
 
     try {
         const res = await fetch(`${API_BASE}/student/applied-jobs`, {
