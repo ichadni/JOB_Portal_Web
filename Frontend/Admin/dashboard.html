@@ -387,7 +387,12 @@
     // ============================================
     // USER INFO
     // ============================================
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    let user = {};
+    try {
+      user = JSON.parse(localStorage.getItem('user') || '{}') || {};
+    } catch (error) {
+      localStorage.removeItem('user');
+    }
     document.getElementById('adminName').textContent = user.username || 'Admin';
 
     // ============================================

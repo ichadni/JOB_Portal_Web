@@ -665,7 +665,12 @@
     // ============================================
     // GET USER INFO
     // ============================================
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    let user = {};
+    try {
+      user = JSON.parse(localStorage.getItem('user') || '{}') || {};
+    } catch (error) {
+      localStorage.removeItem('user');
+    }
     const userName = user.username || 'Recruiter';
     document.getElementById('userName').textContent = userName;
     document.getElementById('userAvatar').textContent = userName.charAt(0).toUpperCase();

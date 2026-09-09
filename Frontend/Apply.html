@@ -509,7 +509,12 @@
       window.location.href = './Auth/Login.html';
     }
 
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    let user = {};
+    try {
+      user = JSON.parse(localStorage.getItem('user') || '{}') || {};
+    } catch (error) {
+      localStorage.removeItem('user');
+    }
     if (user.role !== 'student') {
       alert('Only students can apply for jobs.');
       window.location.href = './Student/dashboard.html';

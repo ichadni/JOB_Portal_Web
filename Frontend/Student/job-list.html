@@ -1071,7 +1071,12 @@ SCRIPTS – FULLY CORRECTED
     window.location.href = '../Auth/Login.html';
   }
 
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  let user = {};
+  try {
+    user = JSON.parse(localStorage.getItem('user') || '{}') || {};
+  } catch (error) {
+    localStorage.removeItem('user');
+  }
   document.getElementById('userName').textContent = user.username || 'Student';
   document.getElementById('userAvatar').textContent = (user.username || 'S').charAt(0).toUpperCase();
 
