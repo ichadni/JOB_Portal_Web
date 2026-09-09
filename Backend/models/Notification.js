@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../config/db');
+const User = require('./User');
 
 const Notification = db.define('Notification', {
   id: {
@@ -11,7 +12,7 @@ const Notification = db.define('Notification', {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'Users',
+      model: User,
       key: 'id'
     }
   },
@@ -43,5 +44,8 @@ const Notification = db.define('Notification', {
   tableName: 'notifications',
   timestamps: false
 });
+
+User.hasMany(Notification, { foreignKey: 'user_id', sourceKey: 'id' });
+Notification.belongsTo(User, { foreignKey: 'user_id', targetKey: 'id' });
 
 module.exports = Notification;
