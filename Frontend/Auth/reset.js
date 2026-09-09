@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Redirect to login after 2 seconds
       setTimeout(() => {
-        window.location.href = "login.html";
+        window.location.href = "Login.html";
       }, 2000);
 
     } catch (err) {

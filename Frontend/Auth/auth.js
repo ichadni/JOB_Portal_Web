@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const redirectUrl = urlParams.get("redirect");
       if (redirectUrl) {
         e.preventDefault();
-        window.location.href = `register.html?redirect=${encodeURIComponent(redirectUrl)}`;
+        window.location.href = `Register.html?redirect=${encodeURIComponent(redirectUrl)}`;
       }
     });
   }
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const redirectUrl = urlParams.get("redirect");
       if (redirectUrl) {
         e.preventDefault();
-        window.location.href = `login.html?redirect=${encodeURIComponent(redirectUrl)}`;
+        window.location.href = `Login.html?redirect=${encodeURIComponent(redirectUrl)}`;
       }
     });
   }

@@ -7,7 +7,7 @@ function getToken() {
 function checkAdminAuth() {
   const token = getToken();
   if (!token) {
-    window.location.href = "../Auth/login.html"; // Adjust path relative to your page
+    window.location.href = "../Auth/Login.html"; // Adjust path relative to your page
     return null;
   }
   return token;
@@ -29,7 +29,7 @@ async function fetchWithAuth(endpoint, options = {}) {
   if (response.status === 401 || response.status === 403) {
     alert("Session expired or unauthorized. Please login again.");
     localStorage.removeItem("token");
-    window.location.href = "../Auth/login.html";
+    window.location.href = "../Auth/Login.html";
     return null;
   }
 

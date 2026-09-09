@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   logoutBtn.addEventListener("click", () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    window.location.href = "../Auth/login.html";
+    window.location.href = "../Auth/Login.html";
   });
 
   // ================= Edit Job =================

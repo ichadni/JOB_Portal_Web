@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // --- AUTH CHECK ---
   const token = localStorage.getItem("token");
   if (!token) {
-    window.location.href = "../Auth/login.html";
+    window.location.href = "../Auth/Login.html";
     return;
   }
 
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   logoutBtn.addEventListener("click", () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    window.location.href = "../Auth/login.html";
+    window.location.href = "../Auth/Login.html";
   });
 
   // --- NOTIFICATIONS (basic) ---
