@@ -3,6 +3,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const authRoutes = require("./routes/auth.js");
 const sequelize = require("./config/db.js");
+const sqliteSequelize = require("./config/database.js");
 const uploadRoutes = require("./routes/upload.js");
 const Job = require("./models/Job.js");
 const jobRoutes = require("./routes/jobs.js");
@@ -50,10 +51,24 @@ app.use('/api/notifications', notificationRoutes);
 // Start server after syncing DB
 const PORT = process.env.PORT || 5001;
 (async () => {
+  let activeSequelize = sequelize;
+
   try {
-    await sequelize.authenticate();
-    console.log("Database connection established.");
-    await sequelize.sync();
+    await activeSequelize.authenticate();
+    console.log(`Database connection established using ${activeSequelize.getDialect()}.`);
+  } catch (err) {
+    if (activeSequelize.getDialect() !== "sqlite") {
+      console.warn("MySQL connection failed, falling back to SQLite:", err.message);
+      activeSequelize = sqliteSequelize;
+      await activeSequelize.authenticate();
+      console.log("SQLite fallback database connection established.");
+    } else {
+      throw err;
+    }
+  }
+
+  try {
+    await activeSequelize.sync();
     console.log("Database synced successfully.");
     app.listen(PORT, "0.0.0.0", () => console.log(`Server listening on port ${PORT}`));
   } catch (err) {
