@@ -326,13 +326,13 @@ Manage Platform
 ### User Management
 
 <p align="center">
-  <img src="screenshots/add-user.png" width="85%" alt="Admin Users Management">
+  <img src="screenshots/ad-user.png" width="85%" alt="Admin Users Management">
 </p>
 
 ### Admin Dashboard
 
 <p align="center">
-  <img src="screenshots/admin-das" width="85%" alt="Admin Dashboard">
+  <img src="screenshots/admin-das.png" width="85%" alt="Admin Dashboard">
 </p>
 
 ---
