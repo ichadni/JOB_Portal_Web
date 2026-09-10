@@ -263,19 +263,19 @@ Manage Platform
 ### Home Page
 
 <p align="center">
-  <img src="screenshots/03-home-page.png" width="85%" alt="Home Page">
+  <img src="screenshots/home_page.png" width="85%" alt="Home Page">
 </p>
 
 ### Student Job Dashboard
 
 <p align="center">
-  <img src="screenshots/04-student-job-dashboard.png" width="85%" alt="Student Job Dashboard">
+  <img src="screenshots/stu-dash.png" width="85%" alt="Student Job Dashboard">
 </p>
 
 ### Job Details
 
 <p align="center">
-  <img src="screenshots/05-job-details.png" width="85%" alt="Job Details">
+  <img src="screenshots/stu-job.png" width="85%" alt="Job Details">
 </p>
 
 ---
@@ -285,69 +285,54 @@ Manage Platform
 ### Application Form
 
 <p align="center">
-  <img src="screenshots/06-job-application-form.png" width="85%" alt="Job Application Form">
+  <img src="screenshots/stu-apply-show.png" width="85%" alt="Job Application Form">
 </p>
 
-### Application Submission
+### Student Profile
 
 <p align="center">
-  <img src="screenshots/07-application-submission.png" width="85%" alt="Application Submission">
+  <img src="screenshots/stu-profile.png" width="85%" alt="Student Profile">
 </p>
-
-### My Applications
-
-<p align="center">
-  <img src="screenshots/08-my-applications.png" width="85%" alt="My Applications">
-</p>
-
----
 
 ## 🏢 Recruiter Dashboard
 
 ### Recruiter Dashboard
 
 <p align="center">
-  <img src="screenshots/09-recruiter-dashboard.png" width="85%" alt="Recruiter Dashboard">
-</p>
-
-### Edit Job
-
-<p align="center">
-  <img src="screenshots/10-edit-job.png" width="85%" alt="Edit Job">
+  <img src="screenshots/re-dash.png" width="85%" alt="Recruiter Dashboard">
 </p>
 
 ### Post New Job
 
 <p align="center">
-  <img src="screenshots/11-post-new-job.png" width="85%" alt="Post New Job">
+  <img src="screenshots/re-add-job.png" width="85%" alt="Post New Job">
+</p>
+
+### Aplications
+
+<p align="center">
+  <img src="screenshots/re-applicant.png" width="85%" alt="Aplication">
 </p>
 
 ### Recruiter Job Details
 
 <p align="center">
-  <img src="screenshots/12-recruiter-job-details.png" width="85%" alt="Recruiter Job Details">
+  <img src="screenshots/re-my-job.png" width="85%" alt="Recruiter Job Details">
 </p>
 
-### Applicants Management
-
-<p align="center">
-  <img src="screenshots/13-applicants-management.png" width="85%" alt="Applicants Management">
-</p>
-
----
 
 ## 🛡️ Admin Panel
 
 ### User Management
 
 <p align="center">
-  <img src="screenshots/14-admin-users-management.png" width="85%" alt="Admin Users Management">
+  <img src="screenshots/add-user.png" width="85%" alt="Admin Users Management">
 </p>
 
 ### Admin Dashboard
 
 <p align="center">
-  <img src="screenshots/15-admin-dashboard.png" width="85%" alt="Admin Dashboard">
+  <img src="screenshots/admin-das" width="85%" alt="Admin Dashboard">
 </p>
 
 ---
